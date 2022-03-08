@@ -3,17 +3,6 @@ apply plugin: 'com.huawei.ohos.app'
 apply from: "./infra/config_exts.gradle"
 
 ohos {
-    signingConfigs {
-        release {
-            storeFile file('D:\\Code\\SignCenter\\signcenter_tool\\key\\OpenHarmony.p12')
-            storePassword '0000001610A20C1B90FFF880F8C8EF7F3743A7341A23C0B855EEB18AA93CE7C22466184D9FB4'
-            keyAlias = 'OpenHarmony Application Release'
-            keyPassword '00000016FAAB33FC005DBAE0890BF79D7B9C7B26B26DE48AEDA44174EFC0D2059E55765B4D44'
-            signAlg = 'SHA256withECDSA'
-            profile file('D:\\Code\\ScreenLock\\applications_screenlock\\signature\\screenlock.p7b')
-            certpath file('D:\\Code\\SignCenter\\signcenter_tool\\certificates\\OpenHarmonyApplication.cer')
-        }
-    }
     compileSdkVersion rootProject.ext.version.compileSdk
     defaultConfig {
         compatibleSdkVersion rootProject.ext.version.compatibleSdk
