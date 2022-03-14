@@ -105,6 +105,7 @@ export class BatteryModel {
   private getBatteryStatus() {
     Log.showInfo(TAG,'getBatteryStatus')
     let batterySoc = BatteryInfo.batterySOC;
+    Log.showInfo(TAG,`batterySoc: ${BatteryInfo.batterySOC}`)
     let batteryCharging = BatteryInfo.chargingStatus;
     if (null == batterySoc) {
       // Set the battery Soc as full when there is no battery hardware

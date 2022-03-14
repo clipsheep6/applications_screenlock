@@ -44,6 +44,12 @@ export default struct SlideScreenlock {
       }
       .width(Constants.FULL_CONTAINER_WIDTH)
       .height(Constants.FULL_CONTAINER_HEIGHT)
+      .blur(this.mViewModel.backgroundBlur)
+      .scale({
+        x: this.mViewModel.backgroundScale,
+        y: this.mViewModel.backgroundScale,
+        z: this.mViewModel.backgroundScale
+      })
 
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
         Column() {
@@ -82,6 +88,8 @@ export default struct SlideScreenlock {
       }
       .width(Constants.FULL_CONTAINER_WIDTH)
       .height(Constants.FULL_CONTAINER_HEIGHT)
+      .opacity(this.mViewModel.elementAlpha)
+      .scale({ x: this.mViewModel.elementScale, y: this.mViewModel.elementScale, z: this.mViewModel.elementScale })
       .onTouch((event) => {
         this.mViewModel.touchEvent(event)
       })

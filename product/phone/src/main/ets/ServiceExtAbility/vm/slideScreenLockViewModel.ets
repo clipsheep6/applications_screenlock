@@ -30,6 +30,10 @@ export default class SlideScreenLockViewModel {
   moveX: number = 0
   moveY: number = 0
   slidingLength: number = 0
+  elementAlpha: number = 1
+  elementScale: number = 1
+  backgroundBlur: number = 1
+  backgroundScale: number = 1 / 0.91
 
   ViewModelInit(): void{
     Log.showInfo(TAG, 'ViewModelInit');
@@ -48,13 +52,25 @@ export default class SlideScreenLockViewModel {
     if (event.type == Constants.TOUCHTYPE_DOWN) {
       this.startX = event.touches[0].screenX
       this.startY = event.touches[0].screenY
-    } else if (event.type == Constants.TOUCHTYPE_UP) {
+    } else if (event.type == Constants.TOUCHTYPE_MOVE) {
       this.moveX = event.touches[0].screenX - this.startX
       this.moveY = event.touches[0].screenY - this.startY
+    } else if (event.type == Constants.TOUCHTYPE_UP) {
       Log.showInfo(TAG, `Touch Event slidingLength：${this.slidingLength}`)
       if (Math.abs(this.moveY) > this.slidingLength) {
         this.unlockScreen()
       }
+      this.moveX = 0
+      this.moveY = 0
     }
+    this.update(this.moveY)
+  }
+
+  private update(moveLength: number) {
+    let length = Math.min(Math.abs(moveLength), this.slidingLength)
+    this.elementAlpha = 1 - 1 * length / this.slidingLength
+    this.elementScale = 1 - 0.15 * length / this.slidingLength
+    this.backgroundBlur = 80 * length / this.slidingLength
+    this.backgroundScale = 1 / 0.91 * (1 - 0.09 * length / this.slidingLength)
   }
 }
