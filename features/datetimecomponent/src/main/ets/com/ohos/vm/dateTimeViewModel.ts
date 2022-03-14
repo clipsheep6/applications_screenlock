@@ -19,7 +19,6 @@ import settings from '@ohos.settingsnapi';
 import Log from '../../../../../../../../common/src/main/ets/default/Log.ets'
 import DateTimeCommon from '../../../../../../../../common/src/main/ets/default/DateTimeCommon'
 import Constants from '../common/constants'
-import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon.ets'
 
 const TAG = 'ScreenLock-DateTimeViewModel'
 
@@ -40,7 +39,6 @@ export default class DateTimeViewModel {
     timeVal: string = ''
     dateVal: any = {}
     weekVal: any = {}
-    setDateTimeHandle: number = -1
     isUsing24hFormat: boolean= false
 
     ViewModelInit(): void{
@@ -51,7 +49,6 @@ export default class DateTimeViewModel {
 
         this.setDateTime.bind(this)()
         commonEvent.createSubscriber(mCommonEventSubscribeInfo, this.createSubscriberCallBack.bind(this));
-        this.setDateTimeHandle = setInterval(this.setDateTime.bind(this), Constants.INTERVAL);
         Log.showInfo(TAG, 'ViewModelInit end');
     }
 
@@ -97,7 +94,6 @@ export default class DateTimeViewModel {
 
     stopPolling() {
         Log.showInfo(TAG, `stopPolling start`)
-        Log.showInfo(TAG, `stopPolling setDateTimeHandle:${this.setDateTimeHandle}`);
         commonEvent.unsubscribe(mEventSubscriber);
         Log.showInfo(TAG, `stopPolling end`)
     }
