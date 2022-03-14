@@ -22,7 +22,6 @@ const TAG = 'ScreenLock-DateTime'
 
 @Component
 export default struct DateTime {
-  @StorageLink('lockStatus') @Watch("onStatusChange") lockStatus: ScreenLockStatus = ScreenLockStatus.Locking
   @State mViewModel: ViewModel = new ViewModel()
   private isShowData: boolean= true
 
@@ -53,10 +52,5 @@ export default struct DateTime {
       }
     }
     .width(Constants.FULL_CONTAINER_WIDTH)
-  }
-
-  onStatusChange(propName: string): void {
-    Log.showInfo(TAG, `onStatusChange`)
-    this.mViewModel.onStatusChange(this.lockStatus)
   }
 }
