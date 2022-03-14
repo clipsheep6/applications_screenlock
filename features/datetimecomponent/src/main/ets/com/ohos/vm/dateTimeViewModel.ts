@@ -14,6 +14,7 @@
  */
 
 import featureAbility from '@ohos.ability.featureAbility'
+import commonEvent from '@ohos.commonEvent';
 import settings from '@ohos.settingsnapi';
 import Log from '../../../../../../../../common/src/main/ets/default/Log.ets'
 import DateTimeCommon from '../../../../../../../../common/src/main/ets/default/DateTimeCommon'
@@ -21,6 +22,16 @@ import Constants from '../common/constants'
 import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon.ets'
 
 const TAG = 'ScreenLock-DateTimeViewModel'
+
+let mCommonEventSubscribeInfo = {
+    events: [
+        commonEvent.Support.COMMON_EVENT_TIME_CHANGED,
+        commonEvent.Support.COMMON_EVENT_TIMEZONE_CHANGED,
+        commonEvent.Support.COMMON_EVENT_TIME_TICK
+    ]
+};
+
+let mEventSubscriber
 
 /**
  * DateTimeViewModel class
@@ -39,6 +50,7 @@ export default class DateTimeViewModel {
         // this.timeFormatMonitor();
 
         this.setDateTime.bind(this)()
+        commonEvent.createSubscriber(mCommonEventSubscribeInfo, this.createSubscriberCallBack.bind(this));
         this.setDateTimeHandle = setInterval(this.setDateTime.bind(this), Constants.INTERVAL);
         Log.showInfo(TAG, 'ViewModelInit end');
     }
@@ -76,27 +88,17 @@ export default class DateTimeViewModel {
         this.weekVal = DateTimeCommon.getSystemWeek()
     }
 
+    private createSubscriberCallBack(err, data) {
+        Log.showInfo(TAG, "start createSubscriberCallBack " + JSON.stringify(data))
+        mEventSubscriber = data
+        commonEvent.subscribe(data, this.setDateTime.bind(this));
+        Log.showInfo(TAG, "start createSubscriberCallBack finish")
+    }
+
     stopPolling() {
         Log.showInfo(TAG, `stopPolling start`)
         Log.showInfo(TAG, `stopPolling setDateTimeHandle:${this.setDateTimeHandle}`);
-        if (this.setDateTimeHandle > 0) {
-            clearInterval(this.setDateTimeHandle)
-            this.setDateTimeHandle = -1
-            Log.showInfo(TAG, `stopPolling setDateTimeHandle new :${this.setDateTimeHandle}`);
-        }
+        commonEvent.unsubscribe(mEventSubscriber);
         Log.showInfo(TAG, `stopPolling end`)
-    }
-
-    onStatusChange(lockStatus: ScreenLockStatus): void {
-        Log.showInfo(TAG, `onStatusChange lockStatus:${lockStatus}`);
-        Log.showInfo(TAG, `onStatusChange setDateTimeHandle:${this.setDateTimeHandle}`);
-        if (lockStatus == ScreenLockStatus.Locking) {
-            if (this.setDateTimeHandle <= 0) {
-                this.setDateTimeHandle = setInterval(this.setDateTime.bind(this), Constants.INTERVAL);
-                Log.showInfo(TAG, `onStatusChange setDateTimeHandle new:${this.setDateTimeHandle}`);
-            }
-        } else {
-            this.stopPolling();
-        }
     }
 }
