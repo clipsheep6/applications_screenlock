@@ -16,9 +16,11 @@
 import featureAbility from '@ohos.ability.featureAbility'
 import commonEvent from '@ohos.commonEvent';
 import settings from '@ohos.settingsnapi';
-import Log from '../../../../../../../../common/src/main/ets/default/Log.ets'
+import Log from '../../../../../../../../common/src/main/ets/default/Log'
 import DateTimeCommon from '../../../../../../../../common/src/main/ets/default/DateTimeCommon'
-import Constants from '../common/constants'
+import sTimeManager, {TimeEventArgs, TIME_CHANGE_EVENT,
+}  from '../../../../../../../../common/src/main/ets/default/TimeManager';
+import EventManager, {unsubscribe} from '../../../../../../../../common/src/main/ets/default/event/EventManager'
 
 const TAG = 'ScreenLock-DateTimeViewModel'
 
@@ -39,48 +41,22 @@ export default class DateTimeViewModel {
     timeVal: string = ''
     dateVal: any = {}
     weekVal: any = {}
-    isUsing24hFormat: boolean= false
+    unSubscriber?: unsubscribe;
 
     ViewModelInit(): void{
         Log.showInfo(TAG, 'ViewModelInit');
 
-        // TODO api 8 下有问题，临时注释
-        // this.timeFormatMonitor();
-
         this.setDateTime.bind(this)()
         commonEvent.createSubscriber(mCommonEventSubscribeInfo, this.createSubscriberCallBack.bind(this));
+        this.unSubscriber = EventManager.subscribe(TIME_CHANGE_EVENT, (args: TimeEventArgs) => {
+            this.setDateTime(args.date)
+        });
         Log.showInfo(TAG, 'ViewModelInit end');
     }
 
-    private timeFormatMonitor(): void {
-        Log.showInfo(TAG, 'timeFormatMonitor');
-        let urivar = settings.getUri('settings.time.format')
-        let helper = featureAbility.acquireDataAbilityHelper(urivar);
-        this.checkTimeFormat(helper);
-        helper.on("dataChange", urivar, (err) => {
-            if (err.code !== 0) {
-                Log.showError(TAG, `failed to getAbilityWant because ${err.message}`);
-                return;
-            } else {
-                this.checkTimeFormat(helper);
-            }
-            Log.showInfo(TAG, 'observer reveive notifychange on success data : ' + JSON.stringify(err))
-        })
-    }
-
-    private checkTimeFormat(helper) {
-        Log.showInfo(TAG, 'checkTimeFormat');
-        let getRetValue = settings.getValue(helper, 'settings.time.format', '24')
-        if (getRetValue === '12') {
-            this.isUsing24hFormat = false;
-        } else if (getRetValue === '24') {
-            this.isUsing24hFormat = true;
-        }
-    }
-
-    private setDateTime() {
+    private setDateTime(date?: Date) {
         Log.showInfo(TAG, `setDateTime`)
-        this.timeVal = DateTimeCommon.getSystemTime(this.isUsing24hFormat)
+        this.timeVal = sTimeManager.formatTime(date ?? new Date())
         this.dateVal = DateTimeCommon.getSystemDate()
         this.weekVal = DateTimeCommon.getSystemWeek()
     }
@@ -95,6 +71,8 @@ export default class DateTimeViewModel {
     stopPolling() {
         Log.showInfo(TAG, `stopPolling start`)
         commonEvent.unsubscribe(mEventSubscriber);
+        this.unSubscriber && this.unSubscriber();
+        this.unSubscriber = undefined;
         Log.showInfo(TAG, `stopPolling end`)
     }
 }

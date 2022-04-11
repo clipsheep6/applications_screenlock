@@ -24,16 +24,12 @@ common
 
 ```
 /applications/standard/screenlock
-    ├── build.gradle                    # 全局编译配置文件
-    ├── settings.gradle                 # 编译模块配置文件
-    ├── LICENSE                         # 许可文件
     ├── common                          # 通用工具类目录
-    ├── signature                       # 证书文件目录
+    ├── entry                           # entry模块目录
     ├── features                        # 子组件目录
     │   ├── batterycomponent            # 电池组件
+    │   ├── clockcomponent              # 时钟组件
     │   ├── datetimecomponent           # 日期时间组件
-    │   ├── shortcutcomponent           # 快捷开关组件
-    │   ├── wallpapercomponent          # 壁纸组件
     │   ├── noticeitem                  # 通知子组件
     │   ├── notificationservice         # 通知服务组件
     │   ├── screenlock                  # 锁屏组件
@@ -41,11 +37,18 @@ common
     │       ├── model                   # 数据管理
     │       ├── view                    # 组件样式管理
     │       ├── vm                      # 数据样式绑定管理
+    │   ├── shortcutcomponent           # 快捷开关组件
+    │   ├── wallpapercomponent          # 壁纸组件
+    │   ├── wificomponent               # wifi组件
     ├── product                         # 锁屏总体功能目录
     │   ├── pc                          # 模块目录
-    │       ├── pages/slidesrceenlock   # 滑动锁屏  
+    │       ├── pages/slidesrceenlock   # 滑动锁屏   
     │   ├── phone                       # 模块目录
-    │       ├── pages/slidesrceenlock   # 滑动锁屏  
+    │       ├── pages/slidesrceenlock   # 滑动锁屏
+    ├── signature                       # 证书文件目录
+    ├── build.gradle                    # 全局编译配置文件
+    ├── LICENSE                         # 许可文件
+    ├── settings.gradle                 # 编译模块配置文件  
 ```
 
 ## 相关仓
