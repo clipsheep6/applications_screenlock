@@ -17,6 +17,7 @@ import Log from '../../../../../../../../../common/src/main/ets/default/Log'
 import Constants from '../../common/constants'
 import NumkeyBoard from './numkeyBoard'
 import ViewModel from '../../vm/digitalPSDViewModel'
+import deviceInfo from '@ohos.deviceInfo';
 
 const TAG = 'ScreenLock-DigitalPSD'
 
@@ -41,32 +42,34 @@ export default struct DigitalPSD {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.End }) {
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.End }) {
         Text(this.mViewModel.prompt)
-          .fontSize($r('app.float.digitalpsd_prompt_fontsize'))
-          .fontWeight(FontWeight.Bold)
+          .fontSize(deviceInfo.deviceType === 'tablet' ? $r('app.float.digitalpsd_prompt_fontsize') : 16)
+          .fontWeight(deviceInfo.deviceType === 'tablet' ? FontWeight.Bold : "Medium")
           .fontColor(Color.White)
-          .margin({ bottom: $r('app.float.digitalpsd_prompt_margin_bottom') })
+          .margin({ bottom: deviceInfo.deviceType === 'tablet' ? $r('app.float.digitalpsd_prompt_margin_bottom') : 24 })
           .textAlign(TextAlign.Center)
           .textOverflow({ overflow: TextOverflow.None })
           .width($r('app.float.digitalpsd_prompt_width'))
-          .height($r('app.float.digitalpsd_prompt_height'))
+          .height(deviceInfo.deviceType === 'tablet' ? $r('app.float.digitalpsd_prompt_height') : 22)
 
         Grid() {
           ForEach(this.passwdMaskArr, (item) => {
             GridItem() {
               Image(item)
-                .width(Constants.DIGITALPSD_IC_DIAMETER)
-                .height(Constants.DIGITALPSD_IC_DIAMETER)
+                .width(deviceInfo.deviceType === 'tablet' ? Constants.DIGITALPSD_IC_DIAMETER : 12)
+                .height(deviceInfo.deviceType === 'tablet' ? Constants.DIGITALPSD_IC_DIAMETER : 12)
             }
           })
         }
         .columnsTemplate('1fr 1fr 1fr 1fr 1fr 1fr')
-        .width($r('app.float.digitalpsd_passwdmask_width'))
-        .height($r('app.float.digitalpsd_passwdmask_height'))
+        .width(deviceInfo.deviceType === 'tablet' ? $r('app.float.digitalpsd_passwdmask_width') : 192)
+        .height(deviceInfo.deviceType === 'tablet' ? $r('app.float.digitalpsd_passwdmask_height') : 12)
         .margin(0)
       }
-      .margin({ bottom: $r('app.float.digitalpsd_passwdmask_margin_bottom') })
+      .margin({
+        bottom: deviceInfo.deviceType === 'tablet' ? $r('app.float.digitalpsd_passwdmask_margin_bottom') : 151
+      })
       .width(Constants.FULL_CONTAINER_WIDTH)
-      .height($r('app.float.digitalpsd_input_area_height'))
+      .height(deviceInfo.deviceType === 'tablet' ? $r('app.float.digitalpsd_input_area_height') : 60)
       .flexShrink(1)
 
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.End }) {
@@ -77,7 +80,7 @@ export default struct DigitalPSD {
       }
       .width(Constants.FULL_CONTAINER_WIDTH)
       .height($r('app.float.digitalpsd_key_area_height'))
-      .margin({ bottom: $r('app.float.digitalpsd_key_area_margin_bottom') })
+      .margin({ bottom: deviceInfo.deviceType === 'tablet' ? $r('app.float.digitalpsd_key_area_margin_bottom') : 52 })
       .flexShrink(0)
     }
     .width(Constants.FULL_CONTAINER_WIDTH)
