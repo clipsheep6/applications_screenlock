@@ -26,12 +26,12 @@ export default struct DateTime {
   @Prop isShowDate: boolean
 
   aboutToAppear() {
-    Log.showInfo(TAG, `aboutToAppear`)
+    Log.showDebug(TAG, `aboutToAppear`)
     this.mViewModel.ViewModelInit()
   }
 
   aboutToDisappear() {
-    Log.showInfo(TAG, `aboutToDisappear`)
+    Log.showDebug(TAG, `aboutToDisappear`)
     this.mViewModel.stopPolling()
   }
 

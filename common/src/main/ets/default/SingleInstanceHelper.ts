@@ -22,7 +22,7 @@ const AUDIO_MANAGER_KEY = 'MultiMediaAudioManager';
 export default function createOrGet<T>(objectClass: { new(): T }, storageKey: string): T {
   if (!globalThis[storageKey]) {
     globalThis[storageKey] = new objectClass();
-    Log.showInfo(TAG, `Create key of ${storageKey}`);
+    Log.showDebug(TAG, `Create key of ${storageKey}`);
   }
   return globalThis[storageKey];
 }
@@ -30,7 +30,7 @@ export default function createOrGet<T>(objectClass: { new(): T }, storageKey: st
 export function getAudioManager() {
   if (!globalThis[AUDIO_MANAGER_KEY]) {
     globalThis[AUDIO_MANAGER_KEY] = audio.getAudioManager();
-    Log.showInfo(TAG, `Create Audio Manager.`);
+    Log.showDebug(TAG, `Create Audio Manager.`);
   }
   return globalThis[AUDIO_MANAGER_KEY];
 }

@@ -28,11 +28,11 @@ struct BatteryPic {
   @State style: any = StyleConfiguration.getBatteryPicStyle()
 
   aboutToAppear(){
-    Log.showInfo(TAG,'aboutToAppear Start');
+    Log.showDebug(TAG,'aboutToAppear Start');
   }
 
   aboutToDisappear(){
-    Log.showInfo(TAG,'aboutToDisappear');
+    Log.showDebug(TAG,'aboutToDisappear');
   }
 
   build() {
@@ -72,7 +72,7 @@ struct BatteryPic {
   }
 
   private getBatteryColor(val, charging) {
-    Log.showInfo(TAG, `getBatteryColor, val: ${ val }  charging: ${ charging } `);
+    Log.showDebug(TAG, `getBatteryColor, val: ${ val }  charging: ${ charging } `);
     if (charging) {
       return this.style.picChargingColor;
     } else if (val <= Constants.BATTERY_LEVEL_LOW) {

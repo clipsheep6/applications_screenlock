@@ -42,7 +42,7 @@ export default struct GeneralItem {
   }
 
   aboutToAppear() {
-    Log.showInfo(TAG, `aboutToAppear Start`)
+    Log.showDebug(TAG, `aboutToAppear Start`)
     if (CheckEmptyUtils.isEmpty(this.itemData.largeIcon)) {
       this.hasPicture = false;
     } else {
@@ -64,7 +64,7 @@ export default struct GeneralItem {
   }
 
   aboutToDisappear() {
-    Log.showInfo(TAG, `aboutToDisappear`);
+    Log.showDebug(TAG, `aboutToDisappear`);
   }
 
   build() {
@@ -102,7 +102,7 @@ struct ContentComponent {
   itemData: any;
 
   aboutToAppear() {
-    Log.showInfo(TAG, `aboutToDisappear pict: ${this.itemData.picture}`);
+    Log.showDebug(TAG, `aboutToDisappear pict: ${this.itemData.picture}`);
   }
 
   build() {

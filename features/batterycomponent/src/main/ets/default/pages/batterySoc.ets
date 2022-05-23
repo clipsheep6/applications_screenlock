@@ -25,11 +25,11 @@ struct BatterySoc {
   @State styleCommon: any = StyleConfigurationCommon.getCommonStyle()
 
   aboutToAppear(){
-    Log.showInfo(TAG,'aboutToAppear Start');
+    Log.showDebug(TAG,'aboutToAppear Start');
   }
 
   aboutToDisappear(){
-    Log.showInfo(TAG,'aboutToDisappear');
+    Log.showDebug(TAG,'aboutToDisappear');
   }
 
   build() {

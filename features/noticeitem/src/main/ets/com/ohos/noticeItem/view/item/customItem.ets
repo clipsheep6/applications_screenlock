@@ -29,13 +29,13 @@ export default struct CustomItem {
   @State isDebugMode: boolean = false;
 
   aboutToAppear() {
-    Log.showInfo(TAG, `aboutToAppear Start`)
+    Log.showDebug(TAG, `aboutToAppear Start`)
     this.template = ViewModel.getPluginTempLate(this.customItemData.template.name);
     this.templateData = this.customItemData.template.data;
     this.isDebugMode = NotificationManager.isDebugMode(TAG);
-    Log.showInfo(TAG, `template = ${JSON.stringify(this.template)}`)
-    Log.showInfo(TAG, `templateData = ${JSON.stringify(this.templateData)}`)
-    Log.showInfo(TAG, `isDebugMode = ${this.isDebugMode}`)
+    Log.showInfo(TAG, `template = ${JSON.stringify(this.template)},`+
+      `templateData = ${JSON.stringify(this.templateData)}` +
+      `isDebugMode = ${this.isDebugMode}`)
   }
 
   build() {
@@ -47,7 +47,7 @@ export default struct CustomItem {
         }).onComplete(() => {
           Log.showInfo(TAG, `Complete`)
         }).onError(({errcode, msg}) => {
-          Log.showInfo(TAG, `Error code:${errcode} message:${msg}`)
+          Log.showDebug(TAG, `Error code:${errcode} message:${msg}`)
         })
           .size({ width: 400, height: 130 })
       }
