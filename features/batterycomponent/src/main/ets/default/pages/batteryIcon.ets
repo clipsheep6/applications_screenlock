@@ -38,11 +38,11 @@ export default struct BatteryIcon {
   aboutToAppear() {
     this.mStatusBarGroupComponentData = StatusBarVM.getStatusBarGroupComponentData(this.mGroupId)
     mBatteryModel.initBatteryModel();
-    Log.showInfo(TAG, 'aboutToAppear');
+    Log.showDebug(TAG, 'aboutToAppear');
   }
 
   aboutToDisappear() {
-    Log.showInfo(TAG, 'aboutToDisappear');
+    Log.showDebug(TAG, 'aboutToDisappear');
   }
 
   build() {

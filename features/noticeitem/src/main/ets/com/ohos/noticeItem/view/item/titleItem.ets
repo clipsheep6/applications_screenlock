@@ -32,11 +32,11 @@ export default struct TitleItem {
   private clickTitleAction: () => void
 
   aboutToAppear() {
-    Log.showInfo(TAG, `aboutToAppear Start`);
+    Log.showDebug(TAG, `aboutToAppear Start`);
   }
 
   aboutToDisappear() {
-    Log.showInfo(TAG, `aboutToDisAppear`);
+    Log.showDebug(TAG, `aboutToDisAppear`);
   }
 
   build() {
@@ -93,7 +93,7 @@ export default struct TitleItem {
   }
 
   clickTitleItem() {
-    Log.showInfo(TAG, 'clickTitleItem');
+    Log.showDebug(TAG, 'clickTitleItem');
     if (this.needExpand) {
       if (this.isExpand) {
         this.isExpand = false;
