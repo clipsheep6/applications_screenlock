@@ -13,14 +13,14 @@
  * limitations under the License.
  */
 
-import Constants, {NotificationLayout as Layout} from '../../common/constants';
+import Constants, { NotificationLayout as Layout } from '../../common/constants';
 import GeneralItem from './generalItem';
 import CustomItem from './customItem';
 import Log from '../../../../../../../../../../common/src/main/ets/default/Log';
 import ViewModel from '../../viewmodel/ViewModel';
 import DevicesDialog from './devicesDialog';
 import WantAgent from '@ohos.wantAgent';
-import IconListComponent, {getIconListSize} from './iconListComponent';
+import IconListComponent, { getIconListSize } from './iconListComponent';
 import ScrollbarManager from '../../common/ScrollbarManager';
 
 const TAG = 'NoticeItem-NotificationItem';
@@ -56,9 +56,10 @@ export default struct NotificationItem {
         || (!this.mEdgeEnd && this.mScroller.currentOffset().xOffset > Layout.SCROLL_THRESHOLD)
         ScrollbarManager.restoreOtherScroll(this.mScroller);
       })
+      .borderRadius(!this.isSubItem ? $r("sys.float.ohos_id_corner_radius_default_l") : 0)
+      .clip(!this.isSubItem)
     }.width(this.itemWidth)
-    .borderRadius(!this.isSubItem ? $r("sys.float.ohos_id_corner_radius_default_l") : 0)
-    .clip(!this.isSubItem)
+
   }
 
   scrollEdge() {
