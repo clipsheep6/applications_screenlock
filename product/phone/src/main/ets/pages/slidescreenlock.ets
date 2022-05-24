@@ -70,7 +70,7 @@ export default struct SlideScreenlock {
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
         Column() {
         }
-        .height($r('app.float.status_bar_height'))
+        .height(0)
 
         Column() {
           LockIcon()
