@@ -30,7 +30,7 @@ export default class Constants {
   static DATETIME_AREA_WIDTH = '20%'
   static P_DATETIME_AREA_WIDTH = '123vp'
 
-  static PASSWORD_AREA_WIDTH = '95%'
+  static PASSWORD_AREA_WIDTH = '312vp'
 
   static STATUS_ABOUT_TO_APPEAR  = 1
   static STATUS_ABOUT_TO_DISAPPEAR = 2
