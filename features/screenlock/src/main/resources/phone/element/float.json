@@ -2,23 +2,31 @@
   "float": [
     {
       "name": "lockicon_width",
-      "value": "40"
+      "value": "16vp"
     },
     {
       "name": "lockicon_height",
-      "value": "45"
+      "value": "16vp"
     },
     {
       "name": "lockicon_top_margin",
-      "value": "10"
+      "value": "60vp"
     },
     {
       "name": "lockicon_bottom_margin",
       "value": "10"
     },
     {
+      "name": "lockicon_right_margin",
+      "value": "4vp"
+    },
+    {
       "name": "lock_prompt_fontsize",
-      "value": "32"
+      "value": "14vp"
+    },
+    {
+      "name": "lock_Text_top_margin",
+      "value": "58vp"
     },
     {
       "name": "deleteall_image_opacity",
@@ -122,8 +130,17 @@
     },
     {
       "name": "mixedpsd_input_width",
-      "value": "600"
+      "value": "288vp"
     },
+    {
+      "name": "mixedpsd_input_height",
+      "value": "36vp"
+    },
+    {
+      "name": "mixedpsd_input_margin_bottom",
+      "value": "16vp"
+    },
+  
     {
       "name": "mixedpsd_input_height",
       "value": "72"
