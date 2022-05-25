@@ -1,22 +1,15 @@
 export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMonth, GregorianCalendarDay) {
-    let Hour = 24,
+    let index1 = 2, // 等于30天时的农历天数的第一个下标
+        index2 = 9, // 大于天数11的下标
+        index3 = 10, // 小于11天时的下标
+        index4 = 11, // 判断农历天数lunarDay的下标长度
+        Day1 = 20, // 判断农历天数为20天时
+        Day2 = 21, // 判断农历天数lunarDay的下标长度
+        Hour = 24,
         Minutes = 60,
         Multiple = 1000,
-        index2 = 2, // 等于30天时的农历天数的第一个下标
-        ThreeDays = 3,
-        MonthMultiple = 12,
-        index11 = 11, // 判断农历天数lunarDay的下标长度
-        index9 = 9, // 大于天数11的下标
-        index10 = 10, // 小于11天时的下标
-        Day20 = 20, // 判断农历天数为20天时
-        Day21 = 21, // 判断农历天数lunarDay的下标长度
-        LeapFebruarySmallDay = 29,
-        LeapFebruaryBigDay = 30,
         InitialLunarTime = 1949
-    let LastHexadecimalDigit = 0xf
-    let HexadecimalFirstDigit = 0xf0000
-    let ConvertToHexDigit = 0x8000
-    let ConvertToHex = 0x8
+
     let lunarMonth = ['正', '二', '三', '四', '五', '六', '七', '八', '九', '十', '冬', '腊'],
         lunarDay = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '初', '廿'],
         HeavenlyStemsAnd = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'],
@@ -89,16 +82,16 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
         // 将计算出来的农历年份转换为天干地支年
         OutputLunarYear = getHeavenlyStemsAnd(OutputLunarYear) + getEarthlyBranches(OutputLunarYear);
         // 将计算出来的农历天数转换成汉字
-        if (OutputLunarDay < index11) {
-            OutputLunarDay = `${lunarDay[index10]}${lunarDay[OutputLunarDay-1]}`
-        } else if (OutputLunarDay > index10 && OutputLunarDay < Day20) {
-            OutputLunarDay = `${lunarDay[index9]}${lunarDay[OutputLunarDay-index11]}`
-        } else if (OutputLunarDay === Day20) {
-            OutputLunarDay = `${lunarDay[1]}${lunarDay[index9]}`
-        } else if (OutputLunarDay > Day20 && OutputLunarDay < LeapFebruaryBigDay) {
-            OutputLunarDay = `${lunarDay[index11]}${lunarDay[OutputLunarDay-Day21]}`
+        if (OutputLunarDay < index4) {
+            OutputLunarDay = `${lunarDay[index3]}${lunarDay[OutputLunarDay-1]}`
+        } else if (OutputLunarDay > index3 && OutputLunarDay < Day1) {
+            OutputLunarDay = `${lunarDay[index2]}${lunarDay[OutputLunarDay-index4]}`
+        } else if (OutputLunarDay === Day1) {
+            OutputLunarDay = `${lunarDay[1]}${lunarDay[index2]}`
+        } else if (OutputLunarDay > Day1 && OutputLunarDay < LeapFebruaryBigDay) {
+            OutputLunarDay = `${lunarDay[index4]}${lunarDay[OutputLunarDay-Day2]}`
         } else if (OutputLunarDay === LeapFebruaryBigDay) {
-            OutputLunarDay = `${lunarDay[index2]}${lunarDay[index9]}`
+            OutputLunarDay = `${lunarDay[index1]}${lunarDay[index2]}`
         }
         return {
             lunarYear: OutputLunarYear,
@@ -108,23 +101,31 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
     }
     // 计算农历年是否有闰月，参数为存储农历年的16进制，其中16进制的最后1位可以用于判断是否有闰月
     function hasLeapMonth(OutputLunarYear) {
+        let lastHexadecimalDigit = 0xf
         // 获取16进制的最后1位，需要用到&与运算符
-        if (OutputLunarYear & LastHexadecimalDigit) {
-            return OutputLunarYear & LastHexadecimalDigit
+        if (OutputLunarYear & lastHexadecimalDigit) {
+            return OutputLunarYear & lastHexadecimalDigit
         } else {
             return -1
         }
     }
     // 如果有闰月，计算农历闰月天数，参数为存储农历年的16进制，其中16进制的第1位（0x除外）可以用于表示闰月是大月还是小月
+    let LeapFebruarySmallDay = 29,
+        LeapFebruaryBigDay = 30
+
     function leapMonthDays(OutputLunarYear) {
+        let hexadecimalFirstDigit = 0xf0000
         // 获取16进制的第1位（0x除外）
         if (hasLeapMonth(OutputLunarYear) > -1) {
-            return (OutputLunarYear & HexadecimalFirstDigit) ? LeapFebruaryBigDay : LeapFebruarySmallDay
+            return (OutputLunarYear & hexadecimalFirstDigit) ? LeapFebruaryBigDay : LeapFebruarySmallDay
         } else {
             return 0
         }
     }
     // 农历年份信息用16进制存储，其中16进制的第2-4位（0x除外）可以用于表示正常月是大月还是小月
+    let ConvertToHexDigit = 0x8000,
+        ConvertToHex = 0x8
+
     function lunarYearDays(OutputLunarYear) {
         let totalDays = 0;
         //获取正常月的天数，并累加。 获取16进制的第2-4位，需要用到>>移位运算符
@@ -153,14 +154,17 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
         return monthArr
     }
     // 将农历年转换为天干，参数为农历年
+    let Day3 = 3
+
     function getHeavenlyStemsAnd(OutputLunarYear) {
-        let HeavenlyStemsAndKey = (OutputLunarYear - ThreeDays) % index10;
-        if (HeavenlyStemsAndKey === 0) HeavenlyStemsAndKey = index10;
+        let HeavenlyStemsAndKey = (OutputLunarYear - Day3) % index3;
+        if (HeavenlyStemsAndKey === 0) HeavenlyStemsAndKey = index3;
         return HeavenlyStemsAnd[HeavenlyStemsAndKey - 1]
     }
     // 将农历年转换为地支，参数为农历年
     function getEarthlyBranches(OutputLunarYear) {
-        let EarthlyBranchesKey = (OutputLunarYear - ThreeDays) % MonthMultiple;
+        let MonthMultiple = 12
+        let EarthlyBranchesKey = (OutputLunarYear - Day3) % MonthMultiple;
         if (EarthlyBranchesKey === 0) EarthlyBranchesKey = MonthMultiple;
         return EarthlyBranches[EarthlyBranchesKey - 1]
     }
