@@ -16,7 +16,7 @@
 import Log from '../../../../../../../../../common/src/main/ets/default/Log'
 import { ScreenLockStatus } from '../../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
 import ViewModel from '../../vm/lockIconViewModel'
-import Constants from '../../common/constants'
+import Constants from '../../common/Constants'
 
 const TAG = 'ScreenLock-LockIcon'
 
@@ -52,7 +52,6 @@ export default struct LockIcon {
   }
 
   onStatusChange(propName: string): void {
-    Log.showInfo(TAG, `onStatusChange`)
     Log.showInfo(TAG, `lockStatus:${this.lockStatus}`);
     this.mViewModel.onStatusChange(this.lockStatus)
   }

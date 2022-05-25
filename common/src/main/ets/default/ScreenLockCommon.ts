@@ -14,6 +14,7 @@
  */
 import Log from './Log';
 import FileIo from '@ohos.fileio';
+import  { LunarCalendar }  from "./LunarCalendar"
 
 const TAG = 'ScreenLock-ScreenLockCommon';
 const DFAULT_SIZE = 4096;
@@ -27,24 +28,27 @@ export enum ScreenLockStatus {
 }
 
 export function ReadConfigFile(fileName) {
-    Log.showInfo(TAG, `readConfigFile fileName:${fileName}`);
-    try {
-        let stream = FileIo.createStreamSync(fileName, 'r');
-        Log.showInfo(TAG, `readConfigFile stream:` + stream);
-        let buf = new ArrayBuffer(DFAULT_SIZE);
-        let len = stream.readSync(buf);
-        Log.showInfo(TAG, `readConfigFile len:` + len);
-        let arr = new Uint8Array(buf);
-        let charAt = ' '.charCodeAt(CHAR_CODE_AT_INDEX);
-        for (let i = len;i < DFAULT_SIZE; i++) {
-            arr[i] = charAt;
-        }
-        let content = String.fromCharCode.apply(null, arr);
-        stream.closeSync();
-        Log.showInfo(TAG, `readConfigFile content:` + JSON.stringify(content));
-        return JSON.parse(content);
-    } catch (error) {
-        Log.showInfo(TAG, `readConfigFile error:` + JSON.stringify(error));
+  Log.showInfo(TAG, `readConfigFile fileName:${fileName}`);
+  let stream;
+  let content : string = "";
+  try {
+    let stream = FileIo.createStreamSync(fileName, 'r');
+    Log.showInfo(TAG, `readConfigFile stream:` + stream);
+    let buf = new ArrayBuffer(DFAULT_SIZE);
+    let len = stream.readSync(buf);
+    Log.showInfo(TAG, `readConfigFile len:` + len);
+    let arr = new Uint8Array(buf);
+    let charAt = ' '.charCodeAt(CHAR_CODE_AT_INDEX);
+    for (let i = len;i < DFAULT_SIZE; i++) {
+      arr[i] = charAt;
     }
+    content = String.fromCharCode.apply(null, arr);
+    Log.showDebug(TAG, `readConfigFile content:` + JSON.stringify(content));
+  } catch (error) {
+    Log.showError(TAG, `readConfigFile error:` + JSON.stringify(error));
+    content = "";
+  } finally {
+    stream.closeSync();
+  }
+  return JSON.stringify(content);
 }
-

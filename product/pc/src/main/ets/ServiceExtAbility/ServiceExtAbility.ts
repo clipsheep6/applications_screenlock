@@ -18,7 +18,7 @@ import windowManager from '@ohos.window'
 import WindowManagers, { WindowType } from "../../../../../../common/src/main/ets/default/WindowManager";
 import display from '@ohos.display'
 import Log from '../../../../../../common/src/main/ets/default/Log'
-import Constants from '../../../../../../features/screenlock/src/main/ets/com/ohos/common/constants'
+import Constants from '../../../../../../features/screenlock/src/main/ets/com/ohos/common/Constants'
 import AbilityManager from '../../../../../../common/src/main/ets/default/abilitymanager/abilityManager'
 import sTimeManager from '../../../../../../common/src/main/ets/default/TimeManager'
 
@@ -34,23 +34,21 @@ class ServiceExtAbility extends ServiceExtension {
     }
 
     private createWindow(name: string) {
-        Log.showInfo(TAG, `createWindow name:${name}`)
+        Log.showDebug(TAG, `createWindow name:${name}`)
         windowManager.create(this.context, name, 2110).then((win) => {
             Log.showInfo(TAG, "before begin " + name + " window show!")
             win.loadContent("pages/index").then(() => {
-                Log.showInfo(TAG, name + " window loadContent in then! ")
                 win.show().then(() => {
-                    Log.showInfo(TAG, "then begin " + name + " window show in then! ");
+                    Log.showInfo(TAG, "window show in then!");
                 })
             })
         }, (error) => {
-            Log.showInfo(TAG, name + " window createFailed, error.code = " + error.code)
+            Log.showError(TAG, name + " window createFailed, error.code = " + error.code)
         })
-        Log.showInfo(TAG, name + " after window create")
     }
 
     private async statusBarWindow() {
-    	Log.showInfo(TAG, `statusBarWindow`);
+        Log.showDebug(TAG, `statusBarWindow`);
         let dis = await display.getDefaultDisplay();
         while (dis === null) {
             await new Promise((resolve)=>{setTimeout(resolve, 1000)});
@@ -58,7 +56,7 @@ class ServiceExtAbility extends ServiceExtension {
         }
         Log.showInfo(TAG, `getDefaultDisplay, dis: ${JSON.stringify(dis)}`);
         let rect;
-        if (dis.width > dis.height) { // Pad¡¢PC horizontalScreen Mode
+        if (dis.width > dis.height) { // Pad and PC horizontalScreen Mode
             rect = {
                 left: 0,
                 top: 0,
@@ -78,7 +76,6 @@ class ServiceExtAbility extends ServiceExtension {
             width: dis.width,
             height: dis.height,
         });
-        Log.showInfo(TAG, `createWindow success.`);
     }
 
     onDestroy() {
