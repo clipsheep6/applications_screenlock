@@ -14,7 +14,7 @@
  */
 
 import Log from '../../../../../../../../common/src/main/ets/default/Log'
-import Constants from '../common/constants'
+import Constants from '../common/Constants'
 import BaseViewModel, {service, AuthType, AuthSubType} from './baseViewModel'
 import {Callback} from 'basic';
 
@@ -32,7 +32,7 @@ export default class DigitalPSDViewModel extends BaseViewModel {
     }
 
     ViewModelInit(): void{
-        Log.showInfo(TAG, 'ViewModelInit');
+        Log.showDebug(TAG, 'ViewModelInit');
         this.passwdMaskArr = new Array(PW_LEN).fill($r('app.media.ic_hollow_dot'));
         super.ViewModelInit();
     }
@@ -72,8 +72,6 @@ export default class DigitalPSDViewModel extends BaseViewModel {
             service.goBack();
         } else if (keyValue == Constants.CALL_PHONE) {
         }
-
-        Log.showInfo(TAG, `onKeyPress end`)
     }
 
     clearPassword() {
