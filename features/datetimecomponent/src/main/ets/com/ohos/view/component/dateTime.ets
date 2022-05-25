@@ -21,7 +21,7 @@ import { ConvertLunarCalendar } from '../../../../../../../../../common/src/main
 import deviceInfo from '@ohos.deviceInfo';
 
 var deviceTypeInfo = deviceInfo.deviceType;
-const TAG = 'ScreenLock-DateTime'
+const TAG = 'ScreenLock-DateTime' 
 
 
 
