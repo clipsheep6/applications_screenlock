@@ -21,8 +21,7 @@ import { ConvertLunarCalendar } from '../../../../../../../../../common/src/main
 import deviceInfo from '@ohos.deviceInfo';
 
 var deviceTypeInfo = deviceInfo.deviceType;
-const TAG = 'ScreenLock-DateTime' 
-
+const TAG = 'ScreenLock-DateTime'
 
 
 @Component
@@ -38,11 +37,14 @@ export default struct DateTime {
     Log.showInfo(TAG, `aboutToAppear`)
     this.mViewModel.ViewModelInit()
     this.year =
-    ConvertLunarCalendar(this.mViewModel.dateVal.year, this.mViewModel.dateVal.month, this.mViewModel.dateVal.day).lunarYear
+    ConvertLunarCalendar(this.mViewModel.dateVal.year, this.mViewModel.dateVal.month, this.mViewModel.dateVal.day)
+    .lunarYear
     this.month =
-    ConvertLunarCalendar(this.mViewModel.dateVal.year, this.mViewModel.dateVal.month, this.mViewModel.dateVal.day).lunarMonth
+    ConvertLunarCalendar(this.mViewModel.dateVal.year, this.mViewModel.dateVal.month, this.mViewModel.dateVal.day)
+    .lunarMonth
     this.day =
-    ConvertLunarCalendar(this.mViewModel.dateVal.year, this.mViewModel.dateVal.month, this.mViewModel.dateVal.day).lunarDay
+    ConvertLunarCalendar(this.mViewModel.dateVal.year, this.mViewModel.dateVal.month, this.mViewModel.dateVal.day)
+    .lunarDay
     if (deviceTypeInfo == 'phone') {
       this.isPhone = true
     }
