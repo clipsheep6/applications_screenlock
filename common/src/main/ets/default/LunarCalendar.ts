@@ -1,10 +1,10 @@
 export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMonth, GregorianCalendarDay) {
-    let index1 = 2, // 等于30天时的农历天数的第一个下标
-        index2 = 9, // 大于天数11的下标
-        index3 = 10, // 小于11天时的下标
-        index4 = 11, // 判断农历天数lunarDay的下标长度
+    let LunarIndex1 = 2, // 等于30天时的农历天数的第一个下标
+        LunarIndex2 = 9, // 大于天数11的下标
+        LunarIndex3 = 10, // 小于11天时的下标
+        LunarIndex4 = 11, // 判断农历天数lunarDay的下标长度
         Day1 = 20, // 判断农历天数为20天时
-        Day2 = 21, // 判断农历天数lunarDay的下标长度
+        Day2 = 21, 
         Hour = 24,
         Minutes = 60,
         Multiple = 1000,
@@ -14,7 +14,6 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
         lunarDay = ['一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '初', '廿'],
         HeavenlyStemsAnd = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'],
         EarthlyBranches = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-    // 农历1949-2100年查询表
     let LunarCalendar = [
         0x0b557,
         0x06ca0, 0x0b550, 0x15355, 0x04da0, 0x0a5b0, 0x14573, 0x052b0, 0x0a9a8, 0x0e950, 0x06aa0,
@@ -34,24 +33,19 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
         0x0e968, 0x0d520, 0x0daa0, 0x16aa6, 0x056d0, 0x04ae0, 0x0a9d4, 0x0a2d0, 0x0d150, 0x0f252,
         0x0d520
     ]
-    // 公历转农历函数
+
     function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMonth, GregorianCalendarDay) {
-        // 输入的月份减1处理
         GregorianCalendarMonth -= 1;
-        // 计算与公历基准的相差天数 Date.UTC()返回的是距离公历1970年1月1日的毫秒数,传入的月份需要减1
         let daySpan = (Date.UTC(GregorianCalendarYear, GregorianCalendarMonth, GregorianCalendarDay) - Date.UTC(InitialLunarTime, 0, LeapFebruarySmallDay)) / (Hour * Minutes * Minutes * Multiple) + 1;
         let OutputLunarYear, OutputLunarMonth, OutputLunarDay;
-        // 确定输出的农历年份
         for (let j = 0; j < LunarCalendar.length; j++) {
             daySpan -= lunarYearDays(LunarCalendar[j]);
             if (daySpan <= 0) {
                 OutputLunarYear = InitialLunarTime + j;
-                // 获取农历年份确定后的剩余天数
                 daySpan += lunarYearDays(LunarCalendar[j]);
                 break
             }
         }
-        // 确定输出的农历月份
         for (let k = 0; k < lunarYearMonths(LunarCalendar[OutputLunarYear - InitialLunarTime]).length; k++) {
             daySpan -= lunarYearMonths(LunarCalendar[OutputLunarYear - InitialLunarTime])[k];
             if (daySpan <= 0) {
@@ -70,28 +64,24 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
                 break
             }
         }
-        // 确定输出农历哪一天
         OutputLunarDay = daySpan;
-        // 将计算出来的农历月份转换成汉字月份，闰月需要在前面加上闰字
         if (hasLeapMonth(LunarCalendar[OutputLunarYear - InitialLunarTime]) > -1 && (typeof (OutputLunarMonth) === 'string' && OutputLunarMonth.indexOf('闰') > -1)) {
             let reg = /\d/.exec(OutputLunarMonth)
             OutputLunarMonth = `闰${lunarMonth[Number(reg)- 1]}`
         } else {
             OutputLunarMonth = lunarMonth[OutputLunarMonth - 1];
         }
-        // 将计算出来的农历年份转换为天干地支年
         OutputLunarYear = getHeavenlyStemsAnd(OutputLunarYear) + getEarthlyBranches(OutputLunarYear);
-        // 将计算出来的农历天数转换成汉字
-        if (OutputLunarDay < index4) {
-            OutputLunarDay = `${lunarDay[index3]}${lunarDay[OutputLunarDay-1]}`
-        } else if (OutputLunarDay > index3 && OutputLunarDay < Day1) {
-            OutputLunarDay = `${lunarDay[index2]}${lunarDay[OutputLunarDay-index4]}`
+        if (OutputLunarDay < LunarIndex4) {
+            OutputLunarDay = `${lunarDay[LunarIndex3]}${lunarDay[OutputLunarDay-1]}`
+        } else if (OutputLunarDay > LunarIndex3 && OutputLunarDay < Day1) {
+            OutputLunarDay = `${lunarDay[LunarIndex2]}${lunarDay[OutputLunarDay-LunarIndex4]}`
         } else if (OutputLunarDay === Day1) {
-            OutputLunarDay = `${lunarDay[1]}${lunarDay[index2]}`
+            OutputLunarDay = `${lunarDay[1]}${lunarDay[LunarIndex2]}`
         } else if (OutputLunarDay > Day1 && OutputLunarDay < LeapFebruaryBigDay) {
-            OutputLunarDay = `${lunarDay[index4]}${lunarDay[OutputLunarDay-Day2]}`
+            OutputLunarDay = `${lunarDay[LunarIndex4]}${lunarDay[OutputLunarDay-Day2]}`
         } else if (OutputLunarDay === LeapFebruaryBigDay) {
-            OutputLunarDay = `${lunarDay[index1]}${lunarDay[index2]}`
+            OutputLunarDay = `${lunarDay[LunarIndex1]}${lunarDay[LunarIndex2]}`
         }
         return {
             lunarYear: OutputLunarYear,
@@ -99,30 +89,28 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
             lunarDay: OutputLunarDay,
         }
     }
-    // 计算农历年是否有闰月，参数为存储农历年的16进制，其中16进制的最后1位可以用于判断是否有闰月
+
     function hasLeapMonth(OutputLunarYear) {
         let lastHexadecimalDigit = 0xf
-        // 获取16进制的最后1位，需要用到&与运算符
         if (OutputLunarYear & lastHexadecimalDigit) {
             return OutputLunarYear & lastHexadecimalDigit
         } else {
             return -1
         }
     }
-    // 如果有闰月，计算农历闰月天数，参数为存储农历年的16进制，其中16进制的第1位（0x除外）可以用于表示闰月是大月还是小月
+
     let LeapFebruarySmallDay = 29,
         LeapFebruaryBigDay = 30
 
     function leapMonthDays(OutputLunarYear) {
         let hexadecimalFirstDigit = 0xf0000
-        // 获取16进制的第1位（0x除外）
         if (hasLeapMonth(OutputLunarYear) > -1) {
             return (OutputLunarYear & hexadecimalFirstDigit) ? LeapFebruaryBigDay : LeapFebruarySmallDay
         } else {
             return 0
         }
     }
-    // 农历年份信息用16进制存储，其中16进制的第2-4位（0x除外）可以用于表示正常月是大月还是小月
+
     let ConvertToHexDigit = 0x8000,
         ConvertToHex = 0x8
 
@@ -140,7 +128,7 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
 
         return totalDays
     }
-    // 获取农历每个月的天数
+
     function lunarYearMonths(OutputLunarYear) {
         let monthArr = [];
         // 获取16进制的第2-4位，需要用到>>移位运算符
@@ -153,15 +141,15 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
 
         return monthArr
     }
-    // 将农历年转换为天干，参数为农历年
+
     let Day3 = 3
 
     function getHeavenlyStemsAnd(OutputLunarYear) {
-        let HeavenlyStemsAndKey = (OutputLunarYear - Day3) % index3;
-        if (HeavenlyStemsAndKey === 0) HeavenlyStemsAndKey = index3;
+        let HeavenlyStemsAndKey = (OutputLunarYear - Day3) % LunarIndex3;
+        if (HeavenlyStemsAndKey === 0) HeavenlyStemsAndKey = LunarIndex3;
         return HeavenlyStemsAnd[HeavenlyStemsAndKey - 1]
     }
-    // 将农历年转换为地支，参数为农历年
+
     function getEarthlyBranches(OutputLunarYear) {
         let MonthMultiple = 12
         let EarthlyBranchesKey = (OutputLunarYear - Day3) % MonthMultiple;
