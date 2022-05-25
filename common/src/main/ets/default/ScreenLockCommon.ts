@@ -14,7 +14,6 @@
  */
 import Log from './Log';
 import FileIo from '@ohos.fileio';
-import  { LunarCalendar }  from "./LunarCalendar"
 
 const TAG = 'ScreenLock-ScreenLockCommon';
 const DFAULT_SIZE = 4096;
