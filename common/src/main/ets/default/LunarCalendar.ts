@@ -1,10 +1,10 @@
 export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMonth, GregorianCalendarDay) {
-    let LunarIndex1 = 2, // 等于30天时的农历天数的第一个下标
-        LunarIndex2 = 9, // 大于天数11的下标
-        LunarIndex3 = 10, // 小于11天时的下标
-        LunarIndex4 = 11, // 判断农历天数lunarDay的下标长度
-        Day1 = 20, // 判断农历天数为20天时
-        Day2 = 21, 
+    let LunarIndex1 = 2,
+        LunarIndex2 = 9,
+        LunarIndex3 = 10,
+        LunarIndex4 = 11,
+        LunarDay1 = 20,
+        LunarDay2 = 21,
         Hour = 24,
         Minutes = 60,
         Multiple = 1000,
@@ -74,12 +74,12 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
         OutputLunarYear = getHeavenlyStemsAnd(OutputLunarYear) + getEarthlyBranches(OutputLunarYear);
         if (OutputLunarDay < LunarIndex4) {
             OutputLunarDay = `${lunarDay[LunarIndex3]}${lunarDay[OutputLunarDay-1]}`
-        } else if (OutputLunarDay > LunarIndex3 && OutputLunarDay < Day1) {
+        } else if (OutputLunarDay > LunarIndex3 && OutputLunarDay < LunarDay1) {
             OutputLunarDay = `${lunarDay[LunarIndex2]}${lunarDay[OutputLunarDay-LunarIndex4]}`
-        } else if (OutputLunarDay === Day1) {
+        } else if (OutputLunarDay === LunarDay1) {
             OutputLunarDay = `${lunarDay[1]}${lunarDay[LunarIndex2]}`
-        } else if (OutputLunarDay > Day1 && OutputLunarDay < LeapFebruaryBigDay) {
-            OutputLunarDay = `${lunarDay[LunarIndex4]}${lunarDay[OutputLunarDay-Day2]}`
+        } else if (OutputLunarDay > LunarDay1 && OutputLunarDay < LeapFebruaryBigDay) {
+            OutputLunarDay = `${lunarDay[LunarIndex4]}${lunarDay[OutputLunarDay-LunarDay2]}`
         } else if (OutputLunarDay === LeapFebruaryBigDay) {
             OutputLunarDay = `${lunarDay[LunarIndex1]}${lunarDay[LunarIndex2]}`
         }
@@ -116,12 +116,10 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
 
     function lunarYearDays(OutputLunarYear) {
         let totalDays = 0;
-        //获取正常月的天数，并累加。 获取16进制的第2-4位，需要用到>>移位运算符
         for (let i = ConvertToHexDigit; i > ConvertToHex; i >>= 1) {
             let monthDays = (OutputLunarYear & i) ? LeapFebruaryBigDay : LeapFebruarySmallDay;
             totalDays += monthDays;
         }
-        // 如果有闰月，需要把闰月的天数加上
         if (hasLeapMonth(OutputLunarYear) > -1) {
             totalDays += leapMonthDays(OutputLunarYear);
         }
@@ -131,7 +129,6 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
 
     function lunarYearMonths(OutputLunarYear) {
         let monthArr = [];
-        // 获取16进制的第2-4位，需要用到>>移位运算符
         for (let i = ConvertToHexDigit; i > ConvertToHex; i >>= 1) {
             monthArr.push((OutputLunarYear & i) ? LeapFebruaryBigDay : LeapFebruarySmallDay);
         }
