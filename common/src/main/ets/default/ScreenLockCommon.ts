@@ -14,16 +14,17 @@
  */
 import Log from './Log';
 import FileIo from '@ohos.fileio';
+import  { LunarCalendar }  from "./LunarCalendar"
 
 const TAG = 'ScreenLock-ScreenLockCommon';
 const DFAULT_SIZE = 4096;
 const CHAR_CODE_AT_INDEX = 0;
 
 export enum ScreenLockStatus {
-  Locking = 1,
-  Unlock = 2,
-  RecognizingFace = 3,
-  FaceNotRecognized = 4
+    Locking = 1,
+    Unlock = 2,
+    RecognizingFace = 3,
+    FaceNotRecognized = 4
 }
 
 export function ReadConfigFile(fileName) {
