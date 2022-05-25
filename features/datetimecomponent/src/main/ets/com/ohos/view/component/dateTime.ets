@@ -31,7 +31,6 @@ export default struct DateTime {
   @State year: string = ''
   @State month: string = ''
   @State day: string = ''
-  @State isPhone: boolean= false
 
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
@@ -45,9 +44,6 @@ export default struct DateTime {
     this.day =
     ConvertLunarCalendar(this.mViewModel.dateVal.year, this.mViewModel.dateVal.month, this.mViewModel.dateVal.day)
     .lunarDay
-    if (deviceTypeInfo == 'phone') {
-      this.isPhone = true
-    }
   }
 
   aboutToDisappear() {
@@ -61,7 +57,7 @@ export default struct DateTime {
         .fontSize($r('app.float.time_fontsize'))
         .fontColor($r('app.color.date_time_color'))
         .margin({ top: $r('app.float.time_top_margin'), bottom: $r('app.float.time_bottom_margin') })
-        .fontWeight(this.isPhone ? 300 : FontWeight.Normal)
+        .fontWeight(FontWeight.Medium)
         .fontFamily("Digit")
       if (this.isShowDate) {
         Row() {

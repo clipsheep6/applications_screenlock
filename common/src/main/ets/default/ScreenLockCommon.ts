@@ -50,7 +50,20 @@ export function ReadConfigFile(fileName) {
 }
 
 export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMonth, GregorianCalendarDay) {
-    let InitialLunarTime = 1949
+    let Hour = 24,
+        Minutes2SecondsMultiple = 60,
+        Minutes = 1000,
+        TwoDays = 2,
+        ThreeDays = 3,
+        TwelveHour = 12,
+        ElevenDays = 11,
+        NineDays = 9,
+        TenDays = 10,
+        twentyDays = 20,
+        twentyOneDays = 21,
+        LeapFebruarySmallDay = 29,
+        LeapFebruaryBigDay = 30,
+        InitialLunarTime = 1949
     let LastHexadecimalDigit = 0xf
     let HexadecimalFirstDigit = 0xf0000
     let ConvertToHexDigit = 0x8000
@@ -62,7 +75,7 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
 
     function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMonth, GregorianCalendarDay) {
         GregorianCalendarMonth -= 1;
-        let daySpan = (Date.UTC(GregorianCalendarYear, GregorianCalendarMonth, GregorianCalendarDay) - Date.UTC(InitialLunarTime, 0, 29)) / (24 * 60 * 60 * 1000) + 1;
+        let daySpan = (Date.UTC(GregorianCalendarYear, GregorianCalendarMonth, GregorianCalendarDay) - Date.UTC(InitialLunarTime, 0, LeapFebruarySmallDay)) / (Hour * Minutes2SecondsMultiple * Minutes2SecondsMultiple * Minutes) + 1;
         let OutputLunarYear, OutputLunarMonth, OutputLunarDay;
         for (let j = 0; j < LunarCalendar.length; j++) {
             daySpan -= lunarYearDays(LunarCalendar[j]);
@@ -99,16 +112,16 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
             OutputLunarMonth = lunarMonth[OutputLunarMonth - 1];
         }
         OutputLunarYear = getHeavenlyStemsAnd(OutputLunarYear) + getEarthlyBranches(OutputLunarYear);
-        if (OutputLunarDay < 11) {
-            OutputLunarDay = `${lunarDay[10]}${lunarDay[OutputLunarDay-1]}`
-        } else if (OutputLunarDay > 10 && OutputLunarDay < 20) {
-            OutputLunarDay = `${lunarDay[9]}${lunarDay[OutputLunarDay-11]}`
-        } else if (OutputLunarDay === 20) {
-            OutputLunarDay = `${lunarDay[1]}${lunarDay[9]}`
-        } else if (OutputLunarDay > 20 && OutputLunarDay < 30) {
-            OutputLunarDay = `${lunarDay[11]}${lunarDay[OutputLunarDay-21]}`
-        } else if (OutputLunarDay === 30) {
-            OutputLunarDay = `${lunarDay[2]}${lunarDay[9]}`
+        if (OutputLunarDay < ElevenDays) {
+            OutputLunarDay = `${lunarDay[TenDays]}${lunarDay[OutputLunarDay-1]}`
+        } else if (OutputLunarDay > TenDays && OutputLunarDay < twentyDays) {
+            OutputLunarDay = `${lunarDay[NineDays]}${lunarDay[OutputLunarDay-ElevenDays]}`
+        } else if (OutputLunarDay === twentyDays) {
+            OutputLunarDay = `${lunarDay[1]}${lunarDay[NineDays]}`
+        } else if (OutputLunarDay > twentyDays && OutputLunarDay < LeapFebruaryBigDay) {
+            OutputLunarDay = `${lunarDay[ElevenDays]}${lunarDay[OutputLunarDay-twentyOneDays]}`
+        } else if (OutputLunarDay === LeapFebruaryBigDay) {
+            OutputLunarDay = `${lunarDay[TwoDays]}${lunarDay[NineDays]}`
         }
         return {
             lunarYear: OutputLunarYear,
@@ -127,7 +140,7 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
 
     function leapMonthDays(OutputLunarYear) {
         if (hasLeapMonth(OutputLunarYear) > -1) {
-            return (OutputLunarYear & HexadecimalFirstDigit) ? 30 : 29
+            return (OutputLunarYear & HexadecimalFirstDigit) ? LeapFebruaryBigDay : LeapFebruarySmallDay
         } else {
             return 0
         }
@@ -136,7 +149,7 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
     function lunarYearDays(OutputLunarYear) {
         let totalDays = 0;
         for (let i = ConvertToHexDigit; i > ConvertToHex; i >>= 1) {
-            let monthDays = (OutputLunarYear & i) ? 30 : 29;
+            let monthDays = (OutputLunarYear & i) ? LeapFebruaryBigDay : LeapFebruarySmallDay;
             totalDays += monthDays;
         }
         if (hasLeapMonth(OutputLunarYear) > -1) {
@@ -149,7 +162,7 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
     function lunarYearMonths(OutputLunarYear) {
         let monthArr = [];
         for (let i = ConvertToHexDigit; i > ConvertToHex; i >>= 1) {
-            monthArr.push((OutputLunarYear & i) ? 30 : 29);
+            monthArr.push((OutputLunarYear & i) ? LeapFebruaryBigDay : LeapFebruarySmallDay);
         }
         if (hasLeapMonth(OutputLunarYear)) {
             monthArr.splice(hasLeapMonth(OutputLunarYear), 0, leapMonthDays(OutputLunarYear));
@@ -159,14 +172,14 @@ export function ConvertLunarCalendar(GregorianCalendarYear, GregorianCalendarMon
     }
 
     function getHeavenlyStemsAnd(OutputLunarYear) {
-        let HeavenlyStemsAndKey = (OutputLunarYear - 3) % 10;
-        if (HeavenlyStemsAndKey === 0) HeavenlyStemsAndKey = 10;
+        let HeavenlyStemsAndKey = (OutputLunarYear - ThreeDays) % TenDays;
+        if (HeavenlyStemsAndKey === 0) HeavenlyStemsAndKey = TenDays;
         return HeavenlyStemsAnd[HeavenlyStemsAndKey - 1]
     }
 
     function getEarthlyBranches(OutputLunarYear) {
-        let EarthlyBranchesKey = (OutputLunarYear - 3) % 12;
-        if (EarthlyBranchesKey === 0) EarthlyBranchesKey = 12;
+        let EarthlyBranchesKey = (OutputLunarYear - ThreeDays) % TwelveHour;
+        if (EarthlyBranchesKey === 0) EarthlyBranchesKey = TwelveHour;
         return EarthlyBranches[EarthlyBranchesKey - 1]
     }
 
