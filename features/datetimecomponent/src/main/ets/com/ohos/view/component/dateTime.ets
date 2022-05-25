@@ -17,7 +17,7 @@ import Log from '../../../../../../../../../common/src/main/ets/default/Log'
 import ViewModel from '../../vm/dateTimeViewModel'
 import Constants from '../../common/constants'
 import { ScreenLockStatus } from '../../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
-import { ConvertLunarCalendar } from '../../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
+import { ConvertLunarCalendar } from '../../../../../../../../../common/src/main/ets/default/LunarCalendar'
 import deviceInfo from '@ohos.deviceInfo';
 
 var deviceTypeInfo = deviceInfo.deviceType;
@@ -31,6 +31,7 @@ export default struct DateTime {
   @State year: string = ''
   @State month: string = ''
   @State day: string = ''
+  @State isPhone: boolean = false
 
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
@@ -44,6 +45,9 @@ export default struct DateTime {
     this.day =
     ConvertLunarCalendar(this.mViewModel.dateVal.year, this.mViewModel.dateVal.month, this.mViewModel.dateVal.day)
     .lunarDay
+    if (deviceTypeInfo == 'phone') {
+      this.isPhone = true
+    }
   }
 
   aboutToDisappear() {
