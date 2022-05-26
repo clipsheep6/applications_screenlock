@@ -31,7 +31,8 @@ export default struct SlideScreenlock {
   @StorageLink('batteryCharging') @Watch('onCharging') batteryCharging: boolean = false
   @Prop @Watch("onStatusChange") pageStatus: number
   @StorageLink('deviceStatus') @Watch('onDeviceStatusChange') deviceStatus: string = ""
-  private mHeightPx : number = 48
+  private mHeightPx: number = 48
+
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
     this.mViewModel.ViewModelInit()
@@ -60,24 +61,25 @@ export default struct SlideScreenlock {
         Column() {
           StatusBar()
         }
-        .height(this.mHeightPx + 'px' )
+        .height(this.mHeightPx + 'px')
         .onAreaChange((e, e2) => {
           Log.showDebug(TAG, `onAreaChange, e: ${JSON.stringify(e)} e2: ${JSON.stringify(e2)}`);
         })
-    }
+      }
 
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
         Column() {
         }
-        .height($r('app.float.status_bar_height'))
+        .height(0)
 
         Column() {
           LockIcon()
-        }.height(Constants.LOCKICON_AREA_WIDTH)
+        }.height(Constants.P_LOCKICON_AREA_WIDTH)
 
         Column() {
           DateTime({ isShowDate: true })
-        }.height(Constants.DATETIME_AREA_WIDTH)
+        }.height(Constants.P_DATETIME_AREA_WIDTH)
+        .margin({ top: $r("app.float.DateTime_margin_top"), bottom: $r("app.float.DateTime_margin_bottom") })
 
         Column() {
           NotificationListComponent()

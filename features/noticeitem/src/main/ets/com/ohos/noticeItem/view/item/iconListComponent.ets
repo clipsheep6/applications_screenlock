@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-import Constants, {NotificationLayout as Layout} from '../../common/constants';
+import Constants, { NotificationLayout as Layout } from '../../common/constants';
 import Log from '../../../../../../../../../../common/src/main/ets/default/Log';
 import SettingDialog from './settingDialog';
 import ConfirmDialog from './confirmDialog'
@@ -48,7 +48,7 @@ export default struct IconListComponent {
     }),
     autoCancel: false,
     offset: { dx: 0, dy: $r('app.float.setting_dialog_dy') },
-    customStyle:true
+    customStyle: true
   });
   private confirmDialogController: CustomDialogController = new CustomDialogController({
     builder: ConfirmDialog({
@@ -58,7 +58,7 @@ export default struct IconListComponent {
     }),
     autoCancel: false,
     offset: { dx: 0, dy: $r('app.float.confirm_dialog_dy') },
-    customStyle:true
+    customStyle: true
   });
   private iconConfigs: IconData[] = [
     {
