@@ -18,7 +18,7 @@ import Constants from '../../common/constants'
 import ViewModel from '../../vm/mixedPSDViewModel'
 import deviceInfo from '@ohos.deviceInfo';
 
-var deviceTypeInfo = deviceInfo.deviceType;
+const DEVICETYPE = deviceInfo.deviceType;
 const TAG = 'ScreenLock-MixedPSD'
 
 @Component
@@ -39,7 +39,7 @@ export default struct MixedPSD {
 
   build() {
     Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
-      if (deviceTypeInfo == 'phone') {
+      if (DEVICETYPE == 'phone') {
         Column() {
           Text(this.mViewModel.prompt)
             .fontSize($r('app.float.mixedpsd_prompt_fontsize'))

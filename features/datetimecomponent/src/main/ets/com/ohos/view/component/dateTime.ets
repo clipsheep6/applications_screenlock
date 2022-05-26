@@ -20,7 +20,7 @@ import { ScreenLockStatus } from '../../../../../../../../../common/src/main/ets
 import { ConvertLunarCalendar } from '../../../../../../../../../common/src/main/ets/default/LunarCalendar'
 import deviceInfo from '@ohos.deviceInfo';
 
-var deviceTypeInfo = deviceInfo.deviceType;
+const DEVICETYPE = deviceInfo.deviceType;
 const TAG = 'ScreenLock-DateTime'
 
 
@@ -45,7 +45,7 @@ export default struct DateTime {
     this.day =
     ConvertLunarCalendar(this.mViewModel.dateVal.year, this.mViewModel.dateVal.month, this.mViewModel.dateVal.day)
     .lunarDay
-    if (deviceTypeInfo == 'phone') {
+    if (DEVICETYPE == 'phone') {
       this.isPhone = true
     }
   }

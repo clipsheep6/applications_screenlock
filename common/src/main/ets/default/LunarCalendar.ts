@@ -123,7 +123,6 @@ export function ConvertLunarCalendar(gregorianCalendarYear, gregorianCalendarMon
         if (hasLeapMonth(outputLunarYear) > -1) {
             totalDays += leapMonthDays(outputLunarYear);
         }
-
         return totalDays
     }
 
@@ -135,7 +134,6 @@ export function ConvertLunarCalendar(gregorianCalendarYear, gregorianCalendarMon
         if (hasLeapMonth(outputLunarYear)) {
             monthArr.splice(hasLeapMonth(outputLunarYear), 0, leapMonthDays(outputLunarYear));
         }
-
         return monthArr
     }
 
