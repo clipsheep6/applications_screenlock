@@ -14,7 +14,7 @@
  */
 
 import Log from '../../../../../../../../../common/src/main/ets/default/Log'
-import {ScreenLockStatus} from '../../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
+import { ScreenLockStatus } from '../../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
 import ViewModel from '../../vm/lockIconViewModel'
 import Constants from '../../common/constants'
 
@@ -33,13 +33,14 @@ export default struct LockIcon {
   build() {
     Flex({ direction: FlexDirection.Row, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
       Image(this.mViewModel.iconPath)
-        .margin({ top: $r('app.float.lockicon_top_margin'), bottom: $r('app.float.lockicon_bottom_margin') })
+        .margin({ top: $r('app.float.lockicon_top_margin'), bottom: $r('app.float.lockicon_bottom_margin'), right: 4 })
         .objectFit(ImageFit.Contain)
         .width($r('app.float.lockicon_width'))
         .height($r('app.float.lockicon_height'))
         .fillColor($r('app.color.lock_ic_color'))
       Text(this.mViewModel.cutMessage).fontSize($r('app.float.lock_prompt_fontsize'))
         .fontColor($r('app.color.lock_prompt_color'))
+        .margin({ top: $r("app.float.lock_Text_top_margin") })
     }
     .width(Constants.FULL_CONTAINER_WIDTH)
     .gesture(GestureGroup(GestureMode.Exclusive, TapGesture({ count: 2 })
