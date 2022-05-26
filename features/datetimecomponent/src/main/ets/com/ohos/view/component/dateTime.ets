@@ -61,7 +61,7 @@ export default struct DateTime {
         .fontSize($r('app.float.time_fontsize'))
         .fontColor($r('app.color.date_time_color'))
         .margin({ top: $r('app.float.time_top_margin'), bottom: $r('app.float.time_bottom_margin') })
-        .fontWeight(FontWeight.Medium)
+        .fontWeight(FontWeight.Lighter)
         .fontFamily("Digit")
       if (this.isShowDate) {
         Row() {
