@@ -49,13 +49,5 @@ export function ReadConfigFile(fileName) {
     } finally {
         stream.closeSync();
     }
-    content = String.fromCharCode.apply(null, arr);
-    Log.showDebug(TAG, `readConfigFile content:` + JSON.stringify(content));
-  } catch (error) {
-    Log.showError(TAG, `readConfigFile error:` + JSON.stringify(error));
-    content = "";
-  } finally {
-    stream.closeSync();
-  }
-  return JSON.parse(content);
+    return JSON.parse(content);
 }
