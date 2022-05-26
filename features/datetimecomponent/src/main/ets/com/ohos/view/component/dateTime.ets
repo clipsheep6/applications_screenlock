@@ -74,7 +74,6 @@ export default struct DateTime {
               .fontSize($r('app.float.date_fontsize'))
               .fontColor($r('app.color.date_time_color'))
           }
-
           Text(this.mViewModel.weekVal).fontSize($r('app.float.date_fontsize'))
             .fontColor($r('app.color.date_time_color'))
         }.height($r('app.float.date_week_area_height'))
