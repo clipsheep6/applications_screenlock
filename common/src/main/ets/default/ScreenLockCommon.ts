@@ -28,7 +28,7 @@ export enum ScreenLockStatus {
 
 export function ReadConfigFile(fileName) {
   Log.showInfo(TAG, `readConfigFile fileName:${fileName}`);
-  let stream; 
+  let stream;
   let content : string = "";
   try {
     let stream = FileIo.createStreamSync(fileName, 'r');
