@@ -14,7 +14,7 @@
  */
 
 import Log from '../../../../../../../../../common/src/main/ets/default/Log';
-import Constants, {NotificationLayout as Layout} from '../common/constants';
+import Constants, { NotificationLayout as Layout } from '../common/constants';
 import NotificationItem from './item/notificationItem'
 import GroupNotificationItem from './item/groupItem'
 import ViewModel from '../viewmodel/ViewModel'
@@ -57,6 +57,6 @@ export default struct NotificationListComponent {
         }
       }, (list: any) => JSON.stringify(list.map((item) => item.hashcode)))
     }
-    .width('100%')
+    .width($r("app.float.notificationList_width"))
   }
 }
