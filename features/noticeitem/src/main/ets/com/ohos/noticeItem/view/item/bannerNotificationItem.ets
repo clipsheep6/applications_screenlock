@@ -26,7 +26,6 @@ import multiItem from './multiItem';
 import pictureItem from './pictureItem';
 import ActionComponent from './actionComponent';
 import DevicesDialog from './devicesDialog';
-import WantAgent from '@ohos.wantAgent';
 
 const TAG = 'NoticeItem-BannerNotificationItem'
 const INTERVAL = 5 * 1000
@@ -188,17 +187,15 @@ export default struct BannerNotificationItem {
       this.onBannerNoticeHide();
       return;
     }
-    let wantAgent = this.want?.want;
-    if (!!wantAgent) {
-      WantAgent.getWant(wantAgent).then((wantData) => {
-        this.nowWant = wantData
-        if (!wantData?.deviceId) {
-          this.devicesDialogController.open();
-        } else{
-          ViewModel.clickItem(this.want);
-        }
-        this.onBannerNoticeHide();
-      })
+    let want = this.want?.want;
+    if (!!want) {
+      this.nowWant = want
+      if (!want?.deviceId) {
+        this.devicesDialogController.open();
+      } else {
+        ViewModel.clickItem(this.want);
+      }
+      this.onBannerNoticeHide();
     }
   }
 
