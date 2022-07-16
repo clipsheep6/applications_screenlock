@@ -19,8 +19,7 @@ import CustomItem from './customItem';
 import Log from '../../../../../../../../../../common/src/main/ets/default/Log';
 import ViewModel from '../../viewmodel/ViewModel';
 import DevicesDialog from './devicesDialog';
-import WantAgent from '@ohos.wantAgent';
-import IconListComponent, {getIconListSize} from './iconListComponent';
+import IconListComponent, { getIconListSize } from './iconListComponent';
 import ScrollbarManager from '../../common/ScrollbarManager';
 
 const TAG = 'NoticeItem-NotificationItem';
@@ -105,17 +104,14 @@ struct FrontItem {
       ViewModel.clickItem(this.itemData);
       return;
     }
-    let wantAgent = this.itemData?.want;
-    if (!!wantAgent) {
-      WantAgent.getWant(wantAgent).then((want) => {
-        this.nowWant = want
-        Log.showDebug(TAG, `showDevicesDialog want: ${JSON.stringify(this.nowWant)}`)
-        if (!want?.deviceId) {
-          this.devicesDialogController.open()
-        } else {
-          ViewModel.clickItem(this.itemData);
-        }
-      })
+    let want = this.itemData?.want;
+    if (!!want) {
+      this.nowWant = want
+      if (!want?.deviceId) {
+        this.devicesDialogController.open()
+      } else {
+        ViewModel.clickItem(this.itemData);
+      }
     } else {
       ViewModel.clickItem(this.itemData);
     }
