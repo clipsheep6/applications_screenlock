@@ -24,10 +24,10 @@ export default class ShortcutViewModel {
         Log.showInfo(TAG, `onShortcutClick ${shortcutType}`)
         switch (shortcutType) {
             case Constants.CLICK_TYPE_SHUTDOWN:
-                power.shutdownDevice("shutdown_device")
+                power.shutdown("shutdown")
                 break;
             case Constants.CLICK_TYPE_REBOOT:
-                power.rebootDevice("reboot_device")
+                power.reboot("reboot")
                 break;
             default:
                 Log.showError(TAG, `${shortcutType} is not support`)
