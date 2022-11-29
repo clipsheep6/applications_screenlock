@@ -7,6 +7,20 @@
         "name": "default",
         "signingConfig": "default",
       }
+    ],
+    "signingConfigs": [
+      {
+        "name": "default",
+        "material": {
+          "storePassword": "00000016BEEE6B44CD9A07F2C40828DE2FC32055A5676F47C23F6A3D7C9C674504EAD2F7F68F",
+          "certpath": "D:/product/developtools_hapsigner/dist/OpenHarmonyApplication.cer",
+          "keyAlias": "OpenHarmony Application Release",
+          "keyPassword": "000000167E9E31ADF8C41035B743CCFB8DC72E6E9D9A6AC87FFCC9C941E7E4654397AD929CCB",
+          "profile": "D:/product/applications_screenlock1/signature/screenlock.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "D:/product/developtools_hapsigner/dist/OpenHarmony.p12"
+        }
+      }
     ]
   },
   "modules": [
