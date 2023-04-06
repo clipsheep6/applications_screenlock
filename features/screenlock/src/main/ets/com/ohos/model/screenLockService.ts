@@ -21,6 +21,7 @@ import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/defa
 import createOrGet from '../../../../../../../../common/src/main/ets/default/SingleInstanceHelper'
 import Router from '@system.router';
 import commonEvent from '@ohos.commonEvent';
+import systemParameter from '@ohos.systemparameter';
 import hiDebug from '@ohos.hidebug';
 import { CommonEventPublishData } from 'commonEvent/commonEventPublishData';
 import {Callback} from 'basic';
@@ -189,6 +190,9 @@ export class ScreenLockService {
                 Log.showInfo(TAG, `had locked, no need to publish lock_screen`);
             } else {
                 this.notifyLockScreenResult(LockResult.Success)
+                setTimeout(() => {
+                    systemParameter.set('bootevent.lockscreen.ready','true')
+                }, 1000);
                 this.currentLockStatus = ScreenLockStatus.Locking;
             }
         });
