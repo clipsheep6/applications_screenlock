@@ -45,7 +45,6 @@ export default struct SignalIcon {
     Log.showInfo(TAG, 'aboutToAppear');
     this.mStatusBarGroupComponentData = StatusBarVM.getStatusBarGroupComponentData(this.mGroupId)
     if (!this.signalObserved) {
-      mSignalModel.initSignalModel();
       this.signalObserved = true;
     }
   }
