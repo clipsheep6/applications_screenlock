@@ -34,12 +34,10 @@ export class SignalModel {
     mLevelLink = AppStorage.SetAndLink("cellularLevel_screenLock", Constants.CELLULAR_NO_SIM_CARD);
     mTypeLink = AppStorage.SetAndLink("cellularType_screenLock", Constants.RADIO_TECHNOLOGY_UNKNOWN);
     mStateLink = AppStorage.SetAndLink("networkState_screenLock", Constants.NET_NULL);
-    this.addSubscriberListener();
   }
 
   initSignalModel() {
     Log.showInfo(TAG, 'initSignalModel');
-    this.checkCellularStatus();
   }
 
   /**
