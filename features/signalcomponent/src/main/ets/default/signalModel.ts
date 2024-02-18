@@ -37,8 +37,7 @@ export class SignalModel {
   }
 
   initSignalModel() {
-    Log.showInfo(TAG, 'initSignalModel');
-    Log.showInfo(TAG, 'Used for testing printing 222222');
+    Log.showInfo(TAG, 'initSignalModel --- Used for testing printing 222222');
   }
 
   /**
@@ -79,6 +78,9 @@ export class SignalModel {
      */
   checkCellularStatus() {
     let slotId = 0;
+    if(!Sim){
+        return;
+    }
     Sim.hasSimCard(slotId, (err, value) => {
       if (value === true) {
         Radio.getNetworkState((err, value) => {
