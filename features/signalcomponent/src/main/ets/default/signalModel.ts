@@ -37,7 +37,6 @@ export class SignalModel {
   }
 
   initSignalModel() {
-    Log.showInfo(TAG, 'initSignalModel --- Used for testing printing 222222');
   }
 
   /**
