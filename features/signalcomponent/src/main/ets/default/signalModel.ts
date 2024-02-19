@@ -37,6 +37,7 @@ export class SignalModel {
   }
 
   initSignalModel() {
+      Log.showInfo(TAG, 'initSignalModel---screenLock');
   }
 
   /**
