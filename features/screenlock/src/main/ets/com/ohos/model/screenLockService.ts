@@ -247,29 +247,31 @@ export class ScreenLockService {
     }
 
     unlockScreen() {
-        Log.showInfo(TAG, `unlockScreen`);
-        this.accountModel.isActivateAccount((isActivate: boolean) => {
-            if (!isActivate) {
-                return
-            }
-            mUnLockBeginAnimation(() => {
-                let status = AppStorage.Link('lockStatus')
-                Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
-                if (status?.get() == ScreenLockStatus.Unlock) {
-                    Log.showInfo(TAG, `unlock the screen`);
-                    this.unlocking();
-                } else {
-                    let slidestatus = AppStorage.Get('slidestatus')
-                    if(!slidestatus){
-                        AppStorage.SetOrCreate('slidestatus', true);
-                        const UIContext: UIContext = AppStorage.get('UIContext');
-                        Log.showInfo(TAG, `this.UIContext is ${UIContext}`)
-                        Log.showInfo(TAG, `unlockScreen Router.push`);
-                        UIContext.getRouter().pushUrl({ url: mRouterPath })
-                    }
+        setTimeout(() => {
+            Log.showInfo(TAG, `unlockScreen`);
+            this.accountModel.isActivateAccount((isActivate: boolean) => {
+                if (!isActivate) {
+                    return
                 }
+                mUnLockBeginAnimation(() => {
+                    let status = AppStorage.Link('lockStatus')
+                    Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
+                    if (status?.get() == ScreenLockStatus.Unlock) {
+                        Log.showInfo(TAG, `unlock the screen`);
+                        this.unlocking();
+                    } else {
+                        let slidestatus = AppStorage.Get('slidestatus')
+                        if(!slidestatus){
+                            AppStorage.SetOrCreate('slidestatus', true);
+                            const UIContext: UIContext = AppStorage.get('UIContext');
+                            Log.showInfo(TAG, `this.UIContext is ${UIContext}`)
+                            Log.showInfo(TAG, `unlockScreen Router.push`);
+                            UIContext.getRouter().pushUrl({ url: mRouterPath })
+                        }
+                    }
+                })
             })
-        })
+        }, 2000);
     }
 
     unlocking() {
