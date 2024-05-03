@@ -247,6 +247,7 @@ export class ScreenLockService {
     }
 
     unlockScreen() {
+        Log.showInfo(TAG, `上划后锁屏开始延迟三秒在解锁`)
         setTimeout(() => {
             Log.showInfo(TAG, `unlockScreen`);
             this.accountModel.isActivateAccount((isActivate: boolean) => {
@@ -271,7 +272,7 @@ export class ScreenLockService {
                     }
                 })
             })
-        }, 2000);
+        }, 3000);
     }
 
     unlocking() {
