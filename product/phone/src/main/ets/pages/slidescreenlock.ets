@@ -135,6 +135,9 @@ export default struct SlideScreenlock {
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event) => {
+        if (this.pageStatus !== 1 ) {
+          return;
+        }
         this.mViewModel.touchEvent(event)
       })
     }
