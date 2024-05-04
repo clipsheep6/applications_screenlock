@@ -95,6 +95,7 @@ export class ScreenLockService {
     currentLockStatus : ScreenLockStatus;
     memoryMonitor: number = -1;
     isLoading: boolean = true;
+    isTimerRunning: boolean = false;
     init() {
         Log.showDebug(TAG, 'init');
         this.startMonitorMemory();
@@ -249,33 +250,38 @@ export class ScreenLockService {
 
     unlockScreen() {
         Log.showInfo(TAG, `unlockScreen`);
-        if (this.isLoading){
-            setTimeout(()=>{
-                this.accountModel.isActivateAccount((isActivate: boolean) => {
-                    if (!isActivate) {
-                        return
-                    }
-                    mUnLockBeginAnimation(() => {
-                        let status = AppStorage.Link('lockStatus')
-                        Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
-                        if (status?.get() == ScreenLockStatus.Unlock) {
-                            Log.showInfo(TAG, `unlock the screen`);
-                            Log.showInfo(TAG, `上划后锁屏开始延迟两秒在解锁`);
-                            this.unlocking();
-                        } else {
-                            let slidestatus = AppStorage.Get('slidestatus')
-                            if(!slidestatus){
-                                AppStorage.SetOrCreate('slidestatus', true);
-                                const UIContext: UIContext = AppStorage.get('UIContext');
-                                Log.showInfo(TAG, `this.UIContext is ${UIContext}`)
-                                Log.showInfo(TAG, `unlockScreen Router.push`);
-                                UIContext.getRouter().pushUrl({ url: mRouterPath })
-                            }
+        if (this.isLoading ){
+            if (!this.isTimerRunning){
+                this.isTimerRunning = true;
+                setTimeout(()=>{
+                    this.accountModel.isActivateAccount((isActivate: boolean) => {
+                        if (!isActivate) {
+                            return
                         }
+                        mUnLockBeginAnimation(() => {
+                            let status = AppStorage.Link('lockStatus')
+                            Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
+                            if (status?.get() == ScreenLockStatus.Unlock) {
+                                Log.showInfo(TAG, `unlock the screen`);
+                                Log.showInfo(TAG, `上划后锁屏开始延迟两秒在解锁`);
+                                this.unlocking();
+                            } else {
+                                let slidestatus = AppStorage.Get('slidestatus')
+                                if(!slidestatus){
+                                    AppStorage.SetOrCreate('slidestatus', true);
+                                    const UIContext: UIContext = AppStorage.get('UIContext');
+                                    Log.showInfo(TAG, `this.UIContext is ${UIContext}`)
+                                    Log.showInfo(TAG, `unlockScreen Router.push`);
+                                    UIContext.getRouter().pushUrl({ url: mRouterPath })
+                                }
+                            }
+                        })
                     })
-                })
-            }, 2000);
-            this.isLoading = false;
+                }, 2000);
+                this.isLoading = false;
+            } else {
+                return
+            }
         } else {
             this.accountModel.isActivateAccount((isActivate: boolean) => {
                 if (!isActivate) {
@@ -286,7 +292,6 @@ export class ScreenLockService {
                     Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
                     if (status?.get() == ScreenLockStatus.Unlock) {
                         Log.showInfo(TAG, `unlock the screen`);
-                        Log.showInfo(TAG, `上划后锁屏开始延迟两秒在解锁`);
                         this.unlocking();
                     } else {
                         let slidestatus = AppStorage.Get('slidestatus')
