@@ -97,48 +97,48 @@ export class ScreenLockService {
     isLoading: boolean = true;
     isTimerRunning: boolean = false;
     init() {
-        Log.showDebug(TAG, 'init');
+        Log.showError(TAG, 'init');
         this.startMonitorMemory();
         this.accountModel.modelInit();
         this.monitorEvents();
         this.accountModel.updateAllUsers()
         this.checkPinAuthProperty(() => {
-            Log.showInfo(TAG, `checkPinAuthProperty back`)
+            Log.showError(TAG, `checkPinAuthProperty back`)
             this.authUserByFace()
         })
     }
 
     monitorEvents() {
-        Log.showDebug(TAG, 'registered events start');
+        Log.showError(TAG, 'registered events start');
         this.screenLockModel.eventListener((typeName: String) => {
             switch (typeName) {
             // System ready on device boot
                 case EVENT_SYSTEM_READY:
-                    Log.showInfo(TAG, `EVENT_SYSTEM_READY event`);
+                    Log.showError(TAG, `EVENT_SYSTEM_READY event`);
                     this.lockScreen();
                     break;
             //Bright screen
                 case EVENT_END_SCREEN_ON:
-                    Log.showInfo(TAG, `EVENT_END_SCREEN_ON event`);
+                    Log.showError(TAG, `EVENT_END_SCREEN_ON event`);
                     this.authUserByFace()
                     AppStorage.SetOrCreate('deviceStatus', EVENT_END_SCREEN_ON);
                     break;
             //The device is going to sleep
                 case EVENT_BEGIN_SLEEP:
                     Trace.start(Trace.CORE_METHOD_SLEEP_TO_LOCK_SCREEN);
-                    Log.showInfo(TAG, `EVENT_BEGIN_SLEEP event`);
+                    Log.showError(TAG, `EVENT_BEGIN_SLEEP event`);
                     this.lockScreen();
                     this.accountModel.updateAllUsers()
                     AppStorage.SetOrCreate('deviceStatus', EVENT_BEGIN_SLEEP);
                     break;
             //unlock request was received
                 case EVENT_UNLOCK_SCREEN:
-                    Log.showInfo(TAG, `EVENT_UNLOCK_SCREEN event`);
+                    Log.showError(TAG, `EVENT_UNLOCK_SCREEN event`);
                     this.unlockScreen();
                     break;
             //lock request was received
                 case EVENT_LOCK_SCREEN:
-                    Log.showInfo(TAG, `EVENT_LOCK_SCREEN event`);
+                    Log.showError(TAG, `EVENT_LOCK_SCREEN event`);
                     this.lockScreen();
                     break;
                 case SERVICE_RESTART:
@@ -153,44 +153,44 @@ export class ScreenLockService {
         })
 
         this.accountModel.eventListener(ACTIVATING_TYPE, ACTIVATING_EVENT, () => {
-            Log.showInfo(TAG, `ACTIVATING_TYPE event`);
+            Log.showError(TAG, `ACTIVATING_TYPE event`);
             this.lockScreen();
         })
 
         this.accountModel.eventListener(ACTIVATE_TYPE, ACTIVATE_EVENT, () => {
-            Log.showInfo(TAG, `ACTIVATE_TYPE event`);
+            Log.showError(TAG, `ACTIVATE_TYPE event`);
             this.accountModel.updateAllUsers()
             this.checkPinAuthProperty(() => {
-                Log.showInfo(TAG, `checkPinAuthProperty back`)
+                Log.showError(TAG, `checkPinAuthProperty back`)
                 this.authUserByFace()
             })
         })
 
         this.accountModel.commonEventListener(()=>{
-            Log.showInfo(TAG, `commonEventListener event`);
+            Log.showError(TAG, `commonEventListener event`);
             this.accountModel.updateAllUsers();
         })
 
-        Log.showDebug(TAG, 'registered events end');
+        Log.showError(TAG, 'registered events end');
     }
 
     lockScreen() {
         Trace.start(Trace.CORE_METHOD_SHOW_LOCK_SCREEN);
-        Log.showDebug(TAG, `lockScreen`);
+        Log.showError(TAG, `lockScreen`);
         let length = parseInt(Router.getLength())
-        Log.showDebug(TAG, `Router.getLength: ${length}`)
+        Log.showError(TAG, `Router.getLength: ${length}`)
         for (let index = 1; index < length; index++) {
-            Log.showInfo(TAG, `back to index`);
+            Log.showError(TAG, `back to index`);
             Router.back();
         }
         //lock the screen
         this.screenLockModel.showScreenLockWindow(() => {
-            Log.showInfo(TAG, `showScreenLockWindow finish`);
+            Log.showError(TAG, `showScreenLockWindow finish`);
             this.checkPinAuthProperty(() => {
             });
-            Log.showInfo(TAG, `screenlock status:${this.currentLockStatus}, userId : ${this.accountModel.getCurrentUserId()}`);
+            Log.showError(TAG, `screenlock status:${this.currentLockStatus}, userId : ${this.accountModel.getCurrentUserId()}`);
             if (this.currentLockStatus == ScreenLockStatus.Locking) {
-                Log.showInfo(TAG, `had locked, no need to publish lock_screen`);
+                Log.showError(TAG, `had locked, no need to publish lock_screen`);
             } else {
                 this.notifyLockScreenResult(LockResult.Success)
                 systemParameter.set('bootevent.lockscreen.ready','true')
@@ -200,9 +200,9 @@ export class ScreenLockService {
     }
 
     private checkPinAuthProperty(callback: Callback<void>) {
-        Log.showDebug(TAG, "checkPinAuthProperty")
+        Log.showError(TAG, "checkPinAuthProperty")
         this.accountModel.getAuthProperty(AuthType.PIN, (properties) => {
-            Log.showInfo(TAG, `checkPinAuthProperty: AUTH_SUB_TYPE:${properties.authSubType}`);
+            Log.showError(TAG, `checkPinAuthProperty: AUTH_SUB_TYPE:${properties.authSubType}`);
             switch (properties.authSubType) {
                 case AuthSubType.PIN_SIX:
                     AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
@@ -233,9 +233,9 @@ export class ScreenLockService {
     }
 
     private checkFaceAuthProperty(callback: Callback<void>) {
-        Log.showDebug(TAG, "checkFaceAuthProperty")
+        Log.showError(TAG, "checkFaceAuthProperty")
         this.accountModel.getAuthProperty(AuthType.FACE, (properties) => {
-            Log.showInfo(TAG, `checkFaceAuthProperty：AUTH_SUB_TYPE:${properties.authSubType}`);
+            Log.showError(TAG, `checkFaceAuthProperty：AUTH_SUB_TYPE:${properties.authSubType}`);
             switch (properties.authSubType) {
                 case AuthSubType.FACE_2D:
                 case AuthSubType.FACE_3D:
@@ -249,7 +249,7 @@ export class ScreenLockService {
     }
 
     unlockScreen() {
-        Log.showInfo(TAG, `unlockScreen`);
+        Log.showError(TAG, `unlockScreen`);
         if (this.isLoading ){
             if (!this.isTimerRunning){
                 this.isTimerRunning = true;
@@ -260,18 +260,18 @@ export class ScreenLockService {
                         }
                         mUnLockBeginAnimation(() => {
                             let status = AppStorage.Link('lockStatus')
-                            Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
+                            Log.showError(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
                             if (status?.get() == ScreenLockStatus.Unlock) {
-                                Log.showInfo(TAG, `unlock the screen`);
-                                Log.showInfo(TAG, `上划后锁屏开始延迟两秒在解锁`);
+                                Log.showError(TAG, `unlock the screen`);
+                                Log.showError(TAG, `上划后锁屏开始延迟两秒在解锁`);
                                 this.unlocking();
                             } else {
                                 let slidestatus = AppStorage.Get('slidestatus')
                                 if(!slidestatus){
                                     AppStorage.SetOrCreate('slidestatus', true);
                                     const UIContext: UIContext = AppStorage.get('UIContext');
-                                    Log.showInfo(TAG, `this.UIContext is ${UIContext}`)
-                                    Log.showInfo(TAG, `unlockScreen Router.push`);
+                                    Log.showError(TAG, `this.UIContext is ${UIContext}`)
+                                    Log.showError(TAG, `unlockScreen Router.push`);
                                     UIContext.getRouter().pushUrl({ url: mRouterPath })
                                 }
                             }
@@ -289,17 +289,17 @@ export class ScreenLockService {
                 }
                 mUnLockBeginAnimation(() => {
                     let status = AppStorage.Link('lockStatus')
-                    Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
+                    Log.showError(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
                     if (status?.get() == ScreenLockStatus.Unlock) {
-                        Log.showInfo(TAG, `unlock the screen`);
+                        Log.showError(TAG, `unlock the screen`);
                         this.unlocking();
                     } else {
                         let slidestatus = AppStorage.Get('slidestatus')
                         if(!slidestatus){
                             AppStorage.SetOrCreate('slidestatus', true);
                             const UIContext: UIContext = AppStorage.get('UIContext');
-                            Log.showInfo(TAG, `this.UIContext is ${UIContext}`)
-                            Log.showInfo(TAG, `unlockScreen Router.push`);
+                            Log.showError(TAG, `this.UIContext is ${UIContext}`)
+                            Log.showError(TAG, `unlockScreen Router.push`);
                             UIContext.getRouter().pushUrl({ url: mRouterPath })
                         }
                     }
@@ -309,43 +309,43 @@ export class ScreenLockService {
     }
 
     unlocking() {
-        Log.showInfo(TAG, `unlocking`);
+        Log.showError(TAG, `unlocking`);
         //set the lockStatus to 'Unlock'
         AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Unlock);
         this.currentLockStatus = ScreenLockStatus.Unlock;
         AppStorage.SetOrCreate('slidestatus', false);
         //unlock the screen
         this.screenLockModel.hiddenScreenLockWindow(() => {
-            Log.showInfo(TAG, `hiddenScreenLockWindow finish`);
+            Log.showError(TAG, `hiddenScreenLockWindow finish`);
             //notify the base service that the unlock is completed
             this.notifyUnlockScreenResult(UnlockResult.Success);
         });
     }
 
     notifyUnlockScreenResult(result: UnlockResult) {
-        Log.showInfo(TAG, `notifyUnlockScreenResult`);
+        Log.showError(TAG, `notifyUnlockScreenResult`);
         this.screenLockModel.sendScreenLockEvent(UNLOCK_SCREEN_RESULT, result, (error, data) => {
-            Log.showInfo(TAG, `notifyUnlockScreenResult: error:${JSON.stringify(error)} data:${JSON.stringify(data)}`);
+            Log.showError(TAG, `notifyUnlockScreenResult: error:${JSON.stringify(error)} data:${JSON.stringify(data)}`);
         });
     }
 
     notifyLockScreenResult(result: LockResult) {
-        Log.showInfo(TAG, `notifyLockScreenResult`);
+        Log.showError(TAG, `notifyLockScreenResult`);
         this.screenLockModel.sendScreenLockEvent(LOCK_SCREEN_RESULT, result, (error, data) => {
-            Log.showInfo(TAG, `notifyLockScreenResult: error:${JSON.stringify(error)} data:${JSON.stringify(data)}`);
+            Log.showError(TAG, `notifyLockScreenResult: error:${JSON.stringify(error)} data:${JSON.stringify(data)}`);
         });
     }
 
     notifyDrawDone() {
-        Log.showInfo(TAG, `notifyDrawDone`);
+        Log.showError(TAG, `notifyDrawDone`);
         //notify the base service that the screen is loaded
         this.screenLockModel.sendScreenLockEvent(SCREENLOCK_DRAW_DONE, 0, (error, result) => {
-            Log.showInfo(TAG, `notifyDrawDone:  error:${JSON.stringify(error)} result:${JSON.stringify(result)}`);
+            Log.showError(TAG, `notifyDrawDone:  error:${JSON.stringify(error)} result:${JSON.stringify(result)}`);
         });
     }
 
     authUser(authSubType: AuthSubType, passwordData: number[] | string, callback): void {
-        Log.showInfo(TAG, `authUser authSubType:${authSubType}`);
+        Log.showError(TAG, `authUser authSubType:${authSubType}`);
         let password: string = '';
         if (typeof passwordData == 'string') {
             password = passwordData;
@@ -353,9 +353,9 @@ export class ScreenLockService {
             password = passwordData.join('');
         }
         this.accountModel.registerPWDInputer(password).then(() => {
-            Log.showInfo(TAG, `registerPWDInputer success`);
+            Log.showError(TAG, `registerPWDInputer success`);
             this.accountModel.authUser(CHALLENGE_INT, AuthType.PIN, AuthTurstLevel.ATL4, (result, extraInfo) => {
-                Log.showDebug(TAG, `authUser  callback:${result} extraInfo:${JSON.stringify(extraInfo)}`);
+                Log.showError(TAG, `authUser  callback:${result} extraInfo:${JSON.stringify(extraInfo)}`);
                 this.accountModel.unregisterInputer();
                 callback(result, extraInfo);
             })
@@ -366,12 +366,12 @@ export class ScreenLockService {
 
     authUserByFace() {
         if (!mWillRecognizeFace) {
-            Log.showInfo(TAG, "Recognize face is not support")
+            Log.showError(TAG, "Recognize face is not support")
             return
         }
-        Log.showInfo(TAG, `authUserByFace`);
+        Log.showError(TAG, `authUserByFace`);
         this.accountModel.authUser(CHALLENGE_INT, AuthType.FACE, AuthTurstLevel.ATL1, (result, extraInfo) => {
-            Log.showDebug(TAG, `authUserByFace callback:${result} extraInfo:${JSON.stringify(extraInfo)}`);
+            Log.showError(TAG, `authUserByFace callback:${result} extraInfo:${JSON.stringify(extraInfo)}`);
             if (result == 0) {
                 AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Unlock);
                 this.unlockScreen()
@@ -387,7 +387,7 @@ export class ScreenLockService {
     }
 
     goBack() {
-        Log.showInfo(TAG, `screen lock service goBack`);
+        Log.showError(TAG, `screen lock service goBack`);
         Router.back();
         this.notifyUnlockScreenResult(UnlockResult.Cancel)
         this.accountModel.unregisterInputer();
@@ -410,14 +410,14 @@ export class ScreenLockService {
     }
 
     getAuthProperty(authType, callback) {
-        Log.showInfo(TAG, `getAuthProperty param: authType ${authType}`);
+        Log.showError(TAG, `getAuthProperty param: authType ${authType}`);
         this.accountModel.getAuthProperty(authType, (properties) => {
             callback(properties);
         })
     }
 
     private publishByUser(eventName: string, activeUserId: number) {
-        Log.showDebug(TAG, `publishByUser event name: ${eventName}, userId: ${activeUserId}`)
+        Log.showError(TAG, `publishByUser event name: ${eventName}, userId: ${activeUserId}`)
         let publishData : CommonEventPublishData = {
             parameters : {
                 userId : activeUserId
@@ -427,7 +427,7 @@ export class ScreenLockService {
             if (error.code) {
                 Log.showError(TAG, 'Operation failed. Cause: ' + JSON.stringify(error));
             } else {
-                Log.showDebug(TAG, 'publish common event success. ' + JSON.stringify(value));
+                Log.showError(TAG, 'publish common event success. ' + JSON.stringify(value));
             }
         });
     }
@@ -435,7 +435,7 @@ export class ScreenLockService {
     private startMonitorMemory() {
         this.memoryMonitor = setInterval(() => {
             const pss = hiDebug.getPss();
-            Log.showInfo(TAG, `app pss info is: ${pss}`);
+            Log.showError(TAG, `app pss info is: ${pss}`);
             if (pss > MEMORY_MONITOR_LIMIT_KB) {
                 WriteFaultLog({FAULT_ID: FaultID.MEMORY, MSG: "pss over limit"})
             }
