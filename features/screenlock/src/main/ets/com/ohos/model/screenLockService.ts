@@ -250,10 +250,12 @@ export class ScreenLockService {
 
     unlockScreen() {
         Log.showError(TAG, `unlockScreen`);
+        Log.showError(TAG, `两个变量 isLoading：${this.isLoading} isTimerRunning：${this.isTimerRunning}`);
         if (this.isLoading ){
             if (!this.isTimerRunning){
                 this.isTimerRunning = true;
                 setTimeout(()=>{
+                    Log.showError(TAG, `定时器开始执行`);
                     this.accountModel.isActivateAccount((isActivate: boolean) => {
                         if (!isActivate) {
                             return
@@ -277,8 +279,9 @@ export class ScreenLockService {
                             }
                         })
                     })
+                    this.isLoading = false;
+                    Log.showError(TAG, `定时器执行完成`);
                 }, 2000);
-                this.isLoading = false;
             } else {
                 return
             }
