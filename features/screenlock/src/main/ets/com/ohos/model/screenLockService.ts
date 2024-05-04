@@ -94,6 +94,7 @@ export class ScreenLockService {
     screenLockModel: ScreenLockModel = new ScreenLockModel()
     currentLockStatus : ScreenLockStatus;
     memoryMonitor: number = -1;
+    isLoading: boolean = true;
     init() {
         Log.showDebug(TAG, 'init');
         this.startMonitorMemory();
@@ -247,7 +248,6 @@ export class ScreenLockService {
     }
 
     unlockScreen() {
-        Log.showInfo(TAG, `上划后锁屏开始延迟三秒在解锁`);
         Log.showInfo(TAG, `unlockScreen`);
         this.accountModel.isActivateAccount((isActivate: boolean) => {
             if (!isActivate) {
@@ -258,9 +258,16 @@ export class ScreenLockService {
                 Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
                 if (status?.get() == ScreenLockStatus.Unlock) {
                     Log.showInfo(TAG, `unlock the screen`);
-                    setTimeout(() => {
-                        this.unlocking();
-                    }, 2000);
+                    if (this.isLoading){
+                        Log.showInfo(TAG, `上划后锁屏开始延迟两秒在解锁`);
+                        setTimeout(() => {
+                            this.unlocking();
+                        }, 2000);
+                        this.isLoading = false;
+                    } else {
+                        this.unlocking()
+                    }
+
                 } else {
                     let slidestatus = AppStorage.Get('slidestatus')
                     if(!slidestatus){
