@@ -135,10 +135,11 @@ export default struct SlideScreenlock {
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event) => {
-        if (this.pageStatus !== 1 ) {
-          return;
+        Log.showInfo(TAG, `打印这个状态：${this.pageStatus}`)
+        if (this.pageStatus == 1 ) {
+          Log.showInfo(TAG, `判断内 打印这个状态：${this.pageStatus}`)
+          this.mViewModel.touchEvent(event)
         }
-        this.mViewModel.touchEvent(event)
       })
     }
   }
