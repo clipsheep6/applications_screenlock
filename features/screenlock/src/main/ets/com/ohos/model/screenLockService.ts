@@ -281,7 +281,7 @@ export class ScreenLockService {
                     })
                     this.isLoading = false;
                     Log.showError(TAG, `定时器执行完成`);
-                }, 4gitg000);
+                }, 4000);
             } else {
                 return
             }
