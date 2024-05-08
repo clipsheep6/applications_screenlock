@@ -23,6 +23,8 @@ import NotificationListComponent from '../../../../../../features/noticeitem/src
 import StatusBar from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/statusBar'
 import Constants from '../common/constants'
 import ViewModel from '../vm/slideScreenLockViewModel'
+import commonEventManager from '@ohos.commonEventManager';
+import Base from '@ohos.base';
 
 const TAG = 'ScreenLock-SlideScreenlock'
 
@@ -51,7 +53,6 @@ export default struct SlideScreenlock {
   onPageHide() {
     Log.showInfo(TAG, `onPageHide`)
   }
-
   unlockScreen() {
     Log.showInfo(TAG, `unlockScreen in, isClickFrontItem${this.isClickFrontItem}`)
     if (this.isClickFrontItem) {

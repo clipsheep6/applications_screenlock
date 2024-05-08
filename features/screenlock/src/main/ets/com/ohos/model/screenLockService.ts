@@ -26,6 +26,8 @@ import systemParameter from '@ohos.systemparameter';
 import { CommonEventPublishData } from 'commonEvent/commonEventPublishData';
 import {Callback} from '@ohos.base';
 import { UIContext } from '@ohos.arkui.UIContext';
+import commonEventManager from '@ohos.commonEventManager';
+import Base from '@ohos.base';
 
 const TAG = 'ScreenLock-ScreenLockService';
 const URI_DIGITALPASSWORD = 'pages/digitalPassword'
@@ -248,67 +250,77 @@ export class ScreenLockService {
         })
     }
 
+    waitToLauncher(){
+        this.accountModel.isActivateAccount((isActivate: boolean) => {
+            if (!isActivate) {
+                return
+            }
+            mUnLockBeginAnimation(() => {
+                let status = AppStorage.Link('lockStatus')
+                Log.showError(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
+                if (status?.get() == ScreenLockStatus.Unlock) {
+                    Log.showError(TAG, `unlock the screen`);
+                    // this.unlocking();
+                    this.launcherLoad();
+                } else {
+                    let slidestatus = AppStorage.Get('slidestatus')
+                    if(!slidestatus){
+                        AppStorage.SetOrCreate('slidestatus', true);
+                        const UIContext: UIContext = AppStorage.get('UIContext');
+                        Log.showError(TAG, `this.UIContext is ${UIContext}`)
+                        Log.showError(TAG, `unlockScreen Router.push`);
+                        UIContext.getRouter().pushUrl({ url: mRouterPath })
+                    }
+                }
+            })
+        })
+    }
+
+
     unlockScreen() {
         Log.showError(TAG, `unlockScreen`);
         Log.showError(TAG, `两个变量 isLoading：${this.isLoading} isTimerRunning：${this.isTimerRunning}`);
         if (this.isLoading ){
             if (!this.isTimerRunning){
                 this.isTimerRunning = true;
-                setTimeout(()=>{
-                    Log.showError(TAG, `定时器开始执行`);
-                    this.accountModel.isActivateAccount((isActivate: boolean) => {
-                        if (!isActivate) {
-                            return
-                        }
-                        mUnLockBeginAnimation(() => {
-                            let status = AppStorage.Link('lockStatus')
-                            Log.showError(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
-                            if (status?.get() == ScreenLockStatus.Unlock) {
-                                Log.showError(TAG, `unlock the screen`);
-                                Log.showError(TAG, `上划后锁屏开始延迟两秒在解锁`);
-                                this.unlocking();
-                            } else {
-                                let slidestatus = AppStorage.Get('slidestatus')
-                                if(!slidestatus){
-                                    AppStorage.SetOrCreate('slidestatus', true);
-                                    const UIContext: UIContext = AppStorage.get('UIContext');
-                                    Log.showError(TAG, `this.UIContext is ${UIContext}`)
-                                    Log.showError(TAG, `unlockScreen Router.push`);
-                                    UIContext.getRouter().pushUrl({ url: mRouterPath })
-                                }
-                            }
-                        })
-                    })
-                    this.isLoading = false;
-                    Log.showError(TAG, `定时器执行完成`);
-                }, 5000);
+                this.waitToLauncher();
+                this.isLoading = false;
             } else {
                 return
             }
         } else {
-            this.accountModel.isActivateAccount((isActivate: boolean) => {
-                if (!isActivate) {
-                    return
-                }
-                mUnLockBeginAnimation(() => {
-                    let status = AppStorage.Link('lockStatus')
-                    Log.showError(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
-                    if (status?.get() == ScreenLockStatus.Unlock) {
-                        Log.showError(TAG, `unlock the screen`);
-                        this.unlocking();
-                    } else {
-                        let slidestatus = AppStorage.Get('slidestatus')
-                        if(!slidestatus){
-                            AppStorage.SetOrCreate('slidestatus', true);
-                            const UIContext: UIContext = AppStorage.get('UIContext');
-                            Log.showError(TAG, `this.UIContext is ${UIContext}`)
-                            Log.showError(TAG, `unlockScreen Router.push`);
-                            UIContext.getRouter().pushUrl({ url: mRouterPath })
-                        }
-                    }
-                })
-            })
+            this.waitToLauncher();
         }
+    }
+
+    private launcherLoad():void {
+        // 用于保存创建成功的订阅者对象，后续使用其完成订阅及退订的动作
+        let subscriber: commonEventManager.CommonEventSubscriber | null = null;
+        // 订阅者信息，其中的event字段需要替换为实际的事件名称。
+        let subscribeInfo: commonEventManager.CommonEventSubscribeInfo = {
+            events: ['event'], // 订阅灭屏公共事件
+        };
+
+        // 创建订阅者回调
+        commonEventManager.createSubscriber(subscribeInfo, (err: Base.BusinessError, data: commonEventManager.CommonEventSubscriber) => {
+            if (err) {
+                Log.showError(TAG, `Failed to create subscriber. Code is ${err.code}, message is ${err.message}`);
+                return;
+            }
+            subscriber = data;
+            // 订阅公共事件回调
+            if (subscriber !== null) {
+                commonEventManager.subscribe(subscriber, (err: Base.BusinessError, data: commonEventManager.CommonEventData) => {
+                    if (err) {
+                        Log.showError(TAG, `Failed to subscribe common event. Code is ${err.code}, message is ${err.message}`);
+                        return;
+                    }
+                    this.unlocking()
+                })
+            } else {
+                Log.showError(TAG, 'Need create subscriber');
+            }
+        })
     }
 
     unlocking() {
