@@ -318,14 +318,20 @@ export class ScreenLockService {
             Log.showError(TAG, `创建订阅者回调内 ${JSON.stringify(subscriber)}`)
             // 订阅公共事件回调
             if (subscriber !== null) {
-                commonEventManager.subscribe(subscriber, (err: Base.BusinessError, data: commonEventManager.CommonEventData) => {
-                    if (err) {
-                        Log.showError(TAG, `Failed to subscribe common event. Code is ${err.code}, message is ${err.message}`);
-                        return;
-                    }
-                    Log.showError(TAG, `开始去解锁`);
-                    this.unlocking()
-                })
+                Log.showError(TAG, `订阅公共事件回调`)
+                try {
+                    commonEventManager.subscribe(subscriber, (err: Base.BusinessError, data: commonEventManager.CommonEventData) => {
+                        Log.showError(TAG, `订阅公共事件回调 data: code:${data?.code}  data${data?.data}`);
+                        if (err) {
+                            Log.showError(TAG, `Failed to subscribe common event. Code is ${err.code}, message is ${err.message}`);
+                            return;
+                        }
+                        Log.showError(TAG, `开始去解锁`);
+                        this.unlocking()
+                    })
+                } catch (err) {
+                    Log.showError(TAG, `给爷打印这个err: ${err}`)
+                }
             } else {
                 Log.showError(TAG, 'Need create subscriber');
             }
