@@ -285,6 +285,12 @@ export class ScreenLockService {
                 this.isTimerRunning = true;
                 this.waitToLauncher();
                 this.isLoading = false;
+                // setTimeout(()=>{
+                //     Log.showError(TAG, `定时器开始执行`);
+                //     this.waitToLauncher();
+                //     this.isLoading = false;
+                //     Log.showError(TAG, `定时器执行完成`);
+                // }, 3000);
             } else {
                 return
             }
@@ -294,11 +300,12 @@ export class ScreenLockService {
     }
 
     private launcherLoad():void {
+        Log.showError(TAG, `launcherLoad 开始执行`)
         // 用于保存创建成功的订阅者对象，后续使用其完成订阅及退订的动作
         let subscriber: commonEventManager.CommonEventSubscriber | null = null;
         // 订阅者信息，其中的event字段需要替换为实际的事件名称。
         let subscribeInfo: commonEventManager.CommonEventSubscribeInfo = {
-            events: ['event'], // 订阅灭屏公共事件
+            events: ['launcher_completed_event'], // 订阅桌面加载完成事件
         };
 
         // 创建订阅者回调
@@ -308,6 +315,7 @@ export class ScreenLockService {
                 return;
             }
             subscriber = data;
+            Log.showError(TAG, `创建订阅者回调内 ${JSON.stringify(subscriber)}`)
             // 订阅公共事件回调
             if (subscriber !== null) {
                 commonEventManager.subscribe(subscriber, (err: Base.BusinessError, data: commonEventManager.CommonEventData) => {
@@ -315,6 +323,7 @@ export class ScreenLockService {
                         Log.showError(TAG, `Failed to subscribe common event. Code is ${err.code}, message is ${err.message}`);
                         return;
                     }
+                    Log.showError(TAG, `开始去解锁`);
                     this.unlocking()
                 })
             } else {
