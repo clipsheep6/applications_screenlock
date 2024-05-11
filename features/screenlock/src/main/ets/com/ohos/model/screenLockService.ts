@@ -26,6 +26,8 @@ import systemParameter from '@ohos.systemparameter';
 import { CommonEventPublishData } from 'commonEvent/commonEventPublishData';
 import {Callback} from '@ohos.base';
 import { UIContext } from '@ohos.arkui.UIContext';
+import commonEventManager from '@ohos.commonEventManager';
+import Base from '@ohos.base';
 
 const TAG = 'ScreenLock-ScreenLockService';
 const URI_DIGITALPASSWORD = 'pages/digitalPassword'
@@ -284,6 +286,12 @@ export class ScreenLockService {
                 this.isTimerRunning = true;
                 this.waitToLauncher();
                 this.isLoading = false;
+                // setTimeout(()=>{
+                //     Log.showError(TAG, `定时器开始执行`);
+                //     this.waitToLauncher();
+                //     this.isLoading = false;
+                //     Log.showError(TAG, `定时器执行完成`);
+                // }, 3000);
             } else {
                 return
             }
@@ -292,6 +300,44 @@ export class ScreenLockService {
         }
     }
 
+    // private launcherLoad():void {
+    //     Log.showError(TAG, `launcherLoad 开始执行`)
+    //     // 用于保存创建成功的订阅者对象，后续使用其完成订阅及退订的动作
+    //     let subscriber: commonEventManager.CommonEventSubscriber | null = null;
+    //     // 订阅者信息，其中的event字段需要替换为实际的事件名称。
+    //     let subscribeInfo: commonEventManager.CommonEventSubscribeInfo = {
+    //         events: ['launcher_completed_event'], // 订阅桌面加载完成事件
+    //     };
+    //
+    //     // 创建订阅者回调
+    //     commonEventManager.createSubscriber(subscribeInfo, (err: Base.BusinessError, data: commonEventManager.CommonEventSubscriber) => {
+    //         if (err) {
+    //             Log.showError(TAG, `Failed to create subscriber. Code is ${err.code}, message is ${err.message}`);
+    //             return;
+    //         }
+    //         subscriber = data;
+    //         Log.showError(TAG, `创建订阅者回调内 ${JSON.stringify(subscriber)}`)
+    //         // 订阅公共事件回调
+    //         if (subscriber !== null) {
+    //             Log.showError(TAG, `订阅公共事件回调`)
+    //             try {
+    //                 commonEventManager.subscribe(subscriber, (err: Base.BusinessError, data: commonEventManager.CommonEventData) => {
+    //                     Log.showError(TAG, `订阅公共事件回调 data: code:${data?.code}  data${data?.data}`);
+    //                     if (err) {
+    //                         Log.showError(TAG, `Failed to subscribe common event. Code is ${err.code}, message is ${err.message}`);
+    //                         return;
+    //                     }
+    //                     Log.showError(TAG, `开始去解锁`);
+    //                     this.unlocking()
+    //                 })
+    //             } catch (err) {
+    //                 Log.showError(TAG, `给爷打印这个err: ${err}`)
+    //             }
+    //         } else {
+    //             Log.showError(TAG, 'Need create subscriber');
+    //         }
+    //     })
+    // }
 
     unlocking() {
         Log.showError(TAG, `unlocking`);

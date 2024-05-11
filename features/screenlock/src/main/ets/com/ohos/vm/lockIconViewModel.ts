@@ -16,8 +16,10 @@
 import Log from '../../../../../../../../common/src/main/ets/default/Log'
 import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
 import screenLockService from '../model/screenLockService'
-import commonEventManager from '@ohos.commonEventManager';
-import Base from '@ohos.base';
+import { settingsDataManager } from '../../../../../../../../common/src/main/ets/default/SettingsDataManager'
+import AbilityManager from '../../../../../../../../common/src/main/ets/default/abilitymanager/abilityManager'
+import dataShare from '@ohos.data.dataShare';
+import settings from '@ohos.settings';
 
 const TAG = 'ScreenLock-LockIconViewModel'
 
@@ -25,56 +27,56 @@ export default class LockIconViewModel {
     cutMessage: any= {}
     iconPath: any= {}
     isLoad: boolean = false;
+    private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
+    private helper: dataShare.DataShareHelper;
 
     ViewModelInit(): void{
         Log.showDebug(TAG, `ViewModelInit`);
         this.iconPath = $r('app.media.ic_public_lock_filled');
         this.cutMessage = $r('app.string.lock_prompt')
+        this.initHelper(this.dataChangesCallback.bind(this));
     }
 
-    private launcherLoad():void {
-        Log.showError(TAG, `launcherLoad 开始执行`)
-        // 用于保存创建成功的订阅者对象，后续使用其完成订阅及退订的动作
-        let subscriber: commonEventManager.CommonEventSubscriber | null = null;
-        // 订阅者信息，其中的event字段需要替换为实际的事件名称。
-        let subscribeInfo: commonEventManager.CommonEventSubscribeInfo = {
-            events: ['launcher_completed_event'], // 订阅桌面加载完成事件
-        };
+    async initHelper(callback: () => void): Promise<void> {
+        let url = "datashare:///com.ohos.settingsdata/entry/settingsdata/SETTINGSDATA?Proxy=true&key=" + this.LAUNCHER_LOAD_STATUS_KEY;
+        this.helper = await dataShare.createDataShareHelper(AbilityManager.getContext(AbilityManager.ABILITY_NAME_SCREEN_LOCK), url);
+        Log.showError(TAG, 'initHelper, helper: ' + this.helper + ', uri: ' + url);
+        this.helper.on('dataChange', url, () => {
+            Log.showError(TAG, 'onDataChange.');
+            callback();
+        });
+    }
 
-        // 创建订阅者回调
-        commonEventManager.createSubscriber(subscribeInfo, (err: Base.BusinessError, data: commonEventManager.CommonEventSubscriber) => {
-            if (err) {
-                Log.showError(TAG, `Failed to create subscriber. Code is ${err.code}, message is ${err.message}`);
-                return;
-            }
-            subscriber = data;
-            Log.showError(TAG, `创建订阅者回调内 ${JSON.stringify(subscriber)}`)
-            // 订阅公共事件回调
-            if (!subscriber){
-                Log.showError(TAG, `创建失败 create subscriber fail`);
-                return
-            }
-            Log.showError(TAG, `创建成功 订阅公共事件回调`)
-            try {
-                commonEventManager.subscribe(subscriber, (err: Base.BusinessError, data: commonEventManager.CommonEventData) => {
-                    Log.showError(TAG, `订阅公共事件回调 data: code:${data?.code}  data${data?.data}`);
-                    if (err) {
-                        Log.showError(TAG, `Failed to subscribe common event. Code is ${err.code}, message is ${err.message}`);
-                        return;
-                    }
-                    Log.showError(TAG, `开始去更改`);
-                    this.isLoad = true;
-                    AppStorage.setOrCreate('launcherIsLoad', true)
-                })
-            } catch (err) {
-                Log.showError(TAG, `给爷打印这个err: ${err}`)
-            }
+    /**
+     * Get launcher load status data.
+     * @return
+     */
+    dataChangesCallback(): void {
+        Log.showError(TAG, `锁屏注册的回调执行了`)
+        let getRetValue:string = this.getValue('isNotLoad');
+        Log.showError(TAG, `dataChangesCallback initValue ${getRetValue}`);
+        if (getRetValue == 'isLoad') {
+            this.isLoad = true;
+            AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
+        }
+    }
 
-        })
+    private getValue(defaultValue: string): string {
+        let context = AbilityManager.getContext(AbilityManager.ABILITY_NAME_SCREEN_LOCK);
+        if (context == undefined || context == null) {
+            Log.showError(TAG, `getValue: ${context}`);
+            return defaultValue
+        }
+        try {
+            return settingsDataManager.getLoadValue(context, this.LAUNCHER_LOAD_STATUS_KEY, defaultValue)
+        } catch (err) {
+            Log.showError(TAG, `getValue: ${context}, ${JSON.stringify(err)}`);
+            return defaultValue
+        }
     }
 
     onStatusChange(lockStatus: ScreenLockStatus): void {
-        Log.showInfo(TAG, `onStatusChange lockStatus:${lockStatus}`);
+        Log.showError(TAG, `onStatusChange lockStatus:${lockStatus}`);
         switch (lockStatus) {
             case ScreenLockStatus.Locking:
                 this.iconPath = $r('app.media.ic_public_lock_filled');
@@ -107,7 +109,7 @@ export default class LockIconViewModel {
     }
 
     onRecognizeFace(lockStatus: ScreenLockStatus) {
-        Log.showInfo(TAG, `onRecognizeFace lockStatus: ${lockStatus}`);
+        Log.showError(TAG, `onRecognizeFace lockStatus: ${lockStatus}`);
         if (lockStatus == ScreenLockStatus.FaceNotRecognized) {
             screenLockService.authUserByFace()
         }
