@@ -16,29 +16,100 @@
 import Log from '../../../../../../../../common/src/main/ets/default/Log'
 import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
 import screenLockService from '../model/screenLockService'
+import { SettingsDataManager } from '../../../../../../../../common/src/main/ets/default/SettingsDataManager'
+import AbilityManager from '../../../../../../../../common/src/main/ets/default/abilitymanager/abilityManager'
+import dataShare from '@ohos.data.dataShare';
+
 
 const TAG = 'ScreenLock-LockIconViewModel'
 
 export default class LockIconViewModel {
     cutMessage: any= {}
     iconPath: any= {}
+    isLoad: boolean = false;
+    private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
+    private helper: dataShare.DataShareHelper;
+    context: any;
+    settingsDataManager:SettingsDataManager = new SettingsDataManager();
 
     ViewModelInit(): void{
         Log.showDebug(TAG, `ViewModelInit`);
         this.iconPath = $r('app.media.ic_public_lock_filled');
-        this.cutMessage = $r('app.string.lock_prompt')
+        this.cutMessage = $r('app.string.lock_prompt');
+        this.initHelper(this.dataChangesCallback);
+    }
+
+    async initHelper(callback: () => void): Promise<void> {
+        let url = "datashare:///com.ohos.settingsdata/entry/settingsdata/SETTINGSDATA?Proxy=true&key=" + this.LAUNCHER_LOAD_STATUS_KEY;
+        try {
+            this.helper = await dataShare.createDataShareHelper(AbilityManager.getContext(AbilityManager.ABILITY_NAME_SCREEN_LOCK), url);
+        } catch (err) {
+            Log.showError(TAG, `创建helper 失败`)
+        }
+
+
+        Log.showError(TAG, 'initHelper, helper: ' + this.helper + ', uri: ' + url);
+        try {
+            this.helper.on('dataChange', url, () => {
+                Log.showError(TAG, 'onDataChange.');
+                callback();
+            });
+        } catch (err) {
+            Log.showError(TAG, `注册错误 ${err}`)
+        }
+    }
+
+    /**
+     * Get launcher load status data.
+     * @return
+     */
+    dataChangesCallback(): void {
+        Log.showError(TAG, `锁屏注册的回调执行了`)
+        let getRetValue:string = this.getValue('isNotLoad');
+        Log.showError(TAG, `dataChangesCallback initValue ${getRetValue}`);
+        if (getRetValue == 'isLoad') {
+            this.isLoad = true;
+            AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
+        }
+    }
+
+    private getValue(defaultValue: string): string {
+        try {
+            this.context = AbilityManager.getContext(AbilityManager.ABILITY_NAME_SCREEN_LOCK);
+            Log.showError(TAG, `获取的context: ${this.context}`)
+        } catch (err) {
+            Log.showError(TAG, `获取上下文context 报错 ${err}`)
+        }
+
+        if (this.context == undefined || this.context == null) {
+            Log.showError(TAG, `getValue: ${this.context}`);
+            return defaultValue
+        }
+        try {
+            return this.settingsDataManager.getLoadValue(this.context, this.LAUNCHER_LOAD_STATUS_KEY, defaultValue)
+        } catch (err) {
+            Log.showError(TAG, `getValue: ${this.context}, ${JSON.stringify(err)}`);
+            return defaultValue
+        }
     }
 
     onStatusChange(lockStatus: ScreenLockStatus): void {
-        Log.showInfo(TAG, `onStatusChange lockStatus:${lockStatus}`);
+        Log.showError(TAG, `onStatusChange lockStatus:${lockStatus}`);
         switch (lockStatus) {
             case ScreenLockStatus.Locking:
                 this.iconPath = $r('app.media.ic_public_lock_filled');
                 this.cutMessage = $r('app.string.lock_prompt')
                 break;
             case ScreenLockStatus.Unlock:
-                this.iconPath = $r('app.media.ic_public_unlock_filled');
-                this.cutMessage = $r('app.string.unlock_prompt')
+            // this.iconPath = $r('app.media.ic_public_unlock_filled');
+            // this.cutMessage = $r('app.string.unlock_prompt')
+                if (!this.isLoad){
+                    AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
+                    Log.showError(TAG, `桌面没有准备好呢 继续锁定状态`)
+                }else {
+                    this.iconPath = $r('app.media.ic_public_unlock_filled');
+                    this.cutMessage = $r('app.string.unlock_prompt')
+                }
                 break;
             case ScreenLockStatus.RecognizingFace:
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
@@ -56,7 +127,7 @@ export default class LockIconViewModel {
     }
 
     onRecognizeFace(lockStatus: ScreenLockStatus) {
-        Log.showInfo(TAG, `onRecognizeFace lockStatus: ${lockStatus}`);
+        Log.showError(TAG, `onRecognizeFace lockStatus: ${lockStatus}`);
         if (lockStatus == ScreenLockStatus.FaceNotRecognized) {
             screenLockService.authUserByFace()
         }

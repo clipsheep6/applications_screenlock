@@ -23,6 +23,8 @@ import NotificationListComponent from '../../../../../../features/noticeitem/src
 import StatusBar from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/statusBar'
 import Constants from '../common/constants'
 import ViewModel from '../vm/slideScreenLockViewModel'
+import commonEventManager from '@ohos.commonEventManager';
+import Base from '@ohos.base';
 
 const TAG = 'ScreenLock-SlideScreenlock'
 
@@ -73,7 +75,8 @@ export default struct SlideScreenlock {
         y: this.mViewModel.backgroundScale
       })
       .animation({
-        duration: this.mViewModel.duration, // animation duration
+        // duration: this.mViewModel.duration, // animation duration
+        duration: 4000, // animation duration
         curve: Curve.Linear, // animation curve
         delay: 0, // animation delay
         iterations: 1, // times of play
@@ -128,14 +131,18 @@ export default struct SlideScreenlock {
         y: this.mViewModel.elementScale
       })
       .animation({
-        duration: this.mViewModel.duration, // animation duration
+        duration: 4000, // animation duration
         curve: Curve.Linear, // animation curve
         delay: 0, // animation delay
         iterations: 1, // times of play
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event) => {
-        this.mViewModel.touchEvent(event)
+        let lockStatus:number = AppStorage.get('lockStatus');
+        Log.showInfo(TAG, `打印这个状态：lockStatus:${lockStatus}`);
+        if (lockStatus == 2) {
+          this.mViewModel.touchEvent(event);
+        }
       })
     }
   }
