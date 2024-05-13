@@ -23,30 +23,30 @@ const TAG = 'SettingsDataManager'
 /**
  * Wrapper class for settings interfaces.
  */
-class SettingsDataManager {
+export class SettingsDataManager {
   /**
    * settingsData manager instance
    *
    * @return settingsDataManager instance
    */
-  static getInstance(): SettingsDataManager {
-    if (globalThis.SettingsDataManagerInstance == null) {
-      globalThis.SettingsDataManagerInstance = new SettingsDataManager();
-    }
-    return globalThis.SettingsDataManagerInstance;
-  }
+  // static getInstance(): SettingsDataManager {
+  //   if (globalThis.SettingsDataManagerInstance == null) {
+  //     globalThis.SettingsDataManagerInstance = new SettingsDataManager();
+  //   }
+  //   return globalThis.SettingsDataManagerInstance;
+  // }
 
-  /**
-   * Update launcher load  settingData by settingDataKey.
-   */
-  setLoadValue(helper: dataShare.DataShareHelper | null, settingDataKey: string, value: boolean): void {
-    Log.showError(TAG, "setLoadValue:" + value)
-    if (typeof globalThis.desktopContext === 'undefined') {
-      settings.setValueSync(globalThis.settingsContext as Context, settingDataKey, value);
-    } else {
-      settings.setValueSync(globalThis.desktopContext as Context, settingDataKey, value);
-    }
-  }
+  // /**
+  //  * Update launcher load  settingData by settingDataKey.
+  //  */
+  // setLoadValue(helper: dataShare.DataShareHelper | null, settingDataKey: string, value: boolean): void {
+  //   Log.showError(TAG, "setLoadValue:" + value)
+  //   if (typeof globalThis.desktopContext === 'undefined') {
+  //     settings.setValueSync(globalThis.settingsContext as Context, settingDataKey, value);
+  //   } else {
+  //     settings.setValueSync(globalThis.desktopContext as Context, settingDataKey, value);
+  //   }
+  // }
 
   /**
    * get launcher load settingDataValue by settingDataKey.
@@ -54,11 +54,9 @@ class SettingsDataManager {
    * @return settingsDataValue by settingDataKey.
    */
   getLoadValue(context, settingDataKey: string, defaultValue: string): string {
-    let value: boolean = 'isNotLoad';
+    let value: string = 'isNotLoad';
     value = settings.getValueSync(context as Context, settingDataKey, defaultValue);
     Log.showError(TAG, "getValue:" + value);
     return value;
   }
 }
-
-export const settingsDataManager = SettingsDataManager.getInstance();

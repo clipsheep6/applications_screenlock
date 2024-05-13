@@ -37,10 +37,6 @@ export default struct SlideScreenlock {
   @StorageLink('isWallpaperShow') isWallpaperShow: boolean = true
   @Provide @Watch('unlockScreen') isClickFrontItem: boolean = false
   private mHeightPx : number = 48
-  // // 用于保存创建成功的订阅者对象，后续使用其完成订阅及退订的动作
-  // private subscriber?: commonEventManager.CommonEventSubscriber;
-  // // 订阅者信息
-  // private subscribeInfo: commonEventManager.CommonEventSubscribeInfo = { events: ["allow_unlock"] }//允许上滑解锁公共事件
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
     this.mViewModel.ViewModelInit()
@@ -58,33 +54,9 @@ export default struct SlideScreenlock {
     Log.showInfo(TAG, `onPageHide`)
   }
 
-  // private launcherLoad():void {
-  //   // 创建订阅者回调
-  //   commonEventManager.createSubscriber(this.subscribeInfo, (err: Base.BusinessError, data: commonEventManager.CommonEventSubscriber) => {
-  //     if (err) {
-  //       Log.showError(TAG, `Failed to create subscriber. Code is ${err.code}, message is ${err.message}`);
-  //       return;
-  //     }
-  //     this.subscriber = data;
-  //     // 订阅公共事件回调
-  //     if (this.subscriber !== null) {
-  //       commonEventManager.subscribe(this.subscriber, (err: Base.BusinessError, data: commonEventManager.CommonEventData) => {
-  //         if (err) {
-  //           Log.showError(TAG, `Failed to subscribe common event. Code is ${err.code}, message is ${err.message}`);
-  //           return;
-  //         }
-  //         this.mViewModel.unlockScreen();
-  //       })
-  //     } else {
-  //       Log.showError(TAG, 'Need create subscriber');
-  //     }
-  //   })
-  // }
-
   unlockScreen() {
     Log.showInfo(TAG, `unlockScreen in, isClickFrontItem${this.isClickFrontItem}`)
     if (this.isClickFrontItem) {
-      // this.launcherLoad();
       this.mViewModel.unlockScreen()
     }
     this.isClickFrontItem = false
@@ -158,13 +130,6 @@ export default struct SlideScreenlock {
         x: this.mViewModel.elementScale,
         y: this.mViewModel.elementScale
       })
-      // .animation({
-      //   duration: this.mViewModel.duration, // animation duration
-      //   curve: Curve.Linear, // animation curve
-      //   delay: 0, // animation delay
-      //   iterations: 1, // times of play
-      //   playMode: PlayMode.Normal // animation mode
-      // })
       .animation({
         duration: 4000, // animation duration
         curve: Curve.Linear, // animation curve
