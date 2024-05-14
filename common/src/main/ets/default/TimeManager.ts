@@ -98,11 +98,11 @@ class TimeManager {
     }
   }
 
-  public async initLauncherLoad() {
+  public async initLauncherLoad(context: any) {
     Log.showDebug(TAG, "initLauncherLoad");
     let url:string = Constants.getUriSync(this.LAUNCHER_LOAD_STATUS_KEY)
     try {
-      this.mLauncherLoadHelper = await dataShare.createDataShareHelper(this.context, url);
+      this.mLauncherLoadHelper = await dataShare.createDataShareHelper(context, url);
     } catch (err) {
       Log.showError(TAG, `创建dataShare 失败： ${err}`)
     }
@@ -126,7 +126,7 @@ class TimeManager {
    */
   dataChangesCallback(context): void {
     Log.showError(TAG, `锁屏注册的回调执行了`)
-    let getRetValue:string = settings.getValueSync(context, TIME_FORMAT_KEY, "isNotLoad")
+    let getRetValue:string = settings.getValueSync(context, this.LAUNCHER_LOAD_STATUS_KEY, "isNotLoad")
     Log.showError(TAG, `dataChangesCallback initValue ${getRetValue}`);
     if (getRetValue == 'isLoad') {
       AppStorage.setOrCreate('launcherIsLoad', true);

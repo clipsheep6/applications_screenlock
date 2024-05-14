@@ -29,6 +29,7 @@ class ServiceExtAbility extends ServiceExtension {
         Log.showInfo(TAG, 'onCreate, want:' + want.abilityName);
         AbilityManager.setContext(AbilityManager.ABILITY_NAME_SCREEN_LOCK, this.context)
         sTimeManager.init(this.context)
+        sTimeManager.initLauncherLoad(this.context)
         this.statusBarWindow()
         this.createWindow(Constants.WIN_NAME)
     }
