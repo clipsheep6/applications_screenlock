@@ -55,7 +55,9 @@ export function concatTime(h: number, m: number) {
 class TimeManager {
   private mUse24hFormat: boolean = false;
   private mSettingsHelper?: DataAbilityHelper;
+  private mLauncherLoadHelper?: DataAbilityHelper;
   private mManager?: CommonEventManager;
+  private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
 
   public init(context: any) {
     this.mManager = getCommonEventManager(
@@ -93,6 +95,42 @@ class TimeManager {
       this.handleTimeFormatChange(context);
     } catch (e) {
       Log.showError(TAG, `Can't listen timeformate change.`);
+    }
+  }
+
+  public async initLauncherLoad() {
+    Log.showDebug(TAG, "initLauncherLoad");
+    let url:string = Constants.getUriSync(this.LAUNCHER_LOAD_STATUS_KEY)
+    try {
+      this.mLauncherLoadHelper = await dataShare.createDataShareHelper(this.context, url);
+    } catch (err) {
+      Log.showError(TAG, `创建dataShare 失败： ${err}`)
+    }
+    Log.showDebug(TAG, "桌面的url:" + url);
+    if (this.mLauncherLoadHelper){
+      Log.showError(TAG, `桌面获取的helpar不是空的`)
+    }
+    try {
+      this.mLauncherLoadHelper.on("dataChange", Constants.getUriSync(this.LAUNCHER_LOAD_STATUS_KEY), () => {
+        Log.showDebug(TAG, "initLauncherLoad mLauncherLoadHelper on");
+        this.dataChangesCallback(context);
+      });
+    } catch (e) {
+      Log.showError(TAG, `Can't listen initLauncherLoad change.`);
+    }
+  }
+
+  /**
+   * Get launcher load status data.
+   * @return
+   */
+  dataChangesCallback(context): void {
+    Log.showError(TAG, `锁屏注册的回调执行了`)
+    let getRetValue:string = settings.getValueSync(context, TIME_FORMAT_KEY, "isNotLoad")
+    Log.showError(TAG, `dataChangesCallback initValue ${getRetValue}`);
+    if (getRetValue == 'isLoad') {
+      AppStorage.setOrCreate('launcherIsLoad', true);
+      AppStorage.setOrCreate('lockStatus', 1);
     }
   }
 

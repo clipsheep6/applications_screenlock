@@ -22,23 +22,32 @@ const TAG = 'ScreenLock-LockIconViewModel'
 export default class LockIconViewModel {
     cutMessage: any= {}
     iconPath: any= {}
+    isLoad: boolean|undefined = false;
 
     ViewModelInit(): void{
         Log.showDebug(TAG, `ViewModelInit`);
         this.iconPath = $r('app.media.ic_public_lock_filled');
-        this.cutMessage = $r('app.string.lock_prompt')
+        this.cutMessage = $r('app.string.lock_prompt');
+        this.isLoad = AppStorage.get('launcherIsLoad')
     }
 
     onStatusChange(lockStatus: ScreenLockStatus): void {
-        Log.showInfo(TAG, `onStatusChange lockStatus:${lockStatus}`);
+        Log.showError(TAG, `onStatusChange lockStatus:${lockStatus}`);
         switch (lockStatus) {
             case ScreenLockStatus.Locking:
                 this.iconPath = $r('app.media.ic_public_lock_filled');
                 this.cutMessage = $r('app.string.lock_prompt')
                 break;
             case ScreenLockStatus.Unlock:
-                this.iconPath = $r('app.media.ic_public_unlock_filled');
-                this.cutMessage = $r('app.string.unlock_prompt')
+            // this.iconPath = $r('app.media.ic_public_unlock_filled');
+            // this.cutMessage = $r('app.string.unlock_prompt')
+                if (!this.isLoad){
+                    AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
+                    Log.showError(TAG, `桌面没有准备好呢 继续锁定状态`)
+                }else {
+                    this.iconPath = $r('app.media.ic_public_unlock_filled');
+                    this.cutMessage = $r('app.string.unlock_prompt')
+                }
                 break;
             case ScreenLockStatus.RecognizingFace:
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
@@ -56,7 +65,7 @@ export default class LockIconViewModel {
     }
 
     onRecognizeFace(lockStatus: ScreenLockStatus) {
-        Log.showInfo(TAG, `onRecognizeFace lockStatus: ${lockStatus}`);
+        Log.showError(TAG, `onRecognizeFace lockStatus: ${lockStatus}`);
         if (lockStatus == ScreenLockStatus.FaceNotRecognized) {
             screenLockService.authUserByFace()
         }

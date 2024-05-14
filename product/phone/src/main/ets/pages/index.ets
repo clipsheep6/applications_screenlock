@@ -18,6 +18,7 @@ import Trace from '../../../../../../common/src/main/ets/default/Trace'
 import CommonStyleManager from '../../../../../../common/src/main/ets/default/StyleManager'
 import AbilityManager from '../../../../../../common/src/main/ets/default/abilitymanager/abilityManager'
 import {LockStyleMode} from '../../../../../../features/screenlock/src/main/ets/com/ohos/model/screenlockStyle'
+import sTimeManager from  '../../../../../../common/src/main/ets/default/TimeManager';
 import ViewModel from '../vm/indexViewModel'
 import SlideScreenLock from './slidescreenlock'
 import CustomScreenLock from './customscreenlock'
@@ -37,6 +38,7 @@ struct Index {
 
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
+    sTimeManager.initLauncherLoad();
     this.mViewModel.ViewModelInit()
     this.pageStatus = Constants.STATUS_ABOUT_TO_APPEAR
     try {
