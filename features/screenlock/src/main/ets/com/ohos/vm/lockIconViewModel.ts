@@ -28,7 +28,6 @@ export default class LockIconViewModel {
         Log.showDebug(TAG, `ViewModelInit`);
         this.iconPath = $r('app.media.ic_public_lock_filled');
         this.cutMessage = $r('app.string.lock_prompt');
-        this.isLoad = AppStorage.get('launcherIsLoad')
     }
 
     onStatusChange(lockStatus: ScreenLockStatus): void {
@@ -41,6 +40,7 @@ export default class LockIconViewModel {
             case ScreenLockStatus.Unlock:
             // this.iconPath = $r('app.media.ic_public_unlock_filled');
             // this.cutMessage = $r('app.string.unlock_prompt')
+                this.isLoad = AppStorage.get('launcherIsLoad')
                 if (!this.isLoad){
                     AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
                     Log.showError(TAG, `桌面没有准备好呢 继续锁定状态`)

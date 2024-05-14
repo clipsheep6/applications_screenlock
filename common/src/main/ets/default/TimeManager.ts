@@ -141,6 +141,7 @@ class TimeManager {
     if (getRetValue == 'isLoad') {
       AppStorage.setOrCreate('launcherIsLoad', true);
       AppStorage.setOrCreate('lockStatus', 2);
+      Log.showError(TAG, `这个确实是执行了`)
     }
   }
 
