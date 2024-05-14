@@ -55,7 +55,6 @@ export function concatTime(h: number, m: number) {
 class TimeManager {
   private mUse24hFormat: boolean = false;
   private mSettingsHelper?: DataAbilityHelper;
-  private mLauncherLoadHelper?: DataAbilityHelper;
   private mManager?: CommonEventManager;
   private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
 
@@ -81,12 +80,28 @@ class TimeManager {
     return concatTime(date.getHours() % (this.mUse24hFormat ? 24 : 12), date.getMinutes());
   }
 
+  public createDataShareHelper(context:any) {
+    Log.showInfo(TAG, 'createDataShareHelper context:' + context);
+    const UPDATE_INTERVAL = 30;
+    const timer = setInterval(() => {
+      dataShare.createDataShareHelper(context, Constants.urlShare)
+        .then((dataHelper) => {
+          Log.showInfo(TAG, `createLauncherDataShareHelper success.`);
+          // this.launcherDataShareHelper = dataHelper;
+          this.mSettingsHelper = dataHelper
+          this.init(context);
+          this.initLauncherLoad(context);
+          clearInterval(timer);
+        })
+        .catch((err: BusinessError) => {
+          Log.showError(TAG, `createDataShareHelper fail. ${JSON.stringify(err)}`);
+        });
+    }, UPDATE_INTERVAL);
+  }
+
+
   private async initTimeFormat(context: any) {
     Log.showDebug(TAG, "initTimeFormat");
-    //this.mSettingsHelper = featureAbility.acquireDataAbilityHelper(context, URI_VAR);
-    this.mSettingsHelper = await dataShare.createDataShareHelper(context, Constants.getUriSync(TIME_FORMAT_KEY));
-    //Log.showDebug(TAG, "url:"+Constants.getUriSync(TIME_FORMAT_KEY));
-    //Log.showDebug(TAG, "mSettingsHelper:"+JSON.stringify(this.mSettingsHelper));
     try {
       this.mSettingsHelper.on("dataChange", Constants.getUriSync(TIME_FORMAT_KEY), () => {
         Log.showDebug(TAG, "mSettingsHelper on");
@@ -101,17 +116,13 @@ class TimeManager {
   public async initLauncherLoad(context: any) {
     Log.showDebug(TAG, "initLauncherLoad");
     let url:string = Constants.getUriSync(this.LAUNCHER_LOAD_STATUS_KEY)
-    try {
-      this.mLauncherLoadHelper = await dataShare.createDataShareHelper(context, url);
-    } catch (err) {
-      Log.showError(TAG, `创建dataShare 失败： ${err}`)
-    }
     Log.showDebug(TAG, "桌面的url:" + url);
-    if (this.mLauncherLoadHelper){
-      Log.showError(TAG, `桌面获取的helpar不是空的`)
+    if (!this.mSettingsHelper) {
+      Log.showError(TAG, ` initLauncherLoad Can't get dataAbility helper.`);
+      return;
     }
     try {
-      this.mLauncherLoadHelper.on("dataChange", Constants.getUriSync(this.LAUNCHER_LOAD_STATUS_KEY), () => {
+      this.mSettingsHelper.on("dataChange", Constants.getUriSync(this.LAUNCHER_LOAD_STATUS_KEY), () => {
         Log.showDebug(TAG, "initLauncherLoad mLauncherLoadHelper on");
         this.dataChangesCallback(context);
       });
@@ -119,7 +130,6 @@ class TimeManager {
       Log.showError(TAG, `Can't listen initLauncherLoad change.`);
     }
   }
-
   /**
    * Get launcher load status data.
    * @return
