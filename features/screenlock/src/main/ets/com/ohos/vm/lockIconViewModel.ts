@@ -41,6 +41,9 @@ export default class LockIconViewModel {
             // this.iconPath = $r('app.media.ic_public_unlock_filled');
             // this.cutMessage = $r('app.string.unlock_prompt')git
                 this.isLoad = AppStorage.get('launcherIsLoad')
+                if (this.isLoad == undefined ){
+                    this.isLoad = true
+                }
                 Log.showError(TAG, `这个应该被改的isLoad是外：${this.isLoad}`)
                 if (!this.isLoad){
                     Log.showError(TAG, `这个应该被改的isLoad是内：${this.isLoad}`)
