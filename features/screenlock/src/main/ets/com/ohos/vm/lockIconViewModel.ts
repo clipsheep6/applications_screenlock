@@ -39,9 +39,11 @@ export default class LockIconViewModel {
                 break;
             case ScreenLockStatus.Unlock:
             // this.iconPath = $r('app.media.ic_public_unlock_filled');
-            // this.cutMessage = $r('app.string.unlock_prompt')
+            // this.cutMessage = $r('app.string.unlock_prompt')git
                 this.isLoad = AppStorage.get('launcherIsLoad')
+                Log.showError(TAG, `这个应该被改的isLoad是外：${this.isLoad}`)
                 if (!this.isLoad){
+                    Log.showError(TAG, `这个应该被改的isLoad是内：${this.isLoad}`)
                     AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
                     Log.showError(TAG, `桌面没有准备好呢 继续锁定状态`)
                 }else {
