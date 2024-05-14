@@ -140,7 +140,7 @@ class TimeManager {
     Log.showError(TAG, `dataChangesCallback initValue ${getRetValue}`);
     if (getRetValue == 'isLoad') {
       AppStorage.setOrCreate('launcherIsLoad', true);
-      AppStorage.setOrCreate('lockStatus', 1);
+      AppStorage.setOrCreate('lockStatus', 2);
     }
   }
 
