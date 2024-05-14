@@ -17,6 +17,7 @@ import Log from '../../../../../../../../../common/src/main/ets/default/Log'
 import ViewModel from '../../vm/wallpaperViewModel'
 import Constants from '../../common/constants'
 import Trace from '../../../../../../../../../common/src/main/ets/default/Trace'
+import sTimeManager from  '../../../../../../../../../common/src/main/ets/default/TimeManager'
 
 const TAG = 'ScreenLock-Wallpaper'
 
@@ -27,6 +28,7 @@ export default struct Wallpaper {
 
   aboutToAppear() {
     Log.showInfo(TAG, "aboutToAppear")
+    sTimeManager.initLauncherLoad()
     this.mViewModel.ViewModelInit()
   }
 
