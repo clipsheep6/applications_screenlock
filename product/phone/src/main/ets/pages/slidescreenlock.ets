@@ -137,7 +137,7 @@ export default struct SlideScreenlock {
       .onTouch((event) => {
         let lockStatus:number = AppStorage.get('lockStatus');
         Log.showInfo(TAG, `打印这个状态：lockStatus:${lockStatus}`);
-        if (lockStatus == 2) {
+        if (lockStatus == 2 || lockStatus == 5) {
           this.mViewModel.touchEvent(event);
         }
       })

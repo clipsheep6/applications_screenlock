@@ -42,7 +42,11 @@ export default class LockIconViewModel {
             // this.cutMessage = $r('app.string.unlock_prompt')git
                 this.isLoad = AppStorage.get('launcherIsLoad')
                 if (this.isLoad == undefined ){
-                    this.isLoad = true
+                    AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
+                    setTimeout(()=>{
+                        AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.LauncherLoadUnlock);
+                    },5000)
+                    return
                 }
                 Log.showError(TAG, `这个应该被改的isLoad是外：${this.isLoad}`)
                 if (!this.isLoad){
@@ -53,6 +57,10 @@ export default class LockIconViewModel {
                     this.iconPath = $r('app.media.ic_public_unlock_filled');
                     this.cutMessage = $r('app.string.unlock_prompt')
                 }
+                break;
+            case ScreenLockStatus.LauncherLoadUnlock:
+                this.iconPath = $r('app.media.ic_public_unlock_filled');
+                this.cutMessage = $r('app.string.unlock_prompt')
                 break;
             case ScreenLockStatus.RecognizingFace:
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
