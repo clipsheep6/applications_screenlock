@@ -54,7 +54,7 @@ export function concatTime(h: number, m: number) {
 
 class TimeManager {
   private mUse24hFormat: boolean = false;
-  public mSettingsHelper?: DataAbilityHelper | null = null;
+  private mSettingsHelper?: DataAbilityHelper | null = null;
   private mManager?: CommonEventManager;
   private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
 
@@ -80,36 +80,23 @@ class TimeManager {
     return concatTime(date.getHours() % (this.mUse24hFormat ? 24 : 12), date.getMinutes());
   }
 
-  public async createDataShareHelper(context:any) {
-    Log.showInfo(TAG, 'createDataShareHelper context:' + context);
-    try {
-      let dataHelper = await dataShare.createDataShareHelper(context, Constants.urlShare)
-      Log.showError(TAG, `创建成功 createLauncherDataShareHelper success`)
-      this.mSettingsHelper = dataHelper
-      this.init(context);
-      this.initLauncherLoad(context);
-    } catch (err) {
-      Log.showError(TAG, `创建失败 createLauncherDataShareHelper fail`)
-    }
+  public createDataShareHelper(context:any) {
+    Log.showInfo(TAG, 'createLauncherDataShareHelper context:' + context);
+    const UPDATE_INTERVAL = 10;
+    const timer = setInterval(() => {
+      dataShare.createDataShareHelper(context, Constants.urlShare)
+        .then((dataHelper) => {
+          Log.showInfo(TAG, `createLauncherDataShareHelper success.`);
+          this.mSettingsHelper = dataHelper
+          this.init(context);
+          this.initLauncherLoad(context);
+          clearInterval(timer);
+        })
+        .catch((err: BusinessError) => {
+          Log.showError(TAG, `createLauncherDataShareHelper fail. ${JSON.stringify(err)}`);
+        });
+    }, UPDATE_INTERVAL);
   }
-
-  // public createDataShareHelper(context:any) {
-  //   Log.showInfo(TAG, 'createLauncherDataShareHelper context:' + context);
-  //   const UPDATE_INTERVAL = 10;
-  //   const timer = setInterval(() => {
-  //     dataShare.createDataShareHelper(context, Constants.urlShare)
-  //       .then((dataHelper) => {
-  //         Log.showInfo(TAG, `createLauncherDataShareHelper success.`);
-  //         this.mSettingsHelper = dataHelper
-  //         this.init(context);
-  //         this.initLauncherLoad(context);
-  //         clearInterval(timer);
-  //       })
-  //       .catch((err: BusinessError) => {
-  //         Log.showError(TAG, `createLauncherDataShareHelper fail. ${JSON.stringify(err)}`);
-  //       });
-  //   }, UPDATE_INTERVAL);
-  // }
 
 
   private async initTimeFormat(context: any) {

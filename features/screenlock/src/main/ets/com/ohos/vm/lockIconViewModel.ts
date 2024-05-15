@@ -45,7 +45,7 @@ export default class LockIconViewModel {
                     AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
                     setTimeout(()=>{
                         AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.LauncherLoadUnlock);
-                    },5000)
+                    }, 7000)
                     return
                 }
                 Log.showError(TAG, `这个应该被改的isLoad是外：${this.isLoad}`)
