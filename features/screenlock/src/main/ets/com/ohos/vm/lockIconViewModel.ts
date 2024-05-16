@@ -56,6 +56,7 @@ export default class LockIconViewModel {
                 }else {
                     this.iconPath = $r('app.media.ic_public_unlock_filled');
                     this.cutMessage = $r('app.string.unlock_prompt')
+                    AppStorage.SetOrCreate('launcherIsLoad', true)
                 }
                 break;
             case ScreenLockStatus.LauncherLoadUnlock:
