@@ -43,7 +43,7 @@ export default class LockIconViewModel {
                     AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
                     setTimeout(()=>{
                         AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.LauncherLoadUnlock);
-                    }, 5000);
+                    }, 7000);
                     return;
                 }
                 if (this.isLoad) {
