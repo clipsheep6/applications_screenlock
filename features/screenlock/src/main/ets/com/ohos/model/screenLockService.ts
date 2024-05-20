@@ -246,6 +246,7 @@ export class ScreenLockService {
         })
     }
 
+
     unlockScreen() {
         Log.showInfo(TAG, `unlockScreen`);
         this.accountModel.isActivateAccount((isActivate: boolean) => {
@@ -255,8 +256,8 @@ export class ScreenLockService {
             mUnLockBeginAnimation(() => {
                 let status = AppStorage.Link('lockStatus')
                 Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
-                if (status?.get() == ScreenLockStatus.Unlock) {
-                    Log.showInfo(TAG, `unlock the screen`);
+                if (status?.get() == ScreenLockStatus.Unlock || status?.get() == ScreenLockStatus.LauncherLoadUnlock) {
+                    Log.showInfo(TAG, `unlock the screen 哪种解锁的 ${status?.get()}`);
                     this.unlocking();
                 } else {
                     let slidestatus = AppStorage.Get('slidestatus')
@@ -272,8 +273,9 @@ export class ScreenLockService {
         })
     }
 
+
     unlocking() {
-        Log.showInfo(TAG, `unlocking`);
+        Log.showError(TAG, `unlocking`);
         //set the lockStatus to 'Unlock'
         AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Unlock);
         this.currentLockStatus = ScreenLockStatus.Unlock;
