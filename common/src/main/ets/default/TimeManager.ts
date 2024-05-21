@@ -68,7 +68,6 @@ class TimeManager {
     );
     this.mManager.subscriberCommonEvent();
     this.mManager.applyPolicy([POLICY.SCREEN_POLICY]);
-    this.initTimeFormat(context);
   }
 
   public release() {
@@ -83,13 +82,14 @@ class TimeManager {
 
   public createDataShareHelper(context: any): void {
     Log.showInfo(TAG, 'createDataShareHelper context:' + context);
-    const UPDATE_INTERVAL = 10;
+    const UPDATE_INTERVAL = 30;
     const timer = setInterval(() => {
       dataShare.createDataShareHelper(context, Constants.urlShare)
         .then((dataHelper) => {
-          Log.showInfo(TAG, `createDataShareHelper success.`);
+          Log.showInfo(TAG, `createDataShareHelper success. ${JSON.stringify(dataHelper)} ${dataHelper}`);
           this.mSettingsHelper = dataHelper;
           this.initLauncherLoad(context);
+          this.initTimeFormat(context);
           clearInterval(timer);
         })
         .catch((err: BusinessError) => {
@@ -122,8 +122,8 @@ class TimeManager {
     }
     try {
       this.mSettingsHelper.on("dataChange", url, this.dataChangesCallback(context));
-    } catch (e) {
-      Log.showError(TAG, `Can't listen initLauncherLoad change.`);
+    } catch (err) {
+      Log.showError(TAG, `Can't listen initLauncherLoad change. ${err}`);
     }
   }
   /**
