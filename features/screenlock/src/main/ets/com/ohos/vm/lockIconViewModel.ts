@@ -43,13 +43,13 @@ export default class LockIconViewModel {
                     AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
                     setTimeout(()=>{
                         AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.LauncherLoadUnlock);
-                    }, 7000);
+                        AppStorage.SetOrCreate('launcherIsLoad', true);
+                    }, 5000);
                     return;
                 }
                 if (this.isLoad) {
                     this.iconPath = $r('app.media.ic_public_unlock_filled');
                     this.cutMessage = $r('app.string.unlock_prompt');
-                    AppStorage.SetOrCreate('launcherIsLoad', true);
                 }
                 break;
             case ScreenLockStatus.LauncherLoadUnlock:

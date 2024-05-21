@@ -57,9 +57,10 @@ class TimeManager {
   private mSettingsHelper?: DataAbilityHelper | null = null;
   private mManager?: CommonEventManager;
   private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
+  private context:null|ServiceExtensionContext = null
 
   public init(context: any) {
-    this.createDataShareHelper(context);
+    this.createDataShareHelper(context)
     this.mManager = getCommonEventManager(
       TAG,
       TIME_SUBSCRIBE_INFO,
@@ -86,10 +87,10 @@ class TimeManager {
     const timer = setInterval(() => {
       dataShare.createDataShareHelper(context, Constants.urlShare)
         .then((dataHelper) => {
-          Log.showInfo(TAG, `createDataShareHelper success. ${JSON.stringify(dataHelper)} ${dataHelper}`);
+          Log.showInfo(TAG, `createDataShareHelper success.`);
           this.mSettingsHelper = dataHelper;
-          this.initLauncherLoad(context);
           this.initTimeFormat(context);
+          this.initLauncherLoad(context);
           clearInterval(timer);
         })
         .catch((err: BusinessError) => {
@@ -115,29 +116,32 @@ class TimeManager {
   public async initLauncherLoad(context: any) {
     Log.showError(TAG, "initLauncherLoad");
     let url:string = Constants.getUriSync(this.LAUNCHER_LOAD_STATUS_KEY)
-    Log.showError(TAG, "桌面的url:" + url);
     if (!this.mSettingsHelper) {
       Log.showError(TAG, `initLauncherLoad Can't get dataAbility helper.`);
       return;
     }
+    Log.showError(TAG, "桌面的url:" + url);
     try {
-      this.mSettingsHelper.on("dataChange", url, this.dataChangesCallback(context));
+      this.mSettingsHelper.on("dataChange", url, ()=>{
+        Log.showError(TAG, `dataChangesCallback`)
+        this.dataChangesCallback(context)
+      });
     } catch (err) {
       Log.showError(TAG, `Can't listen initLauncherLoad change. ${err}`);
     }
   }
+  // Register observer ret: 0
   /**
    * Get launcher load status data.
    * @return
    */
-  dataChangesCallback(context): void {
-    Log.showError(TAG, `dataChangesCallback`);
-    let getRetValue:string = settings.getValueSync(context, this.LAUNCHER_LOAD_STATUS_KEY, "isNotLoad");
+  dataChangesCallback(): void {
+    let getRetValue:string = settings.getValueSync(this.context, this.LAUNCHER_LOAD_STATUS_KEY, "isNotLoad")
     Log.showError(TAG, `dataChangesCallback initValue ${getRetValue}`);
     if (getRetValue == 'isLoad') {
       AppStorage.setOrCreate('launcherIsLoad', true);
       AppStorage.setOrCreate('lockStatus', 2);
-      Log.showError(TAG, `这个确实是执行了`);
+      Log.showError(TAG, `这个确实是执行了`)
     }
   }
 
