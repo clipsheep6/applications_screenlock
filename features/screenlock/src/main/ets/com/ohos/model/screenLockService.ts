@@ -94,6 +94,9 @@ export class ScreenLockService {
     screenLockModel: ScreenLockModel = new ScreenLockModel()
     currentLockStatus : ScreenLockStatus;
     memoryMonitor: number = -1;
+    isLoading: boolean = true;
+    isLockRunning: boolean = false;
+    launcherIsLoad:boolean|undefined = AppStorage.get('launcherIsLoad')
     init() {
         Log.showDebug(TAG, 'init');
         this.startMonitorMemory();
@@ -246,30 +249,46 @@ export class ScreenLockService {
         })
     }
 
-    unlockScreen() {
-        Log.showInfo(TAG, `unlockScreen`);
+    waitToLauncher(){
         this.accountModel.isActivateAccount((isActivate: boolean) => {
             if (!isActivate) {
                 return
             }
             mUnLockBeginAnimation(() => {
                 let status = AppStorage.Link('lockStatus')
-                Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
-                if (status?.get() == ScreenLockStatus.Unlock) {
-                    Log.showInfo(TAG, `unlock the screen`);
+                Log.showError(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
+                if (status?.get() == ScreenLockStatus.Unlock || status?.get() == ScreenLockStatus.LauncherLoadUnlock) {
+                    Log.showError(TAG, `unlock the screen 哪种解锁的:${status?.get()}`);
                     this.unlocking();
                 } else {
                     let slidestatus = AppStorage.Get('slidestatus')
                     if(!slidestatus){
                         AppStorage.SetOrCreate('slidestatus', true);
                         const UIContext: UIContext = AppStorage.get('UIContext');
-                        Log.showInfo(TAG, `this.UIContext is ${UIContext}`)
-                        Log.showInfo(TAG, `unlockScreen Router.push`);
+                        Log.showError(TAG, `this.UIContext is ${UIContext}`)
+                        Log.showError(TAG, `unlockScreen Router.push`);
                         UIContext.getRouter().pushUrl({ url: mRouterPath })
                     }
                 }
             })
         })
+    }
+
+
+    unlockScreen() {
+        Log.showError(TAG, `unlockScreen`);
+        Log.showError(TAG, `两个变量 isLoading：${this.isLoading} isLockRunning：${this.isLockRunning}`);
+        if (this.isLoading && this.launcherIsLoad){
+            if (!this.isLockRunning){
+                this.isLockRunning = true;
+                this.waitToLauncher();
+                this.isLoading = false;
+            } else {
+                return
+            }
+        } else {
+            this.waitToLauncher();
+        }
     }
 
     unlocking() {

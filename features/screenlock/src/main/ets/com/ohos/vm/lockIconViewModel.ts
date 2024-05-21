@@ -22,6 +22,7 @@ const TAG = 'ScreenLock-LockIconViewModel'
 export default class LockIconViewModel {
     cutMessage: any= {}
     iconPath: any= {}
+    isLoad: boolean|undefined = false;
 
     ViewModelInit(): void{
         Log.showDebug(TAG, `ViewModelInit`);
@@ -30,13 +31,33 @@ export default class LockIconViewModel {
     }
 
     onStatusChange(lockStatus: ScreenLockStatus): void {
-        Log.showInfo(TAG, `onStatusChange lockStatus:${lockStatus}`);
+        Log.showError(TAG, `onStatusChange lockStatus:${lockStatus}`);
         switch (lockStatus) {
             case ScreenLockStatus.Locking:
                 this.iconPath = $r('app.media.ic_public_lock_filled');
                 this.cutMessage = $r('app.string.lock_prompt')
                 break;
             case ScreenLockStatus.Unlock:
+                this.isLoad = AppStorage.get('launcherIsLoad')
+                if (this.isLoad == undefined ){
+                    AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
+                    setTimeout(()=>{
+                        AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.LauncherLoadUnlock);
+                        AppStorage.SetOrCreate('launcherIsLoad', true)
+                    }, 6000)
+                    return
+                }
+                Log.showError(TAG, `这个应该被改的isLoad是外：${this.isLoad}`)
+                if (!this.isLoad){
+                    Log.showError(TAG, `这个应该被改的isLoad是内：${this.isLoad}`)
+                    AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Locking);
+                    Log.showError(TAG, `桌面没有准备好呢 继续锁定状态`)
+                }else {
+                    this.iconPath = $r('app.media.ic_public_unlock_filled');
+                    this.cutMessage = $r('app.string.unlock_prompt')
+                }
+                break;
+            case ScreenLockStatus.LauncherLoadUnlock:
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
                 this.cutMessage = $r('app.string.unlock_prompt')
                 break;

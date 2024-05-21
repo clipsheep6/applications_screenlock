@@ -21,6 +21,7 @@ import LockIcon from '../../../../../../features/screenlock/src/main/ets/com/oho
 import Wallpaper from '../../../../../../features/wallpapercomponent/src/main/ets/com/ohos/view/component/wallpaper'
 import NotificationListComponent from '../../../../../../features/noticeitem/src/main/ets/com/ohos/noticeItem/view/NotificationListComponent'
 import StatusBar from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/statusBar'
+import { ScreenLockStatus } from '../../../../../../common/src/main/ets/default/ScreenLockCommon'
 import Constants from '../common/constants'
 import ViewModel from '../vm/slideScreenLockViewModel'
 
@@ -135,7 +136,11 @@ export default struct SlideScreenlock {
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event) => {
-        this.mViewModel.touchEvent(event)
+        let lockStatus: number = AppStorage.get('lockStatus');
+        if (lockStatus == ScreenLockStatus.Unlock||lockStatus == ScreenLockStatus.LauncherLoadUnlock) {
+          Log.showInfo(TAG, `打印这个状态：lockStatus:${lockStatus}`);
+          this.mViewModel.touchEvent(event);
+        }
       })
     }
   }
