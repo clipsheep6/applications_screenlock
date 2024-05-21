@@ -57,7 +57,6 @@ class TimeManager {
   private mSettingsHelper?: DataAbilityHelper | null = null;
   private mManager?: CommonEventManager;
   private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
-  private context:null|ServiceExtensionContext = null
 
   public init(context: any) {
     this.createDataShareHelper(context)
@@ -89,8 +88,8 @@ class TimeManager {
         .then((dataHelper) => {
           Log.showInfo(TAG, `createDataShareHelper success.`);
           this.mSettingsHelper = dataHelper;
-          this.initTimeFormat(context);
           this.initLauncherLoad(context);
+          this.initTimeFormat(context);
           clearInterval(timer);
         })
         .catch((err: BusinessError) => {
@@ -123,7 +122,7 @@ class TimeManager {
     Log.showError(TAG, "桌面的url:" + url);
     try {
       this.mSettingsHelper.on("dataChange", url, ()=>{
-        Log.showError(TAG, `dataChangesCallback`)
+        Log.showDebug(TAG, "mSettingsHelper on LauncherIsLoad dataChangesCallback");
         this.dataChangesCallback(context)
       });
     } catch (err) {
@@ -136,6 +135,7 @@ class TimeManager {
    * @return
    */
   dataChangesCallback(): void {
+    Log.showError(TAG, `dataChangesCallback`)
     let getRetValue:string = settings.getValueSync(this.context, this.LAUNCHER_LOAD_STATUS_KEY, "isNotLoad")
     Log.showError(TAG, `dataChangesCallback initValue ${getRetValue}`);
     if (getRetValue == 'isLoad') {
