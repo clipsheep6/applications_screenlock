@@ -142,6 +142,13 @@ export default struct SlideScreenlock {
         }
       })
     }
+    .animation({
+      duration: 4000, // animation duration
+      curve: Curve.Linear, // animation curve
+      delay: 0, // animation delay
+      iterations: 1, // times of play
+      playMode: PlayMode.Normal // animation mode
+    })
   }
 
   onCharging(propName: string): void {
