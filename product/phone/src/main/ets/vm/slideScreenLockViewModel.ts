@@ -61,7 +61,7 @@ export default class SlideScreenLockViewModel {
         if (event.type == Constants.TOUCHTYPE_DOWN) {
             this.startX = event.touches[0].screenX
             this.startY = event.touches[0].screenY
-        } else if (event.type == Constants.TOUCHTYPE_MOVE) {
+        } else if (event.type == Constants.TOUCHTYPE_MOVE || event.type == 5) {
             this.moveX = event.touches[0].screenX - this.startX
             this.moveY = event.touches[0].screenY - this.startY
         } else if (event.type == Constants.TOUCHTYPE_UP) {

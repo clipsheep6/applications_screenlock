@@ -73,9 +73,9 @@ export default struct SlideScreenlock {
         y: this.mViewModel.backgroundScale
       })
       .animation({
-        duration: this.mViewModel.duration, // animation duration
+        duration: 1000, // animation duration
         curve: Curve.Linear, // animation curve
-        delay: 0, // animation delay
+        delay: 100, // animation delay
         iterations: 1, // times of play
         playMode: PlayMode.Normal // animation mode
       })
@@ -135,9 +135,20 @@ export default struct SlideScreenlock {
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event) => {
-        this.mViewModel.touchEvent(event)
+        let lockStatus:number = AppStorage.get('lockStatus');
+        if (lockStatus == 2||lockStatus == 5) {
+          Log.showInfo(TAG, `打印这个状态：lockStatus:${lockStatus}`);
+          this.mViewModel.touchEvent(event);
+        }
       })
     }
+    .animation({
+      duration: 4000, // animation duration
+      curve: Curve.Linear, // animation curve
+      delay: 0, // animation delay
+      iterations: 1, // times of play
+      playMode: PlayMode.Normal // animation mode
+    })
   }
 
   onCharging(propName: string): void {

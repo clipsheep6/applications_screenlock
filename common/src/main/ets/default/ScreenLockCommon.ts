@@ -20,7 +20,8 @@ export enum ScreenLockStatus {
   Locking = 1,
   Unlock = 2,
   RecognizingFace = 3,
-  FaceNotRecognized = 4
+  FaceNotRecognized = 4,
+  LauncherLoadUnlock = 5
 }
 
 export function ReadConfigFile(fileName, callBack:(data)=>void) {
