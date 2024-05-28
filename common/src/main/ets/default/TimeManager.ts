@@ -25,6 +25,7 @@ import createOrGet from "./SingleInstanceHelper";
 import Constants from "./Constants";
 import { obtainLocalEvent } from "./event/EventUtil";
 import { CommonEventManager, getCommonEventManager, POLICY } from "./commonEvent/CommonEventManager";
+import { ScreenLockStatus } from './ScreenLockCommon';
 
 export const TIME_CHANGE_EVENT = "Time_Change_Event";
 
@@ -54,10 +55,12 @@ export function concatTime(h: number, m: number) {
 
 class TimeManager {
   private mUse24hFormat: boolean = false;
-  private mSettingsHelper?: DataAbilityHelper;
+  private mSettingsHelper?: DataAbilityHelper | null = null;
   private mManager?: CommonEventManager;
+  private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
 
   public init(context: any) {
+    this.createDataShareHelper(context);
     this.mManager = getCommonEventManager(
       TAG,
       TIME_SUBSCRIBE_INFO,
@@ -66,7 +69,6 @@ class TimeManager {
     );
     this.mManager.subscriberCommonEvent();
     this.mManager.applyPolicy([POLICY.SCREEN_POLICY]);
-    this.initTimeFormat(context);
   }
 
   public release() {
@@ -79,12 +81,27 @@ class TimeManager {
     return concatTime(date.getHours() % (this.mUse24hFormat ? 24 : 12), date.getMinutes());
   }
 
+  public createDataShareHelper(context:any) {
+    Log.showInfo(TAG, 'createLauncherDataShareHelper context:' + context);
+    const UPDATE_INTERVAL = 10;
+    const timer = setInterval(() => {
+      dataShare.createDataShareHelper(context, Constants.urlShare)
+        .then((dataHelper) => {
+          Log.showInfo(TAG, `createLauncherDataShareHelper success.`);
+          this.mSettingsHelper = dataHelper;
+          this.initTimeFormat(context);
+          this.initLauncherLoad(context);
+          clearInterval(timer);
+        })
+        .catch((err: BusinessError) => {
+          Log.showError(TAG, `createLauncherDataShareHelper fail. ${JSON.stringify(err)}`);
+        });
+    }, UPDATE_INTERVAL);
+  }
+
+
   private async initTimeFormat(context: any) {
     Log.showDebug(TAG, "initTimeFormat");
-    //this.mSettingsHelper = featureAbility.acquireDataAbilityHelper(context, URI_VAR);
-    this.mSettingsHelper = await dataShare.createDataShareHelper(context, Constants.getUriSync(TIME_FORMAT_KEY));
-    //Log.showDebug(TAG, "url:"+Constants.getUriSync(TIME_FORMAT_KEY));
-    //Log.showDebug(TAG, "mSettingsHelper:"+JSON.stringify(this.mSettingsHelper));
     try {
       this.mSettingsHelper.on("dataChange", Constants.getUriSync(TIME_FORMAT_KEY), () => {
         Log.showDebug(TAG, "mSettingsHelper on");
@@ -93,6 +110,36 @@ class TimeManager {
       this.handleTimeFormatChange(context);
     } catch (e) {
       Log.showError(TAG, `Can't listen timeformate change.`);
+    }
+  }
+
+  public async initLauncherLoad(context: any) {
+    Log.showInfo(TAG, 'initLauncherLoad');
+    let url:string = Constants.getUriSync(this.LAUNCHER_LOAD_STATUS_KEY)
+    if (!this.mSettingsHelper) {
+      Log.showInfo(TAG, `initLauncherLoad Can't get dataAbility helper.`);
+      return;
+    }
+    try {
+      this.mSettingsHelper.on('dataChange', url, ()=>{
+        Log.showInfo(TAG, 'mSettingsHelper on initLauncherLoad');
+        this.dataChangesCallback(context)
+      });
+    } catch (err) {
+      Log.showError(TAG, `Can't listen initLauncherLoad change.  err:${err}`);
+    }
+  }
+  /**
+   * Get launcher load status data.
+   * @return
+   */
+  dataChangesCallback(context): void {
+    Log.showInfo(TAG, 'dataChangesCallback');
+    let getRetValue:string = settings.getValueSync(context, this.LAUNCHER_LOAD_STATUS_KEY, "isNotLoad");
+    Log.showInfo(TAG, `dataChangesCallback initValue ${getRetValue}`);
+    if (getRetValue == 'isLoad') {
+      AppStorage.setOrCreate('launcherIsLoad', true);
+      AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
     }
   }
 

@@ -23,6 +23,7 @@ import NotificationListComponent from '../../../../../../features/noticeitem/src
 import StatusBar from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/statusBar'
 import Constants from '../common/constants'
 import ViewModel from '../vm/slideScreenLockViewModel'
+import { ScreenLockStatus } from '../../../../../../common/src/main/ets/default/ScreenLockCommon';
 
 const TAG = 'ScreenLock-SlideScreenlock'
 
@@ -73,9 +74,9 @@ export default struct SlideScreenlock {
         y: this.mViewModel.backgroundScale
       })
       .animation({
-        duration: this.mViewModel.duration, // animation duration
+        duration: 1000, // animation duration
         curve: Curve.Linear, // animation curve
-        delay: 0, // animation delay
+        delay: 100, // animation delay
         iterations: 1, // times of play
         playMode: PlayMode.Normal // animation mode
       })
@@ -135,7 +136,10 @@ export default struct SlideScreenlock {
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event) => {
-        this.mViewModel.touchEvent(event)
+        let lockStatus:number = AppStorage.get('lockStatus');
+        if (lockStatus == ScreenLockStatus.Unlock || lockStatus == ScreenLockStatus.LauncherLoadUnlock) {
+          this.mViewModel.touchEvent(event);
+        }
       })
     }
   }
