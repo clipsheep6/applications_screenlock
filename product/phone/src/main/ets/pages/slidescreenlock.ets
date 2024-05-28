@@ -74,9 +74,9 @@ export default struct SlideScreenlock {
         y: this.mViewModel.backgroundScale
       })
       .animation({
-        duration: 1000, // animation duration
+        duration: this.mViewModel.duration, // animation duration
         curve: Curve.Linear, // animation curve
-        delay: 100, // animation delay
+        delay: 0, // animation delay
         iterations: 1, // times of play
         playMode: PlayMode.Normal // animation mode
       })
