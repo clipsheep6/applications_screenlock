@@ -36,8 +36,7 @@ export function ReadConfigFile(fileName, callBack:(data)=>void) {
     Log.showInfo(TAG, `readDefaultFile content length: ${content.length}`);
     jsonCfg = JSON.parse(content);
     callBack(jsonCfg);
-  })
-    .catch((error)=>{
+  }).catch((error)=>{
       Log.showError(TAG, `readDefaultFile filed: ${JSON.stringify(error)}`);
     });
 }

@@ -82,12 +82,12 @@ class TimeManager {
   }
 
   public createDataShareHelper(context:any) {
-    Log.showInfo(TAG, 'createLauncherDataShareHelper context:' + context);
+    Log.showInfo(TAG, 'createLauncherDataShareHelper');
     const UPDATE_INTERVAL = 10;
     const timer = setInterval(() => {
       dataShare.createDataShareHelper(context, Constants.urlShare)
         .then((dataHelper) => {
-          Log.showInfo(TAG, `createLauncherDataShareHelper success.`);
+          Log.showInfo(TAG, 'createLauncherDataShareHelper success.');
           this.mSettingsHelper = dataHelper;
           this.initTimeFormat(context);
           this.initLauncherLoad(context);
