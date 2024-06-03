@@ -135,9 +135,9 @@ class TimeManager {
    */
   dataChangesCallback(context): void {
     Log.showInfo(TAG, 'dataChangesCallback');
-    let getRetValue:string = settings.getValueSync(context, this.LAUNCHER_LOAD_STATUS_KEY, "isNotLoad");
-    Log.showInfo(TAG, `dataChangesCallback initValue ${getRetValue}`);
-    if (getRetValue == 'isLoad') {
+    let retValue:string = settings.getValueSync(context, this.LAUNCHER_LOAD_STATUS_KEY, 'isNotLoad');
+    Log.showInfo(TAG, `dataChangesCallback initValue ${retValue}`);
+    if (retValue === 'isLoad') {
       AppStorage.setOrCreate('launcherIsLoad', true);
       AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
     }
