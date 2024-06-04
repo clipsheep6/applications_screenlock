@@ -22,6 +22,7 @@ const TAG = 'ScreenLock-LockIconViewModel'
 export default class LockIconViewModel {
     cutMessage: any= {}
     iconPath: any= {}
+    isLoad: boolean|undefined = false;
 
     ViewModelInit(): void{
         Log.showDebug(TAG, `ViewModelInit`);
@@ -34,11 +35,29 @@ export default class LockIconViewModel {
         switch (lockStatus) {
             case ScreenLockStatus.Locking:
                 this.iconPath = $r('app.media.ic_public_lock_filled');
-                this.cutMessage = $r('app.string.lock_prompt')
+                this.cutMessage = $r('app.string.lock_prompt');
                 break;
             case ScreenLockStatus.Unlock:
+                this.isLoad = AppStorage.get('launcherIsLoad');
+                if (this.isLoad == undefined ) {
+                    AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Locking);
+                    setTimeout(()=>{
+                        AppStorage.setOrCreate('lockStatus', ScreenLockStatus.LauncherLoadUnlock);
+                    }, 5000);
+                    return;
+                }
+                if (!this.isLoad) {
+                    AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Locking);
+                } else {
+                    this.iconPath = $r('app.media.ic_public_unlock_filled');
+                    this.cutMessage = $r('app.string.unlock_prompt');
+                    AppStorage.setOrCreate('launcherIsLoad', true);
+                }
+                break;
+            case ScreenLockStatus.LauncherLoadUnlock:
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
-                this.cutMessage = $r('app.string.unlock_prompt')
+                this.cutMessage = $r('app.string.unlock_prompt');
+                AppStorage.setOrCreate('launcherIsLoad', true);
                 break;
             case ScreenLockStatus.RecognizingFace:
                 this.iconPath = $r('app.media.ic_public_unlock_filled');

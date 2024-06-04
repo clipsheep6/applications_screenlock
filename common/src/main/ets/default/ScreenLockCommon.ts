@@ -20,7 +20,8 @@ export enum ScreenLockStatus {
   Locking = 1,
   Unlock = 2,
   RecognizingFace = 3,
-  FaceNotRecognized = 4
+  FaceNotRecognized = 4,
+  LauncherLoadUnlock = 5
 }
 
 export function ReadConfigFile(fileName, callBack:(data)=>void) {
@@ -35,8 +36,7 @@ export function ReadConfigFile(fileName, callBack:(data)=>void) {
     Log.showInfo(TAG, `readDefaultFile content length: ${content.length}`);
     jsonCfg = JSON.parse(content);
     callBack(jsonCfg);
-  })
-  .catch((error)=>{
-    Log.showError(TAG, `readDefaultFile filed: ${JSON.stringify(error)}`);
-  });
+  }).catch((error)=>{
+      Log.showError(TAG, `readDefaultFile filed: ${JSON.stringify(error)}`);
+    });
 }
