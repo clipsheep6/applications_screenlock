@@ -23,6 +23,8 @@ import NotificationListComponent from '../../../../../../features/noticeitem/src
 import StatusBar from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/statusBar'
 import Constants from '../common/constants'
 import ViewModel from '../vm/slideScreenLockViewModel'
+import { ScreenLockStatus } from '../../../../../../common/src/main/ets/default/ScreenLockCommon';
+import { PreferencesHelper } from '../../../../../../common/src/main/ets/default/PreferencesHelper'
 
 const TAG = 'ScreenLock-SlideScreenlock'
 
@@ -35,9 +37,19 @@ export default struct SlideScreenlock {
   @StorageLink('isWallpaperShow') isWallpaperShow: boolean = true
   @Provide @Watch('unlockScreen') isClickFrontItem: boolean = false
   private mHeightPx : number = 48
+  private time:number = this.mViewModel.duration
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
     this.mViewModel.ViewModelInit()
+    this.checkIsFirst();
+  }
+
+  checkIsFirst() {
+    let isFirst =  PreferencesHelper.getInstance().get('isFirst', true);
+    if (isFirst) {
+      this.time = 6000
+    }
+    Log.showError(TAG, `打印 time:${this.time}  isFirst ${isFirst}`)
   }
 
   aboutToDisappear() {
@@ -73,7 +85,7 @@ export default struct SlideScreenlock {
         y: this.mViewModel.backgroundScale
       })
       .animation({
-        duration: this.mViewModel.duration, // animation duration
+        duration: 6000, // animation duration
         curve: Curve.Linear, // animation curve
         delay: 0, // animation delay
         iterations: 1, // times of play
@@ -128,14 +140,18 @@ export default struct SlideScreenlock {
         y: this.mViewModel.elementScale
       })
       .animation({
-        duration: this.mViewModel.duration, // animation duration
+        duration: 6000, // animation duration
         curve: Curve.Linear, // animation curve
         delay: 0, // animation delay
         iterations: 1, // times of play
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event) => {
-        this.mViewModel.touchEvent(event)
+        // this.mViewModel.duration
+        let lockStatus:number = AppStorage.get('lockStatus');
+        if (lockStatus === ScreenLockStatus.Unlock || lockStatus === ScreenLockStatus.LauncherLoadUnlock) {
+          this.mViewModel.touchEvent(event);
+        }
       })
     }
   }
