@@ -16,6 +16,7 @@
 import Log from '../../../../../../../../common/src/main/ets/default/Log'
 import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
 import screenLockService from '../model/screenLockService'
+import { PreferencesHelper } from '../../../../../../../../common/src/main/ets/default/PreferencesHelper'
 
 const TAG = 'ScreenLock-LockIconViewModel'
 
@@ -29,6 +30,24 @@ export default class LockIconViewModel {
         this.cutMessage = $r('app.string.lock_prompt')
     }
 
+   async unlockScreen() {
+       Log.showError(TAG, `打印 unlockScreen`)
+       let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
+       if (isFirst){
+           AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Locking)
+           setTimeout(()=>{
+               Log.showError(TAG, `打印 isFirst：${isFirst}`)
+               this.iconPath = $r('app.media.ic_public_unlock_filled');
+               this.cutMessage = $r('app.string.unlock_prompt')
+               PreferencesHelper.getInstance().put('isFirst', false);
+               AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock)
+           }, 3000)
+       } else {
+           this.iconPath = $r('app.media.ic_public_unlock_filled');
+           this.cutMessage = $r('app.string.unlock_prompt')
+       }
+    }
+
     onStatusChange(lockStatus: ScreenLockStatus): void {
         Log.showInfo(TAG, `onStatusChange lockStatus:${lockStatus}`);
         switch (lockStatus) {
@@ -37,6 +56,10 @@ export default class LockIconViewModel {
                 this.cutMessage = $r('app.string.lock_prompt')
                 break;
             case ScreenLockStatus.Unlock:
+                this.unlockScreen();
+                break;
+            case ScreenLockStatus.LauncherLoadUnlock:
+                Log.showError(TAG, `打印 ScreenLockStatus.LauncherLoadUnlock 555`)
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
                 this.cutMessage = $r('app.string.unlock_prompt')
                 break;
