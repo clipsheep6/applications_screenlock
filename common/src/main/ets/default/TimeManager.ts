@@ -27,6 +27,7 @@ import { obtainLocalEvent } from "./event/EventUtil";
 import { CommonEventManager, getCommonEventManager, POLICY } from "./commonEvent/CommonEventManager";
 import { ScreenLockStatus } from './ScreenLockCommon';
 import settings from '@ohos.settings';
+import { PreferencesHelper } from '../../../../../common/src/main/ets/default/PreferencesHelper'
 
 export const TIME_CHANGE_EVENT = "Time_Change_Event";
 
@@ -61,8 +62,7 @@ class TimeManager {
   private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
 
   public init(context: any) {
-    this.createDataShareHelper(context);
-    this.initLauncherLoad(context)
+    this.checkIsFirst(context)
     this.mManager = getCommonEventManager(
       TAG,
       TIME_SUBSCRIBE_INFO,
@@ -71,6 +71,16 @@ class TimeManager {
     );
     this.mManager.subscriberCommonEvent();
     this.mManager.applyPolicy([POLICY.SCREEN_POLICY]);
+    this.initTimeFormat(context);
+  }
+
+  async checkIsFirst(context) {
+    let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
+    if (isFirst) {
+      this.initLauncherLoad(context);
+      // PreferencesHelper.getInstance().put('isFirst', false);
+    }
+    Log.showError(TAG, `打印isFirst ${isFirst}`)
   }
 
   public release() {
@@ -83,26 +93,13 @@ class TimeManager {
     return concatTime(date.getHours() % (this.mUse24hFormat ? 24 : 12), date.getMinutes());
   }
 
-  public createDataShareHelper(context:any) {
-    Log.showInfo(TAG, 'createDataShareHelper');
-    const UPDATE_INTERVAL = 10;
-    const timer = setInterval(() => {
-      dataShare.createDataShareHelper(context, Constants.urlShare)
-        .then((dataHelper) => {
-          Log.showInfo(TAG, 'createDataShareHelper success.');
-          this.mSettingsHelper = dataHelper;
-          this.initTimeFormat(context);
-          clearInterval(timer);
-        })
-        .catch((err: BusinessError) => {
-          Log.showError(TAG, `createDataShareHelper fail. ${JSON.stringify(err)}`);
-        });
-    }, UPDATE_INTERVAL);
-  }
-
 
   private async initTimeFormat(context: any) {
     Log.showDebug(TAG, "initTimeFormat");
+    //this.mSettingsHelper = featureAbility.acquireDataAbilityHelper(context, URI_VAR);
+    this.mSettingsHelper = await dataShare.createDataShareHelper(context, Constants.getUriSync(TIME_FORMAT_KEY));
+    //Log.showDebug(TAG, "url:"+Constants.getUriSync(TIME_FORMAT_KEY));
+    //Log.showDebug(TAG, "mSettingsHelper:"+JSON.stringify(this.mSettingsHelper));
     try {
       this.mSettingsHelper.on("dataChange", Constants.getUriSync(TIME_FORMAT_KEY), () => {
         Log.showDebug(TAG, "mSettingsHelper on");
@@ -114,56 +111,26 @@ class TimeManager {
     }
   }
 
-  public async initLauncherLoad(context) {
-    Log.showInfo(TAG, 'initLauncherLoad');
-    const UPDATE_INTERVAL = 10;
-    const timer = setInterval(() => {
-      settings.getValue(context, 'launcherIsLoad', (err, value)=>{
-        if (err) {
-          console.error(`Failed to get the setting. ${err.message} `);
-          return;
-        }
-        clearInterval(timer);
-        Log.showError(TAG, `获取成功 拿到的value：${value}`)
-        if (value) {
-          Log.showError(TAG, `在桌面加载完成,设置解锁状态为5`)
-          AppStorage.setOrCreate('launcherIsLoad', true);
-          AppStorage.setOrCreate('lockStatus', ScreenLockStatus.LauncherLoadUnlock);
-        }
-      })
-    }, UPDATE_INTERVAL);
-  }
+   public async initLauncherLoad(context) {
+     Log.showInfo(TAG, 'initLauncherLoad');
+     const UPDATE_INTERVAL = 10;
+     const timer = setInterval(() => {
+       settings.getValue(context, 'launcherIsLoad', (err, value)=>{
+         if (err) {
+           console.error(`Failed to get the setting. ${err.message} `);
+           return;
+         }
+         clearInterval(timer);
+         Log.showError(TAG, `获取成功 拿到的value：${value}`)
+         if (value) {
+           Log.showError(TAG, `在桌面加载完成,设置解锁状态为解锁2`)
+           PreferencesHelper.getInstance().put('isFirst', false);
+           AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
+         }
+       })
+     }, UPDATE_INTERVAL);
+   }
 
-
-  // public async initLauncherLoad(context: any) {
-  //   Log.showInfo(TAG, 'initLauncherLoad');
-  //   let url:string = Constants.getUriSync(this.LAUNCHER_LOAD_STATUS_KEY)
-  //   if (!this.mSettingsHelper) {
-  //     Log.showInfo(TAG, `initLauncherLoad Can't get dataAbility helper.`);
-  //     return;
-  //   }
-  //   try {
-  //     this.mSettingsHelper.on('dataChange', url, ()=>{
-  //       Log.showInfo(TAG, 'mSettingsHelper on initLauncherLoad');
-  //       this.dataChangesCallback(context)
-  //     });
-  //   } catch (err) {
-  //     Log.showError(TAG, `Can't listen initLauncherLoad change.  err:${err}`);
-  //   }
-  // }
-  // /**
-  //  * Get launcher load status data.
-  //  * @return
-  //  */
-  // dataChangesCallback(context): void {
-  //   Log.showInfo(TAG, 'dataChangesCallback');
-  //   let retValue:string = settings.getValueSync(context, this.LAUNCHER_LOAD_STATUS_KEY, 'isNotLoad');
-  //   Log.showInfo(TAG, `dataChangesCallback initValue ${retValue}`);
-  //   if (retValue === 'isLoad') {
-  //     AppStorage.setOrCreate('launcherIsLoad', true);
-  //     AppStorage.setOrCreate('lockStatus', ScreenLockStatus.LauncherLoadUnlock);
-  //   }
-  // }
 
   private handleTimeFormatChange(context: any) {
     Log.showDebug(TAG, "handleTimeFormatChange")

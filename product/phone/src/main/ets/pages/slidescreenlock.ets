@@ -147,10 +147,10 @@ export default struct SlideScreenlock {
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event) => {
-        let lockStatus:number = AppStorage.get('lockStatus');
-        if (lockStatus === ScreenLockStatus.Unlock || lockStatus === ScreenLockStatus.LauncherLoadUnlock) {
-          this.mViewModel.touchEvent(event);
-        }
+         let lockStatus:number = AppStorage.get('lockStatus');
+         if (lockStatus === ScreenLockStatus.Unlock) {
+           this.mViewModel.touchEvent(event);
+         }
       })
     }
   }
