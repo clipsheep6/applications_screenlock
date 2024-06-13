@@ -16,6 +16,7 @@
 import DataPreferences from '@ohos.data.preferences';
 import Log from './Log';
 import { Context } from '@ohos.abilityAccessCtrl';
+import sTimeManager from '../../../../../common/src/main/ets/default/TimeManager'
 
 
 const TAG = 'PreferencesHelper';
@@ -41,6 +42,7 @@ export class PreferencesHelper {
       this.preference = await DataPreferences.getPreferences(context, PreferencesHelper.PREFERENCE_NAME);
       if (this.preference) {
         Log.showError(TAG, `preference is inited2`);
+        sTimeManager.checkIsFirst(context)
       }
     } catch (err) {
       Log.showError(TAG, `Failed to initPreference, Cause:${err.message || err?.code}`);

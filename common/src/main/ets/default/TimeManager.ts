@@ -62,7 +62,7 @@ class TimeManager {
   private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
 
   public init(context: any) {
-    this.checkIsFirst(context)
+    // this.checkIsFirst(context)
     this.mManager = getCommonEventManager(
       TAG,
       TIME_SUBSCRIBE_INFO,
@@ -75,6 +75,7 @@ class TimeManager {
   }
 
   async checkIsFirst(context) {
+    Log.showError(TAG, `为什么不执行`)
     try {
       let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
       if (isFirst) {
