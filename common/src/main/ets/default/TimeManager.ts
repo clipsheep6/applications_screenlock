@@ -75,10 +75,14 @@ class TimeManager {
   }
 
   async checkIsFirst(context) {
-    let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
-    if (isFirst) {
-      this.initLauncherLoad(context);
-      // PreferencesHelper.getInstance().put('isFirst', false);
+    try {
+      let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
+      if (isFirst) {
+        this.initLauncherLoad(context);
+        // PreferencesHelper.getInstance().put('isFirst', false);
+      }
+    } catch (err) {
+      Log.showError(TAG, `打印这个报错为什么是 ${err}`)
     }
     Log.showError(TAG, `打印isFirst ${isFirst}`)
   }

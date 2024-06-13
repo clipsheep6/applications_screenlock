@@ -14,7 +14,7 @@
  */
 
 import DataPreferences from '@ohos.data.preferences';
-import Log from './Log';
+import { Log } from '../utils/Log';
 import { Context } from '@ohos.abilityAccessCtrl';
 
 
@@ -34,12 +34,14 @@ export class PreferencesHelper {
 
   async initPreference(context: Context): Promise<void> {
     if (this.preference) {
-      Log.showInfo(TAG, `
-`);
+      Log.showInfo(TAG, `preference is inited`);
       return;
     }
     try {
       this.preference = await DataPreferences.getPreferences(context, PreferencesHelper.PREFERENCE_NAME);
+      if (this.preference) {
+        Log.showError(TAG, `preference is inited2`);
+      }
     } catch (err) {
       Log.showError(TAG, `Failed to initPreference, Cause:${err.message || err?.code}`);
     }
