@@ -14,7 +14,7 @@
  */
 
 import DataPreferences from '@ohos.data.preferences';
-import { Log } from '../utils/Log';
+import Log from './Log';
 import { Context } from '@ohos.abilityAccessCtrl';
 
 
