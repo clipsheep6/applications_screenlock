@@ -17,7 +17,6 @@ import Log from '../../../../../../../../common/src/main/ets/default/Log'
 import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
 import screenLockService from '../model/screenLockService'
 import { PreferencesHelper } from '../../../../../../../../common/src/main/ets/default/PreferencesHelper'
-import settings from '@ohos.settings';
 
 const TAG = 'ScreenLock-LockIconViewModel'
 

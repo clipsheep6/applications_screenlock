@@ -25,9 +25,6 @@ import createOrGet from "./SingleInstanceHelper";
 import Constants from "./Constants";
 import { obtainLocalEvent } from "./event/EventUtil";
 import { CommonEventManager, getCommonEventManager, POLICY } from "./commonEvent/CommonEventManager";
-import { ScreenLockStatus } from './ScreenLockCommon';
-import settings from '@ohos.settings';
-import { PreferencesHelper } from '../../../../../common/src/main/ets/default/PreferencesHelper'
 
 export const TIME_CHANGE_EVENT = "Time_Change_Event";
 
@@ -57,12 +54,10 @@ export function concatTime(h: number, m: number) {
 
 class TimeManager {
   private mUse24hFormat: boolean = false;
-  private mSettingsHelper?: DataAbilityHelper | null = null;
+  private mSettingsHelper?: DataAbilityHelper;
   private mManager?: CommonEventManager;
-  private readonly LAUNCHER_LOAD_STATUS_KEY: string = 'settings.display.launcher_load_status';
 
   public init(context: any) {
-    // this.checkIsFirst(context)
     this.mManager = getCommonEventManager(
       TAG,
       TIME_SUBSCRIBE_INFO,
@@ -72,20 +67,6 @@ class TimeManager {
     this.mManager.subscriberCommonEvent();
     this.mManager.applyPolicy([POLICY.SCREEN_POLICY]);
     this.initTimeFormat(context);
-  }
-
-  async checkIsFirst(context) {
-    Log.showError(TAG, `为什么不执行`)
-    try {
-      let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
-      if (isFirst) {
-        this.initLauncherLoad(context);
-        // PreferencesHelper.getInstance().put('isFirst', false);
-      }
-    } catch (err) {
-      Log.showError(TAG, `打印这个报错为什么是 ${err}`)
-    }
-    Log.showError(TAG, `打印isFirst ${isFirst}`)
   }
 
   public release() {
@@ -115,26 +96,6 @@ class TimeManager {
       Log.showError(TAG, `Can't listen timeformate change.`);
     }
   }
-
-   public async initLauncherLoad(context) {
-     Log.showInfo(TAG, 'initLauncherLoad');
-     const UPDATE_INTERVAL = 10;
-     const timer = setInterval(() => {
-       settings.getValue(context, 'launcherIsLoad', (err, value)=>{
-         if (err) {
-           console.error(`Failed to get the setting. ${err.message} `);
-           return;
-         }
-         clearInterval(timer);
-         Log.showError(TAG, `获取成功 拿到的value：${value}`)
-         if (value) {
-           Log.showError(TAG, `在桌面加载完成,设置解锁状态为解锁2`)
-           PreferencesHelper.getInstance().put('isFirst', false);
-           AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
-         }
-       })
-     }, UPDATE_INTERVAL);
-   }
 
 
   private handleTimeFormatChange(context: any) {

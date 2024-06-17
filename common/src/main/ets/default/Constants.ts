@@ -29,9 +29,8 @@ export type WindowType = 'status' | 'navigation';
 
 export default class Constants {
   static URI_VAR: string = 'dataability:///com.ohos.settingsdata.DataAbility';
-  static urlShare: string = 'datashare:///com.ohos.settingsdata/entry/settingsdata/SETTINGSDATA?Proxy=true&key=';
 
   static getUriSync(key: string): string {
-    return this.urlShare + key;
+    return "datashare:///com.ohos.settingsdata/entry/settingsdata/SETTINGSDATA?Proxy=true&key=" + key;
   }
 }

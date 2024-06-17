@@ -37,19 +37,9 @@ export default struct SlideScreenlock {
   @StorageLink('isWallpaperShow') isWallpaperShow: boolean = true
   @Provide @Watch('unlockScreen') isClickFrontItem: boolean = false
   private mHeightPx : number = 48
-  private time:number = this.mViewModel.duration
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
     this.mViewModel.ViewModelInit()
-    this.checkIsFirst();
-  }
-
- async checkIsFirst() {
-    let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
-    if (isFirst) {
-      this.time = 6000
-    }
-    Log.showError(TAG, `打印 time:${this.time}  isFirst ${isFirst}`)
   }
 
   aboutToDisappear() {
@@ -85,7 +75,7 @@ export default struct SlideScreenlock {
         y: this.mViewModel.backgroundScale
       })
       .animation({
-        duration: 6000, // animation duration
+        duration: this.mViewModel.duration, // animation duration
         curve: Curve.Linear, // animation curve
         delay: 0, // animation delay
         iterations: 1, // times of play
@@ -140,7 +130,7 @@ export default struct SlideScreenlock {
         y: this.mViewModel.elementScale
       })
       .animation({
-        duration: 6000, // animation duration
+        duration: this.mViewModel.duration, // animation duration
         curve: Curve.Linear, // animation curve
         delay: 0, // animation delay
         iterations: 1, // times of play
