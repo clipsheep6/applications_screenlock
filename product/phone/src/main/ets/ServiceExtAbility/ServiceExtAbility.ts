@@ -28,7 +28,6 @@ const TAG = "ScreenLock-ServiceExtAbility"
 class ServiceExtAbility extends ServiceExtension {
     onCreate(want) {
         Log.showInfo(TAG, 'onCreate, want:' + want.abilityName);
-         PreferencesHelper.getInstance().initPreference(this.context);
         AbilityManager.setContext(AbilityManager.ABILITY_NAME_SCREEN_LOCK, this.context)
         sTimeManager.init(this.context)
         this.statusBarWindow()
