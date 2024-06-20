@@ -136,6 +136,9 @@ export default struct SlideScreenlock {
         iterations: 1, // times of play
         playMode: PlayMode.Normal // animation mode
       })
+      .onAppear(()=>{
+        Log.showError(TAG, `锁屏界面加载完成 onAppear`)
+      })
       .onTouch((event) => {
          let lockStatus:number = AppStorage.get('lockStatus');
          if (lockStatus === ScreenLockStatus.Unlock) {
