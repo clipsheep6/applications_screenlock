@@ -36,7 +36,6 @@ class ServiceExtAbility extends ServiceExtension {
         sTimeManager.init(this.context)
         this.statusBarWindow()
         this.createWindow(Constants.WIN_NAME)
-        GetLauncherIsLoad.getInstance().checkIsFirst(this.context)
     }
 
     private createWindow(name: string) {

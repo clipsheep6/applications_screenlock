@@ -40,10 +40,6 @@ export default struct SlideScreenlock {
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
     this.mViewModel.ViewModelInit();
-    // Log.showError(TAG, `创建开始`)
-    // PreferencesHelper.getInstance().initPreference(getContext()).then(()=>{
-    //   Log.showError(TAG, `创建结束`)
-    // })
   }
 
   aboutToDisappear() {
