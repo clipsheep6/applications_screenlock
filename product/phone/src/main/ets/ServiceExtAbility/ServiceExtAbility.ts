@@ -22,20 +22,21 @@ import AbilityManager from '../../../../../../common/src/main/ets/default/abilit
 import sTimeManager from '../../../../../../common/src/main/ets/default/TimeManager'
 import { UIContext } from '@ohos.arkui.UIContext'
 import { PreferencesHelper } from '../../../../../../common/src/main/ets/default/PreferencesHelper'
+import DataPreferences from '@ohos.data.preferences';
+import { GetLauncherIsLoad } from '../../../../../../common/src/main/ets/default/GetLauncherIsLoad'
 
 const TAG = "ScreenLock-ServiceExtAbility"
 
 class ServiceExtAbility extends ServiceExtension {
     onCreate(want) {
         Log.showInfo(TAG, 'onCreate, want:' + want.abilityName);
+        // this.initPreference();
+        PreferencesHelper.getInstance().initPreference(this.context)
         AbilityManager.setContext(AbilityManager.ABILITY_NAME_SCREEN_LOCK, this.context)
         sTimeManager.init(this.context)
         this.statusBarWindow()
         this.createWindow(Constants.WIN_NAME)
-        Log.showError(TAG, `创建开始`)
-        PreferencesHelper.getInstance().initPreference(this.context).then(()=>{
-            Log.showError(TAG, `创建结束`)
-        })
+        GetLauncherIsLoad.getInstance().checkIsFirst(this.context)
     }
 
     private createWindow(name: string) {

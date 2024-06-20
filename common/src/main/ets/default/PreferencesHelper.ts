@@ -22,7 +22,7 @@ import { GetLauncherIsLoad } from './GetLauncherIsLoad';
 const TAG = 'PreferencesHelper';
 
 export class PreferencesHelper {
-  private static PREFERENCE_NAME = 'Screen_lock_pref';
+  // private static PREFERENCE_NAME = 'Screen_lock_pref';
   private static sInstance:PreferencesHelper | undefined = undefined;
   private preference:DataPreferences.Preferences;
 
@@ -33,21 +33,37 @@ export class PreferencesHelper {
     return PreferencesHelper.sInstance;
   }
 
-  async initPreference(context: Context): Promise<void> {
-    if (this.preference) {
-      Log.showInfo(TAG, 'preference is inited');
-      return;
-    }
+  async initPreference(context) {
+    // let preferences:DataPreferences.Preferences | null = null;
     try {
-      this.preference = await DataPreferences.getPreferences(context, PreferencesHelper.PREFERENCE_NAME);
-      if (this.preference) {
-        Log.showError(TAG, 'preference is inited2');
-        GetLauncherIsLoad.getInstance().checkIsFirst(context)
+      this.preference = await DataPreferences.getPreferences(context, 'Screen_lock_pref');
+      if (this.preference.hasSync('isFirst')) {
+        Log.showError(TAG, "The key 'isFirst' is contained");
+      } else {
+        Log.showError(TAG, "The key 'isFirst' does not contain");
+        // 不存在则写入
+        this.preference.putSync('isFirst', true);
       }
     } catch (err) {
-      Log.showError(TAG, `Failed to initPreference, Cause:${err.message || err?.code}`);
+      Log.showError(TAG, `Failed to initPreference, Cause:${err.message || err.code}`);
     }
   }
+
+  // async initPreference(context: Context): Promise<void> {
+  //   if (this.preference) {
+  //     Log.showInfo(TAG, 'preference is inited');
+  //     return;
+  //   }
+  //   try {
+  //     this.preference = await DataPreferences.getPreferences(context, PreferencesHelper.PREFERENCE_NAME);
+  //     if (this.preference) {
+  //       Log.showError(TAG, 'preference is inited2');
+  //       GetLauncherIsLoad.getInstance().checkIsFirst(context)
+  //     }
+  //   } catch (err) {
+  //     Log.showError(TAG, `Failed to initPreference, Cause:${err.message || err?.code}`);
+  //   }
+  // }
 
   async put(key:string, value):Promise<void>{
     try {
