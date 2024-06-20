@@ -32,6 +32,10 @@ class ServiceExtAbility extends ServiceExtension {
         sTimeManager.init(this.context)
         this.statusBarWindow()
         this.createWindow(Constants.WIN_NAME)
+        Log.showError(TAG, `创建开始`)
+        PreferencesHelper.getInstance().initPreference(this.context).then(()=>{
+            Log.showError(TAG, `创建结束`)
+        })
     }
 
     private createWindow(name: string) {
