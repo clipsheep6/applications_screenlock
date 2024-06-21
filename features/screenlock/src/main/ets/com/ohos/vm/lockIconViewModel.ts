@@ -39,6 +39,7 @@ export default class LockIconViewModel {
             case ScreenLockStatus.Unlock:
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
                 this.cutMessage = $r('app.string.unlock_prompt')
+                Log.showError(TAG, `锁屏已经可以解锁`)
                 break;
             case ScreenLockStatus.RecognizingFace:
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
