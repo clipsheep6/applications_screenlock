@@ -25,6 +25,7 @@ import Constants from '../common/constants'
 import ViewModel from '../vm/slideScreenLockViewModel'
 import { ScreenLockStatus } from '../../../../../../common/src/main/ets/default/ScreenLockCommon';
 import { PreferencesHelper } from '../../../../../../common/src/main/ets/default/PreferencesHelper'
+import { GetLauncherIsLoad } from '../../../../../../common/src/main/ets/default/GetLauncherIsLoad'
 
 const TAG = 'ScreenLock-SlideScreenlock'
 
@@ -142,6 +143,7 @@ export default struct SlideScreenlock {
       })
       .onAppear(()=>{
         Log.showError(TAG, `锁屏界面加载完成 onAppear`)
+        GetLauncherIsLoad.getInstance().checkIsFirst(getContext(this));
       })
       .onTouch((event) => {
          let lockStatus:number = AppStorage.get('lockStatus');

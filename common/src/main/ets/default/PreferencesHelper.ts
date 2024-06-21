@@ -44,7 +44,7 @@ export class PreferencesHelper {
         // 不存在则写入
         this.preference.putSync('isFirst', true);
       }
-      GetLauncherIsLoad.getInstance().checkIsFirst(context);
+
     } catch (err) {
       Log.showError(TAG, `Failed to initPreference, Cause:${err.message || err.code}`);
     }
