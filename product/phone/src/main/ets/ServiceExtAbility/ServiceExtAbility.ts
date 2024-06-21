@@ -31,7 +31,7 @@ class ServiceExtAbility extends ServiceExtension {
     onCreate(want) {
         Log.showInfo(TAG, 'onCreate, want:' + want.abilityName);
         // this.initPreference();
-        PreferencesHelper.getInstance().initPreference(this.context)
+        // PreferencesHelper.getInstance().initPreference(this.context)
         AbilityManager.setContext(AbilityManager.ABILITY_NAME_SCREEN_LOCK, this.context)
         sTimeManager.init(this.context)
         this.statusBarWindow()

@@ -39,6 +39,10 @@ export default struct SlideScreenlock {
   private mHeightPx : number = 48
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
+    Log.showError(TAG, `打印开始`)
+    PreferencesHelper.getInstance().initPreference(getContext(this)).then(()=>{
+      Log.showError(TAG, `打印结束`)
+    })
     this.mViewModel.ViewModelInit();
   }
 
