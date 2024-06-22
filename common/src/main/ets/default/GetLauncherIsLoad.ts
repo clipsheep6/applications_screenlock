@@ -43,7 +43,6 @@ export class GetLauncherIsLoad {
     } catch (err) {
       Log.showError(TAG, `打印这个报错为什么是 ${err}`)
     }
-    )
   }
 
   public async getLauncherLoad(context) {
