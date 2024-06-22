@@ -39,11 +39,8 @@ export default struct SlideScreenlock {
   @StorageLink('isWallpaperShow') isWallpaperShow: boolean = true
   @Provide @Watch('unlockScreen') isClickFrontItem: boolean = false
   private mHeightPx : number = 48
-  async aboutToAppear() {
+  aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
-    Log.showError(TAG, `打印开始`);
-    await PreferencesHelper.getInstance().initPreference(getContext(this));
-    Log.showError(TAG, `打印结束`);
     this.mViewModel.ViewModelInit();
     Log.showError(TAG, `ViewModelInit 结束`);
   }
@@ -148,8 +145,11 @@ export default struct SlideScreenlock {
           iterations: 1, // times of play
           playMode: PlayMode.Normal // animation mode
         })
-        .onAppear(() => {
+        .onAppear(async () => {
           Log.showError(TAG, `锁屏界面加载完成 onAppear`)
+          Log.showError(TAG, `打印开始`);
+          await PreferencesHelper.getInstance().initPreference(getContext(this));
+          Log.showError(TAG, `打印结束`);
           GetLauncherIsLoad.getInstance().checkIsFirst(getContext(this));
         })
         .onTouch((event) => {

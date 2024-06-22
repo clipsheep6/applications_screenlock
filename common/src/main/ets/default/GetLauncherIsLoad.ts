@@ -47,7 +47,7 @@ export class GetLauncherIsLoad {
 
   public async getLauncherLoad(context) {
     Log.showError(TAG, 'initLauncherLoad');
-    const UPDATE_INTERVAL = 50;
+    // const UPDATE_INTERVAL = 50;
     const timer = setInterval(() => {
       settings.getValue(context, 'launcherIsLoad', (err, value)=>{
         if (err) {
@@ -62,7 +62,7 @@ export class GetLauncherIsLoad {
           PreferencesHelper.getInstance().put('isFirst', false);
         }
       })
-    }, UPDATE_INTERVAL);
+    }, 200);
   }
 }
 
