@@ -37,7 +37,7 @@ export class GetLauncherIsLoad {
     try {
       let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
       Log.showError(TAG, `打印isFirst ${isFirst}`);
-      if (isFirst || isFirst === 'undefined') {
+      if (isFirst || isFirst === undefined) {
         this.getLauncherLoad(context);
       }
     } catch (err) {
@@ -58,8 +58,8 @@ export class GetLauncherIsLoad {
         Log.showError(TAG, `获取成功 拿到的value：${value}`)
         if (value) {
           Log.showError(TAG, `在桌面加载完成,设置解锁状态为解锁2`)
-          PreferencesHelper.getInstance().put('isFirst', false);
           AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
+          PreferencesHelper.getInstance().put('isFirst', false);
         }
       })
     }, UPDATE_INTERVAL);
