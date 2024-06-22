@@ -36,22 +36,23 @@ export class GetLauncherIsLoad {
     Log.showError(TAG, `为什么不执行`)
     try {
       let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
+      Log.showError(TAG, `打印isFirst ${isFirst}`);
       if (isFirst || isFirst === 'undefined') {
         this.getLauncherLoad(context);
       }
     } catch (err) {
       Log.showError(TAG, `打印这个报错为什么是 ${err}`)
     }
-    Log.showError(TAG, `打印isFirst ${isFirstOne}`)
+    )
   }
 
   public async getLauncherLoad(context) {
-    Log.showInfo(TAG, 'initLauncherLoad');
+    Log.showError(TAG, 'initLauncherLoad');
     const UPDATE_INTERVAL = 50;
     const timer = setInterval(() => {
       settings.getValue(context, 'launcherIsLoad', (err, value)=>{
         if (err) {
-          console.error(`Failed to get the setting. ${err.message} `);
+          Log.showError(TAG, `Failed to get the setting. ${err.message} `);
           return;
         }
         clearInterval(timer);
