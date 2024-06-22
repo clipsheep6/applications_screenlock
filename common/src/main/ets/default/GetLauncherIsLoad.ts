@@ -34,11 +34,9 @@ export class GetLauncherIsLoad {
 
   async checkIsFirst(context: any) {
     Log.showError(TAG, `为什么不执行`)
-    let isFirstOne = await PreferencesHelper.getInstance().get('isFirst', true);
-    Log.showError(TAG, `打印 ${isFirstOne}`);
     try {
       let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
-      if (isFirst) {
+      if (isFirst || isFirst === 'undefined') {
         this.getLauncherLoad(context);
       }
     } catch (err) {
