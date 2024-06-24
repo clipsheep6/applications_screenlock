@@ -24,6 +24,7 @@ const TAG = 'GetLauncherIsLoad';
 export class GetLauncherIsLoad {
 
   private static sInstance:GetLauncherIsLoad | undefined = undefined;
+  public timer:number | null = null;
 
   static getInstance() {
     if (!GetLauncherIsLoad.sInstance) {
@@ -47,14 +48,13 @@ export class GetLauncherIsLoad {
 
   public async getLauncherLoad(context) {
     Log.showError(TAG, 'initLauncherLoad');
-    // const UPDATE_INTERVAL = 50;
-    const timer = setInterval(() => {
+    this.timer = setInterval(() => {
       settings.getValue(context, 'launcherIsLoad', (err, value)=>{
         if (err) {
           Log.showError(TAG, `Failed to get the setting. ${err.message} `);
           return;
         }
-        clearInterval(timer);
+        clearInterval(this.timer);
         Log.showError(TAG, `获取成功 拿到的value：${value}`)
         if (value) {
           Log.showError(TAG, `在桌面加载完成,设置解锁状态为解锁2`)

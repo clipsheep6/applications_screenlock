@@ -17,6 +17,7 @@ import Log from '../../../../../../../../common/src/main/ets/default/Log'
 import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
 import screenLockService from '../model/screenLockService'
 import { PreferencesHelper } from '../../../../../../../../common/src/main/ets/default/PreferencesHelper'
+import { GetLauncherIsLoad } from '../../../../../../../../common/src/main/ets/default/GetLauncherIsLoad'
 
 const TAG = 'ScreenLock-LockIconViewModel'
 
@@ -38,9 +39,10 @@ export default class LockIconViewModel {
             setTimeout(()=>{
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
                 this.cutMessage = $r('app.string.unlock_prompt')
+                clearInterval(GetLauncherIsLoad.getInstance().timer)
                 Log.showError(TAG, `定时器内打印 可以进行解锁1 isFirst：${isFirst}`)
+                AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
                 PreferencesHelper.getInstance().put('isFirst', false);
-                AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock)
            }, 5000)
         } else {
             this.iconPath = $r('app.media.ic_public_unlock_filled');
