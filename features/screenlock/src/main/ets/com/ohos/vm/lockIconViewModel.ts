@@ -34,6 +34,7 @@ export default class LockIconViewModel {
     async unlockScreen() {
         Log.showError(TAG, `打印 unlockScreen`)
         let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
+        Log.showError(TAG, `isFirst：${isFirst}`)
         if (isFirst || isFirst === undefined) {
             AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Locking)
             setTimeout(()=>{

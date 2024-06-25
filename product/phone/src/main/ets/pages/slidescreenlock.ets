@@ -46,15 +46,15 @@ export default struct SlideScreenlock {
   }
 
   aboutToDisappear() {
-    Log.showInfo(TAG, `aboutToDisAppear`)
+    Log.showError(TAG, `打印 aboutToDisAppear`)
   }
 
-  onPageShow() {
-    Log.showInfo(TAG, `onPageShow`)
+ async onPageShow() {
+   Log.showError(TAG, `打印 onPageShow`)
   }
 
   onPageHide() {
-    Log.showInfo(TAG, `onPageHide`)
+    Log.showError(TAG, `打印 onPageHide`)
   }
 
   unlockScreen() {
