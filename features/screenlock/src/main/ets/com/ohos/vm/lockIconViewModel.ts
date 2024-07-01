@@ -43,11 +43,13 @@ export default class LockIconViewModel {
                 clearInterval(GetLauncherIsLoad.getInstance().timer)
                 Log.showError(TAG, `定时器内打印 可以进行解锁1 isFirst：${isFirst}`)
                 AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
+                AppStorage.setOrCreate('unlock_prompt', true)
                 PreferencesHelper.getInstance().put('isFirst', false);
            }, 5000)
         } else {
             this.iconPath = $r('app.media.ic_public_unlock_filled');
             this.cutMessage = $r('app.string.unlock_prompt')
+            AppStorage.setOrCreate('unlock_prompt', true)
             Log.showError(TAG, `定时器内打印 可以进行解锁2 isFirst：${isFirst}`)
         }
      }

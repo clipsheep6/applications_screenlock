@@ -154,7 +154,8 @@ export default struct SlideScreenlock {
         })
         .onTouch((event) => {
           let lockStatus: number = AppStorage.get('lockStatus');
-          if (lockStatus === ScreenLockStatus.Unlock) {
+          let unlock_prompt: boolean | undefined = AppStorage.get('unlock_prompt')
+          if (lockStatus === ScreenLockStatus.Unlock && unlock_prompt) {
             this.mViewModel.touchEvent(event);
           }
         })
