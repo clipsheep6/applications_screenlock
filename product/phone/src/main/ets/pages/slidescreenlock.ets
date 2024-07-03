@@ -75,7 +75,7 @@ export default struct SlideScreenlock {
       .animation({
         duration: this.mViewModel.duration, // animation duration
         curve: Curve.Linear, // animation curve
-        delay: 0, // animation delay
+        delay: 100, // animation delay
         iterations: 1, // times of play
         playMode: PlayMode.Normal // animation mode
       })
@@ -130,7 +130,7 @@ export default struct SlideScreenlock {
       .animation({
         duration: this.mViewModel.duration, // animation duration
         curve: Curve.Linear, // animation curve
-        delay: 0, // animation delay
+        delay: 100, // animation delay
         iterations: 1, // times of play
         playMode: PlayMode.Normal // animation mode
       })
