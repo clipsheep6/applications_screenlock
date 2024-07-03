@@ -253,6 +253,7 @@ export class ScreenLockService {
                 return
             }
             mUnLockBeginAnimation(() => {
+                Log.showError(TAG, `赋值给mUnLockBeginAnimation 开始执行`)
                 let status = AppStorage.Link('lockStatus')
                 Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
                 if (status?.get() == ScreenLockStatus.Unlock) {
@@ -370,6 +371,7 @@ export class ScreenLockService {
     }
 
     setUnlockAnimation(beginAnimation: Callback<Callback<void>>) {
+        Log.showError(TAG, `beginAnimation 赋值给mUnLockBeginAnimation`)
         mUnLockBeginAnimation = beginAnimation;
     }
 
