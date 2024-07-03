@@ -33,7 +33,7 @@ export default class SlideScreenLockViewModel {
     elementAlpha: number = 1
     elementScale: number = 1
     backgroundScale: number = 1.1
-    duration: number= 250
+    duration: number= 1000
     toggleShow: boolean = false
 
     ViewModelInit(): void{
@@ -47,7 +47,7 @@ export default class SlideScreenLockViewModel {
                 this.elementAlpha = 1
                 this.elementScale = 1
                 this.backgroundScale = 1.1
-            }, 250);
+            }, 1000);
         })
         this.slidingLength = SLIDING_LENGTH
     }
