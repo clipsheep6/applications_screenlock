@@ -38,7 +38,7 @@ export default class SlideScreenLockViewModel {
     duration: number= 250
     toggleShow: boolean = false
 
-    async ViewModelInit(): Promise<void> {
+     ViewModelInit(): void {
         Log.showError(TAG, `ViewModelInit 检查是否是首次`);
         ScreenLockService.setUnlockAnimation((callback: Callback<void>) => {
             this.elementAlpha = 0
