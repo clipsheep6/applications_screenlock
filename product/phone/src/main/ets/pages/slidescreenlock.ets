@@ -39,6 +39,7 @@ export default struct SlideScreenlock {
   @StorageLink('isWallpaperShow') isWallpaperShow: boolean = true
   @Provide @Watch('unlockScreen') isClickFrontItem: boolean = false
   private mHeightPx : number = 48
+  private duration:number = this.mViewModel.duration
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
     this.mViewModel.ViewModelInit();
