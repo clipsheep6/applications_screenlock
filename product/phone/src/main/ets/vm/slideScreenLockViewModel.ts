@@ -41,6 +41,7 @@ export default class SlideScreenLockViewModel {
     async ViewModelInit(): Promise<void> {
         Log.showError(TAG, `ViewModelInit 检查是否是首次`);
         let isFirst = await PreferencesHelper.getInstance().get('isFirst', true)
+        Log.showError(TAG, `检查是否是首次打印isFirst:${isFirst}`)
         if (isFirst || isFirst === undefined) {
             this.duration = 500
         }
@@ -56,6 +57,7 @@ export default class SlideScreenLockViewModel {
             }, this.duration);
         })
         this.slidingLength = SLIDING_LENGTH
+        AppStorage.setOrCreate('duration', this.duration)
     }
 
     unlockScreen(): void{

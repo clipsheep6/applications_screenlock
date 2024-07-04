@@ -280,6 +280,8 @@ export class ScreenLockService {
         AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Unlock);
         this.currentLockStatus = ScreenLockStatus.Unlock;
         AppStorage.SetOrCreate('slidestatus', false);
+        let number = AppStorage.get('duration')
+        Log.showError(TAG, `打印这个数字, ${number}`)
         //unlock the screen
         this.screenLockModel.hiddenScreenLockWindow(() => {
             Log.showInfo(TAG, `hiddenScreenLockWindow finish`);
