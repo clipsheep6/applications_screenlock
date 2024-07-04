@@ -40,6 +40,7 @@ export class GetLauncherIsLoad {
       Log.showError(TAG, `打印isFirst ${isFirst}`);
       if (isFirst || isFirst === undefined) {
         this.getLauncherLoad(context);
+        AppStorage.setOrCreate('isFirst', true)
       }
     } catch (err) {
       Log.showError(TAG, `打印这个报错为什么是 ${err}`)
