@@ -40,11 +40,6 @@ export default class SlideScreenLockViewModel {
 
     async ViewModelInit(): Promise<void> {
         Log.showError(TAG, `ViewModelInit 检查是否是首次`);
-        let isFirst = AppStorage.get('isFirst')
-        Log.showError(TAG, `检查是否是首次打印isFirst:${isFirst}`)
-        if (isFirst) {
-            this.duration = 500
-        }
         ScreenLockService.setUnlockAnimation((callback: Callback<void>) => {
             this.elementAlpha = 0
             this.elementScale = 0.85

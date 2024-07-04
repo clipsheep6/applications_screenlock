@@ -38,8 +38,8 @@ export default struct SlideScreenlock {
   @StorageLink('deviceStatus') @Watch('onDeviceStatusChange') deviceStatus: string = ""
   @StorageLink('isWallpaperShow') isWallpaperShow: boolean = true
   @Provide @Watch('unlockScreen') isClickFrontItem: boolean = false
+  @StorageLink('isFirst') @Watch('durationChange') isFirst: boolean = false
   private mHeightPx : number = 48
-  private duration:number = this.mViewModel.duration
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
     this.mViewModel.ViewModelInit();
@@ -64,6 +64,11 @@ export default struct SlideScreenlock {
       this.mViewModel.unlockScreen()
     }
     this.isClickFrontItem = false
+  }
+
+  durationChange(){
+    Log.showError(TAG, `打印 durationChange`)
+    this.mViewModel.duration = 500
   }
 
   printlog(): boolean {
