@@ -79,6 +79,7 @@ class TimeManager {
     return concatTime(date.getHours() % (this.mUse24hFormat ? 24 : 12), date.getMinutes());
   }
 
+
   private async initTimeFormat(context: any) {
     Log.showDebug(TAG, "initTimeFormat");
     //this.mSettingsHelper = featureAbility.acquireDataAbilityHelper(context, URI_VAR);
@@ -95,6 +96,7 @@ class TimeManager {
       Log.showError(TAG, `Can't listen timeformate change.`);
     }
   }
+
 
   private handleTimeFormatChange(context: any) {
     Log.showDebug(TAG, "handleTimeFormatChange")

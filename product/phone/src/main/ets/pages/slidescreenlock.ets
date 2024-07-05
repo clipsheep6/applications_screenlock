@@ -23,6 +23,10 @@ import NotificationListComponent from '../../../../../../features/noticeitem/src
 import StatusBar from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/statusBar'
 import Constants from '../common/constants'
 import ViewModel from '../vm/slideScreenLockViewModel'
+import { ScreenLockStatus } from '../../../../../../common/src/main/ets/default/ScreenLockCommon';
+import { PreferencesHelper } from '../../../../../../common/src/main/ets/default/PreferencesHelper'
+import { GetLauncherIsLoad } from '../../../../../../common/src/main/ets/default/GetLauncherIsLoad'
+import print from '@ohos.print'
 
 const TAG = 'ScreenLock-SlideScreenlock'
 
@@ -34,22 +38,24 @@ export default struct SlideScreenlock {
   @StorageLink('deviceStatus') @Watch('onDeviceStatusChange') deviceStatus: string = ""
   @StorageLink('isWallpaperShow') isWallpaperShow: boolean = true
   @Provide @Watch('unlockScreen') isClickFrontItem: boolean = false
+  @StorageLink('isFirst') @Watch('durationChange') isFirst: boolean = false
   private mHeightPx : number = 48
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
-    this.mViewModel.ViewModelInit()
+    this.mViewModel.ViewModelInit();
+    Log.showError(TAG, `ViewModelInit 结束`);
   }
 
   aboutToDisappear() {
-    Log.showInfo(TAG, `aboutToDisAppear`)
+    Log.showError(TAG, `打印 aboutToDisAppear`)
   }
 
-  onPageShow() {
-    Log.showInfo(TAG, `onPageShow`)
+ async onPageShow() {
+   Log.showError(TAG, `打印 onPageShow`)
   }
 
   onPageHide() {
-    Log.showInfo(TAG, `onPageHide`)
+    Log.showError(TAG, `打印 onPageHide`)
   }
 
   unlockScreen() {
@@ -60,83 +66,107 @@ export default struct SlideScreenlock {
     this.isClickFrontItem = false
   }
 
-  build() {
-    Stack({ alignContent: Alignment.Bottom }) {
-      Column() {
-        Wallpaper()
-      }
-      .backgroundColor($r('app.color.screenlock_backgroundcolor'))
-      .width(Constants.FULL_CONTAINER_WIDTH)
-      .height(Constants.FULL_CONTAINER_HEIGHT)
-      .scale({
-        x: this.mViewModel.backgroundScale,
-        y: this.mViewModel.backgroundScale
-      })
-      .animation({
-        duration: this.mViewModel.duration, // animation duration
-        curve: Curve.Linear, // animation curve
-        delay: 0, // animation delay
-        iterations: 1, // times of play
-        playMode: PlayMode.Normal // animation mode
-      })
+  durationChange(){
+    Log.showError(TAG, `打印 durationChange`)
+    this.mViewModel.duration = 500
+    this.mViewModel.ViewModelInit()
+  }
 
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
+  printlog(): boolean {
+    Log.showError(TAG, `build begin`)
+    return true;
+  }
+
+  build() {
+    if (this.printlog()) {
+      Stack({ alignContent: Alignment.Bottom }) {
         Column() {
-          StatusBar()
+          Wallpaper()
         }
-        .height(this.mHeightPx + 'px' )
-        .onAreaChange((e, e2) => {
-          Log.showDebug(TAG, `onAreaChange, e: ${JSON.stringify(e)} e2: ${JSON.stringify(e2)}`);
+        .backgroundColor($r('app.color.screenlock_backgroundcolor'))
+        .width(Constants.FULL_CONTAINER_WIDTH)
+        .height(Constants.FULL_CONTAINER_HEIGHT)
+        .scale({
+          x: this.mViewModel.backgroundScale,
+          y: this.mViewModel.backgroundScale
+        })
+        .animation({
+          duration: this.mViewModel.duration, // animation duration
+          curve: Curve.Linear, // animation curve
+          delay: 0, // animation delay
+          iterations: 1, // times of play
+          playMode: PlayMode.Normal // animation mode
+        })
+
+        Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
+          Column() {
+            StatusBar()
+          }
+          .height(this.mHeightPx + 'px')
+          .onAreaChange((e, e2) => {
+            Log.showDebug(TAG, `onAreaChange, e: ${JSON.stringify(e)} e2: ${JSON.stringify(e2)}`);
+          })
+        }
+
+        Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
+          Column() {
+          }
+          .height(0)
+
+          Column() {
+            Row() {
+              Blank()
+              Accounts()
+            }
+            .width(Constants.NOTIFICATION_AREA_WIDTH)
+            .height($r("app.float.accounts_area_height"))
+          }
+          .margin({ top: $r("app.float.accounts_area_margin_top") })
+
+          Column() {
+            LockIcon()
+          }.height(Constants.P_LOCKICON_AREA_WIDTH)
+
+          Column() {
+            DateTime({ isShowDate: true })
+          }.height(Constants.P_DATETIME_AREA_WIDTH)
+          .margin({ top: $r("app.float.DateTime_margin_top"), bottom: $r("app.float.DateTime_margin_bottom") })
+
+          Column() {
+            NotificationListComponent()
+          }
+          .alignItems(HorizontalAlign.Center)
+          .width(Constants.NOTIFICATION_AREA_WIDTH)
+        }
+        .width(Constants.FULL_CONTAINER_WIDTH)
+        .height(Constants.FULL_CONTAINER_HEIGHT)
+        .opacity(this.mViewModel.elementAlpha)
+        .scale({
+          x: this.mViewModel.elementScale,
+          y: this.mViewModel.elementScale
+        })
+        .animation({
+          duration: this.mViewModel.duration, // animation duration
+          curve: Curve.Linear, // animation curve
+          delay: 0, // animation delay
+          iterations: 1, // times of play
+          playMode: PlayMode.Normal // animation mode
+        })
+        .onAppear(async () => {
+          Log.showError(TAG, `锁屏界面加载完成 onAppear`)
+          Log.showError(TAG, `打印开始`);
+          await PreferencesHelper.getInstance().initPreference(getContext(this));
+          Log.showError(TAG, `打印结束`);
+          GetLauncherIsLoad.getInstance().checkIsFirst(getContext(this));
+        })
+        .onTouch((event) => {
+          let lockStatus: number = AppStorage.get('lockStatus');
+          let unlock_prompt: boolean | undefined = AppStorage.get('unlock_prompt')
+          if (lockStatus === ScreenLockStatus.Unlock && unlock_prompt) {
+            this.mViewModel.touchEvent(event);
+          }
         })
       }
-
-      Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Start }) {
-        Column() {
-        }
-        .height(0)
-
-        Column() {
-          Row() {
-            Blank()
-            Accounts()
-          }
-          .width(Constants.NOTIFICATION_AREA_WIDTH)
-          .height($r("app.float.accounts_area_height"))
-        }
-        .margin({ top: $r("app.float.accounts_area_margin_top") })
-
-        Column() {
-          LockIcon()
-        }.height(Constants.P_LOCKICON_AREA_WIDTH)
-
-        Column() {
-          DateTime({ isShowDate: true })
-        }.height(Constants.P_DATETIME_AREA_WIDTH)
-        .margin({ top: $r("app.float.DateTime_margin_top"), bottom: $r("app.float.DateTime_margin_bottom") })
-
-        Column() {
-          NotificationListComponent()
-        }
-        .alignItems(HorizontalAlign.Center)
-        .width(Constants.NOTIFICATION_AREA_WIDTH)
-      }
-      .width(Constants.FULL_CONTAINER_WIDTH)
-      .height(Constants.FULL_CONTAINER_HEIGHT)
-      .opacity(this.mViewModel.elementAlpha)
-      .scale({
-        x: this.mViewModel.elementScale,
-        y: this.mViewModel.elementScale
-      })
-      .animation({
-        duration: this.mViewModel.duration, // animation duration
-        curve: Curve.Linear, // animation curve
-        delay: 0, // animation delay
-        iterations: 1, // times of play
-        playMode: PlayMode.Normal // animation mode
-      })
-      .onTouch((event) => {
-        this.mViewModel.touchEvent(event)
-      })
     }
   }
 

@@ -94,6 +94,7 @@ export class ScreenLockService {
     screenLockModel: ScreenLockModel = new ScreenLockModel()
     currentLockStatus : ScreenLockStatus;
     memoryMonitor: number = -1;
+
     init() {
         Log.showDebug(TAG, 'init');
         this.startMonitorMemory();
@@ -246,6 +247,7 @@ export class ScreenLockService {
         })
     }
 
+
     unlockScreen() {
         Log.showInfo(TAG, `unlockScreen`);
         this.accountModel.isActivateAccount((isActivate: boolean) => {
@@ -256,8 +258,8 @@ export class ScreenLockService {
                 let status = AppStorage.Link('lockStatus')
                 Log.showDebug(TAG, `unlocking lockStatus:${JSON.stringify(status?.get())}`);
                 if (status?.get() == ScreenLockStatus.Unlock) {
-                    Log.showInfo(TAG, `unlock the screen`);
-                    this.unlocking();
+                     Log.showInfo(TAG, `unlock the screen`);
+                     this.unlocking();
                 } else {
                     let slidestatus = AppStorage.Get('slidestatus')
                     if(!slidestatus){
@@ -278,6 +280,8 @@ export class ScreenLockService {
         AppStorage.SetOrCreate('lockStatus', ScreenLockStatus.Unlock);
         this.currentLockStatus = ScreenLockStatus.Unlock;
         AppStorage.SetOrCreate('slidestatus', false);
+        let number = AppStorage.get('duration')
+        Log.showError(TAG, `打印这个数字, ${number}`)
         //unlock the screen
         this.screenLockModel.hiddenScreenLockWindow(() => {
             Log.showInfo(TAG, `hiddenScreenLockWindow finish`);

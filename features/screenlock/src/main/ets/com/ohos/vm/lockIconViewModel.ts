@@ -16,6 +16,8 @@
 import Log from '../../../../../../../../common/src/main/ets/default/Log'
 import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
 import screenLockService from '../model/screenLockService'
+import { PreferencesHelper } from '../../../../../../../../common/src/main/ets/default/PreferencesHelper'
+import { GetLauncherIsLoad } from '../../../../../../../../common/src/main/ets/default/GetLauncherIsLoad'
 
 const TAG = 'ScreenLock-LockIconViewModel'
 
@@ -29,6 +31,29 @@ export default class LockIconViewModel {
         this.cutMessage = $r('app.string.lock_prompt')
     }
 
+    async unlockScreen() {
+        Log.showError(TAG, `打印 unlockScreen`)
+        let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
+        Log.showError(TAG, `isFirst：${isFirst}`)
+        if (isFirst || isFirst === undefined) {
+            AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Locking)
+            setTimeout(()=>{
+                this.iconPath = $r('app.media.ic_public_unlock_filled');
+                this.cutMessage = $r('app.string.unlock_prompt')
+                clearInterval(GetLauncherIsLoad.getInstance().timer)
+                Log.showError(TAG, `定时器内打印 可以进行解锁1 isFirst：${isFirst}`)
+                AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
+                AppStorage.setOrCreate('unlock_prompt', true)
+                PreferencesHelper.getInstance().put('isFirst', false);
+           }, 5000)
+        } else {
+            this.iconPath = $r('app.media.ic_public_unlock_filled');
+            this.cutMessage = $r('app.string.unlock_prompt')
+            AppStorage.setOrCreate('unlock_prompt', true)
+            Log.showError(TAG, `定时器内打印 可以进行解锁2 isFirst：${isFirst}`)
+        }
+     }
+
     onStatusChange(lockStatus: ScreenLockStatus): void {
         Log.showInfo(TAG, `onStatusChange lockStatus:${lockStatus}`);
         switch (lockStatus) {
@@ -37,8 +62,7 @@ export default class LockIconViewModel {
                 this.cutMessage = $r('app.string.lock_prompt')
                 break;
             case ScreenLockStatus.Unlock:
-                this.iconPath = $r('app.media.ic_public_unlock_filled');
-                this.cutMessage = $r('app.string.unlock_prompt')
+                 this.unlockScreen();
                 break;
             case ScreenLockStatus.RecognizingFace:
                 this.iconPath = $r('app.media.ic_public_unlock_filled');

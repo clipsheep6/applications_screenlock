@@ -15,8 +15,10 @@
 
 import Log from '../../../../../../common/src/main/ets/default/Log';
 import ScreenLockService from '../../../../../../features/screenlock/src/main/ets/com/ohos/model/screenLockService'
+import { PreferencesHelper } from '../../../../../../common/src/main/ets/default/PreferencesHelper'
 import Constants from '../common/constants'
 import {Callback} from '@ohos.base';
+import DataPreferences from '@ohos.data.preferences';
 
 const TAG = 'ScreenLock-SlideScreenLockViewModel'
 //Height of notification area.
@@ -36,8 +38,8 @@ export default class SlideScreenLockViewModel {
     duration: number= 250
     toggleShow: boolean = false
 
-    ViewModelInit(): void{
-        Log.showDebug(TAG, `ViewModelInit`);
+     ViewModelInit(): void {
+        Log.showError(TAG, `ViewModelInit 检查是否是首次`);
         ScreenLockService.setUnlockAnimation((callback: Callback<void>) => {
             this.elementAlpha = 0
             this.elementScale = 0.85
@@ -47,9 +49,10 @@ export default class SlideScreenLockViewModel {
                 this.elementAlpha = 1
                 this.elementScale = 1
                 this.backgroundScale = 1.1
-            }, 250);
+            }, this.duration);
         })
         this.slidingLength = SLIDING_LENGTH
+        AppStorage.setOrCreate('duration', this.duration)
     }
 
     unlockScreen(): void{
