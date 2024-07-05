@@ -68,7 +68,7 @@ export default struct SlideScreenlock {
 
   durationChange(){
     Log.showError(TAG, `打印 durationChange`)
-    this.mViewModel.duration = 650
+    this.mViewModel.duration = 500
     this.mViewModel.ViewModelInit()
   }
 
