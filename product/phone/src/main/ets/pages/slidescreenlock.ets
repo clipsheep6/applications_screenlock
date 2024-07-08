@@ -146,14 +146,14 @@ export default struct SlideScreenlock {
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event: TouchEvent) => {
-          let lockStatus: number = AppStorage.get('lockStatus');
-          let unlock_prompt: boolean | undefined = AppStorage.get('unlock_prompt')
-          if (lockStatus === ScreenLockStatus.Unlock && unlock_prompt) {
-            this.mViewModel.touchEvent(event);
-          }
+        let lockStatus: number = AppStorage.get('lockStatus');
+        let unlockPrompt: boolean | undefined = AppStorage.get('unlock_prompt')
+        if (lockStatus === ScreenLockStatus.Unlock && unlockPrompt) {
+          this.mViewModel.touchEvent(event);
+        }
       })
       .onAppear(async () => {
-        Log.showError(TAG, 'The lock screen is loaded');
+        Log.showInfo(TAG, 'The lock screen is loaded');
         await PreferencesHelper.getInstance().initPreference(getContext(this));
         GetLauncherIsLoad.getInstance().checkIsFirst(getContext(this));
       })
