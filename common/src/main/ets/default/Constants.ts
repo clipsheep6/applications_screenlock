@@ -25,6 +25,12 @@ export interface Rect {
   height: number;
 };
 
+export const ScreenStatus = {
+  lockStatus: 'lockStatus',
+  isFirst: 'isFirst',
+  launcherLoadingStatus:'launcherLoadingStatus'
+};
+
 export type WindowType = 'status' | 'navigation';
 
 export default class Constants {

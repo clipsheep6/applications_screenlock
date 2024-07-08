@@ -19,6 +19,8 @@ import ScreenLockModel from './screenLockModel';
 import AccountModel, {AuthType, AuthSubType, AuthTurstLevel} from './accountsModel'
 import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon';
 import createOrGet from '../../../../../../../../common/src/main/ets/default/SingleInstanceHelper'
+import { PreferencesHelper } from '../../../../../../../../common/src/main/ets/default/PreferencesHelper'
+import { ScreenStatus } from '../../../../../../../../common/src/main/ets/default/Constants';
 import Router from '@system.router';
 import commonEvent from '@ohos.commonEvent';
 import hiDebug from '@ohos.hidebug';
@@ -281,6 +283,7 @@ export class ScreenLockService {
         //unlock the screen
         this.screenLockModel.hiddenScreenLockWindow(() => {
             Log.showInfo(TAG, `hiddenScreenLockWindow finish`);
+            PreferencesHelper.getInstance().put(ScreenStatus.isFirst, false);
             //notify the base service that the unlock is completed
             this.notifyUnlockScreenResult(UnlockResult.Success);
         });

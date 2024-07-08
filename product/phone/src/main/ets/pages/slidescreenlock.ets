@@ -38,10 +38,13 @@ export default struct SlideScreenlock {
   @StorageLink('deviceStatus') @Watch('onDeviceStatusChange') deviceStatus: string = ""
   @StorageLink('isWallpaperShow') isWallpaperShow: boolean = true
   @Provide @Watch('unlockScreen') isClickFrontItem: boolean = false
-  @StorageLink('isFirst') @Watch('durationChange') isFirst: boolean = false;
   private mHeightPx : number = 48
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
+    let isFirstBoot = PreferencesHelper.getInstance().get('isFirst', true)
+    if (isFirstBoot === undefined) {
+      this.mViewModel.duration = 500;
+    }
     this.mViewModel.ViewModelInit()
   }
 
@@ -65,11 +68,6 @@ export default struct SlideScreenlock {
     this.isClickFrontItem = false
   }
 
-  durationChange(){
-    Log.showError(TAG, `打印 durationChange`)
-    this.mViewModel.duration = 500;
-    this.mViewModel.ViewModelInit();
-  }
 
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
@@ -147,7 +145,7 @@ export default struct SlideScreenlock {
       })
       .onTouch((event: TouchEvent) => {
         let lockStatus: number = AppStorage.get('lockStatus');
-        let unlockPrompt: boolean | undefined = AppStorage.get('unlock_prompt')
+        let unlockPrompt: boolean | undefined = AppStorage.get('unlockPrompt')
         if (lockStatus === ScreenLockStatus.Unlock && unlockPrompt) {
           this.mViewModel.touchEvent(event);
         }

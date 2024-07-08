@@ -18,6 +18,7 @@ import settings from '@ohos.settings';
 import Log from './Log';
 import { ScreenLockStatus } from './ScreenLockCommon';
 import { PreferencesHelper } from './PreferencesHelper';
+import { ScreenStatus } from './Constants';
 
 const TAG = 'GetLauncherIsLoad';
 
@@ -35,10 +36,10 @@ export class GetLauncherIsLoad {
 
   async checkIsFirst(context: any) {
     try {
-      let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
+      let isFirst = await PreferencesHelper.getInstance().get(ScreenStatus.isFirst, true);
+      Log.showError(TAG, `The power-on status is obtained, isFirst:${isFirst}`)
       if (isFirst || isFirst === undefined) {
         this.getLauncherLoad(context);
-        AppStorage.setOrCreate('isFirst', true)
       }
     } catch (err) {
       Log.showError(TAG, `Check whether the initial startup fails, err: ${err}`)
@@ -48,15 +49,14 @@ export class GetLauncherIsLoad {
   public async getLauncherLoad(context) {
     Log.showInfo(TAG, 'initLauncherLoad');
     this.timer = setInterval(() => {
-      settings.getValue(context, 'launcherIsLoad', (err, value)=>{
+      settings.getValue(context, ScreenStatus.launcherLoadingStatus, (err, value)=>{
         if (err) {
           Log.showError(TAG, `Failed to get the setting. ${err.message}`);
           return;
         }
         clearInterval(this.timer);
         if (value) {
-          AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
-          PreferencesHelper.getInstance().put('isFirst', false);
+          AppStorage.setOrCreate(ScreenStatus.lockStatus, ScreenLockStatus.Unlock);
         }
       })
     }, 200);

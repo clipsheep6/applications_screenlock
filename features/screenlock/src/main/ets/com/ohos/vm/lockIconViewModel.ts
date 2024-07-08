@@ -17,6 +17,7 @@ import Log from '../../../../../../../../common/src/main/ets/default/Log';
 import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon';
 import { PreferencesHelper } from '../../../../../../../../common/src/main/ets/default/PreferencesHelper';
 import { GetLauncherIsLoad } from '../../../../../../../../common/src/main/ets/default/GetLauncherIsLoad';
+import { ScreenStatus } from '../../../../../../../../common/src/main/ets/default/Constants'
 import screenLockService from '../model/screenLockService';
 
 const TAG = 'ScreenLock-LockIconViewModel';
@@ -33,16 +34,16 @@ export default class LockIconViewModel {
 
     async unlockScreen() {
         Log.showInfo(TAG, 'Unlock this screen');
-        let isFirst = await PreferencesHelper.getInstance().get('isFirst', true);
+        let isFirst = await PreferencesHelper.getInstance().get(ScreenStatus.isFirst, true);
+        Log.showError(TAG, `The power-on status is obtained, isFirst:${isFirst}`)
         if (isFirst) {
-            AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Locking);
+            AppStorage.setOrCreate(ScreenStatus.lockStatus, ScreenLockStatus.Locking);
             setTimeout(() => {
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
                 this.cutMessage = $r('app.string.unlock_prompt');
                 clearInterval(GetLauncherIsLoad.getInstance().timer);
-                AppStorage.setOrCreate('lockStatus', ScreenLockStatus.Unlock);
-                AppStorage.setOrCreate('unlock_prompt', true);
-                PreferencesHelper.getInstance().put('isFirst', false);
+                AppStorage.setOrCreate(ScreenStatus.isFirst, ScreenLockStatus.Unlock);
+                AppStorage.setOrCreate('unlockPrompt', true);
             }, 5000);
         } else {
             this.iconPath = $r('app.media.ic_public_unlock_filled');
