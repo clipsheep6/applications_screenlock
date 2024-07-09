@@ -14,6 +14,7 @@
  */
 
 import DataPreferences from '@ohos.data.preferences';
+import { ScreenStatus } from './Constants';
 import Log from './Log';
 
 const TAG = 'PreferencesHelper';
@@ -32,12 +33,12 @@ export class PreferencesHelper {
   async initPreference(context) {
     try {
       this.preference = await DataPreferences.getPreferences(context, 'Screen_lock_pref');
-      if (this.preference.hasSync('isFirst')) {
+      if (this.preference.hasSync(ScreenStatus.isFirst)) {
         Log.showInfo(TAG, "The key 'isFirst' is contained");
       } else {
         Log.showError(TAG, "The key 'isFirst' does not contain");
         // 不存在则写入
-        this.preference.putSync('isFirst', true);
+        this.preference.putSync(ScreenStatus.isFirst, true);
       }
     } catch (err) {
       Log.showError(TAG, `Failed to initPreference, Cause:${err.message || err.code}`);
