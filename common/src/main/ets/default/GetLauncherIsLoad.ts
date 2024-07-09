@@ -37,7 +37,7 @@ export class GetLauncherIsLoad {
   async checkIsFirst(context: any) {
     try {
       let isFirst = await PreferencesHelper.getInstance().get(ScreenStatus.isFirst, true);
-      Log.showError(TAG, `The power-on status is obtained, isFirst:${isFirst}`)
+      Log.showInfo(TAG, `The power-on status is obtained, isFirst:${isFirst}`);
       if (isFirst || isFirst === undefined) {
         this.getLauncherLoad(context);
         return isFirst;
@@ -56,7 +56,7 @@ export class GetLauncherIsLoad {
           return;
         }
         clearInterval(this.timer);
-        Log.showError(TAG, `The data is obtained successfully. value:${value}`)
+        Log.showInfo(TAG, `The data is obtained successfully. value:${value}`);
         if (value) {
           AppStorage.setOrCreate(ScreenStatus.lockStatus, ScreenLockStatus.Unlock);
           PreferencesHelper.getInstance().put(ScreenStatus.isFirst, false);

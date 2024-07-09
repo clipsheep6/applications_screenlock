@@ -24,7 +24,6 @@ import StatusBar from '../../../../../../features/screenlock/src/main/ets/com/oh
 import { ScreenLockStatus } from '../../../../../../common/src/main/ets/default/ScreenLockCommon';
 import { PreferencesHelper } from '../../../../../../common/src/main/ets/default/PreferencesHelper';
 import { GetLauncherIsLoad } from '../../../../../../common/src/main/ets/default/GetLauncherIsLoad';
-import print from '@ohos.print';
 import Constants from '../common/constants'
 import ViewModel from '../vm/slideScreenLockViewModel'
 
@@ -142,13 +141,13 @@ export default struct SlideScreenlock {
       .onTouch((event: TouchEvent) => {
         let lockStatus: number = AppStorage.get('lockStatus');
         let unlockPrompt: boolean | undefined = AppStorage.get('unlockPrompt');
-        Log.showError(TAG, `lockStatus:${lockStatus}, unlockPrompt:${unlockPrompt}`);
+        Log.showDebug(TAG, `lockStatus:${lockStatus}, unlockPrompt:${unlockPrompt}`);
         if (lockStatus === ScreenLockStatus.Unlock && unlockPrompt) {
           this.mViewModel.touchEvent(event);
         }
       })
       .onAppear(async () => {
-        Log.showInfo(TAG, 'The lock screen is loaded');
+        Log.showDebug(TAG, 'The lock screen is loaded');
         await PreferencesHelper.getInstance().initPreference(getContext(this));
         let isFirstBoot = await GetLauncherIsLoad.getInstance().checkIsFirst(getContext(this));
         if (isFirstBoot) {

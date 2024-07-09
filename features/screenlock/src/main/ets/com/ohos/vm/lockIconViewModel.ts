@@ -35,7 +35,7 @@ export default class LockIconViewModel {
     async unlockScreen() {
         Log.showInfo(TAG, 'Unlock this screen');
         let isFirst = await PreferencesHelper.getInstance().get(ScreenStatus.isFirst, true);
-        Log.showError(TAG, `The power-on status is obtained, isFirst:${isFirst}`)
+        Log.showInfo(TAG, `The power-on status is obtained, isFirst:${isFirst}`);
         if (isFirst) {
             AppStorage.setOrCreate(ScreenStatus.lockStatus, ScreenLockStatus.Locking);
             setTimeout(() => {
