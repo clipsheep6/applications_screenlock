@@ -44,6 +44,7 @@ export default class LockIconViewModel {
                 clearInterval(GetLauncherIsLoad.getInstance().timer);
                 AppStorage.setOrCreate(ScreenStatus.lockStatus, ScreenLockStatus.Unlock);
                 AppStorage.setOrCreate('unlockPrompt', true);
+                PreferencesHelper.getInstance().put(ScreenStatus.lockStatus, false);
             }, 5000);
         } else {
             this.iconPath = $r('app.media.ic_public_unlock_filled');
