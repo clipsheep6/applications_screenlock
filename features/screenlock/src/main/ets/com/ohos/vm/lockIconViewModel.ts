@@ -42,7 +42,7 @@ export default class LockIconViewModel {
                 this.iconPath = $r('app.media.ic_public_unlock_filled');
                 this.cutMessage = $r('app.string.unlock_prompt');
                 clearInterval(GetLauncherIsLoad.getInstance().timer);
-                AppStorage.setOrCreate(ScreenStatus.isFirst, ScreenLockStatus.Unlock);
+                AppStorage.setOrCreate(ScreenStatus.lockStatus, ScreenLockStatus.Unlock);
                 AppStorage.setOrCreate('unlockPrompt', true);
             }, 5000);
         } else {
