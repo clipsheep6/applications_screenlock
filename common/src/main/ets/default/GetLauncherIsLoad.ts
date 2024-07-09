@@ -40,6 +40,7 @@ export class GetLauncherIsLoad {
       Log.showError(TAG, `The power-on status is obtained, isFirst:${isFirst}`)
       if (isFirst || isFirst === undefined) {
         this.getLauncherLoad(context);
+        return isFirst;
       }
     } catch (err) {
       Log.showError(TAG, `Check whether the initial startup fails, err: ${err}`)

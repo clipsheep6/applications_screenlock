@@ -41,11 +41,6 @@ export default struct SlideScreenlock {
   private mHeightPx : number = 48
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
-    let isFirstBoot = PreferencesHelper.getInstance().get('isFirst', true)
-    Log.showError(TAG, `isFirstBoot:${isFirstBoot}`);
-    if (isFirstBoot === undefined) {
-      this.mViewModel.duration = 500;
-    }
     this.mViewModel.ViewModelInit()
   }
 
@@ -155,7 +150,11 @@ export default struct SlideScreenlock {
       .onAppear(async () => {
         Log.showInfo(TAG, 'The lock screen is loaded');
         await PreferencesHelper.getInstance().initPreference(getContext(this));
-        GetLauncherIsLoad.getInstance().checkIsFirst(getContext(this));
+        let isFirstBoot = await GetLauncherIsLoad.getInstance().checkIsFirst(getContext(this));
+        if (isFirstBoot) {
+          this.mViewModel.duration = 500;
+          this.mViewModel.ViewModelInit();
+        }
       })
     }
   }
