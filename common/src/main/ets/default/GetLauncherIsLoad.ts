@@ -47,8 +47,8 @@ export class GetLauncherIsLoad {
     }
   }
 
-  public async getLauncherLoad(context) {
-    Log.showInfo(TAG, 'initLauncherLoad');
+  public async getLauncherLoad(context: any) {
+    Log.showInfo(TAG, 'getLauncherLoad');
     this.timer = setInterval(() => {
       settings.getValue(context, ScreenStatus.launcherLoadingStatus, (err, value)=>{
         if (err) {
@@ -59,6 +59,7 @@ export class GetLauncherIsLoad {
         Log.showError(TAG, `The data is obtained successfully. value:${value}`)
         if (value) {
           AppStorage.setOrCreate(ScreenStatus.lockStatus, ScreenLockStatus.Unlock);
+          PreferencesHelper.getInstance().put(ScreenStatus.isFirst, false);
         }
       })
     }, 200);

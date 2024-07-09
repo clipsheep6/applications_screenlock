@@ -283,7 +283,6 @@ export class ScreenLockService {
         //unlock the screen
         this.screenLockModel.hiddenScreenLockWindow(() => {
             Log.showInfo(TAG, `hiddenScreenLockWindow finish`);
-            PreferencesHelper.getInstance().put(ScreenStatus.isFirst, false);
             //notify the base service that the unlock is completed
             this.notifyUnlockScreenResult(UnlockResult.Success);
         });
