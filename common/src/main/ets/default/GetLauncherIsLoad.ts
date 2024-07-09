@@ -55,6 +55,7 @@ export class GetLauncherIsLoad {
           return;
         }
         clearInterval(this.timer);
+        Log.showError(TAG, `The data is obtained successfully. value:${value}`)
         if (value) {
           AppStorage.setOrCreate(ScreenStatus.lockStatus, ScreenLockStatus.Unlock);
         }

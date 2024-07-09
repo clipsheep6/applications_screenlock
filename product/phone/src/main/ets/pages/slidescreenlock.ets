@@ -42,6 +42,7 @@ export default struct SlideScreenlock {
   aboutToAppear() {
     Log.showInfo(TAG, `aboutToAppear`)
     let isFirstBoot = PreferencesHelper.getInstance().get('isFirst', true)
+    Log.showError(TAG, `isFirstBoot:${isFirstBoot}`);
     if (isFirstBoot === undefined) {
       this.mViewModel.duration = 500;
     }
@@ -146,6 +147,7 @@ export default struct SlideScreenlock {
       .onTouch((event: TouchEvent) => {
         let lockStatus: number = AppStorage.get('lockStatus');
         let unlockPrompt: boolean | undefined = AppStorage.get('unlockPrompt');
+        Log.showError(TAG, `lockStatus:${lockStatus}, unlockPrompt:${unlockPrompt}`);
         if (lockStatus === ScreenLockStatus.Unlock && unlockPrompt) {
           this.mViewModel.touchEvent(event);
         }
