@@ -21,7 +21,6 @@ import LockIcon from '../../../../../../features/screenlock/src/main/ets/com/oho
 import Wallpaper from '../../../../../../features/wallpapercomponent/src/main/ets/com/ohos/view/component/wallpaper';
 import NotificationListComponent from '../../../../../../features/noticeitem/src/main/ets/com/ohos/noticeItem/view/NotificationListComponent';
 import StatusBar from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/statusBar';
-import { ScreenLockStatus } from '../../../../../../common/src/main/ets/default/ScreenLockCommon';
 import { PreferencesHelper } from '../../../../../../common/src/main/ets/default/PreferencesHelper';
 import { GetLauncherIsLoad } from '../../../../../../common/src/main/ets/default/GetLauncherIsLoad';
 import Constants from '../common/constants'
@@ -139,10 +138,9 @@ export default struct SlideScreenlock {
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event: TouchEvent) => {
-        let lockStatus: number = AppStorage.get('lockStatus');
         let unlockPrompt: boolean | undefined = AppStorage.get('unlockPrompt');
-        Log.showDebug(TAG, `lockStatus:${lockStatus}, unlockPrompt:${unlockPrompt}`);
-        if (lockStatus === ScreenLockStatus.Unlock && unlockPrompt) {
+        Log.showDebug(TAG, `unlockPrompt:${unlockPrompt}`);
+        if (unlockPrompt) {
           this.mViewModel.touchEvent(event);
         }
       })
