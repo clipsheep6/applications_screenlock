@@ -13,11 +13,14 @@
  * limitations under the License.
  */
 
-import Log from '../../../../../../../../common/src/main/ets/default/Log'
-import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon'
-import screenLockService from '../model/screenLockService'
+import Log from '../../../../../../../../common/src/main/ets/default/Log';
+import {ScreenLockStatus} from '../../../../../../../../common/src/main/ets/default/ScreenLockCommon';
+import { PreferencesHelper } from '../../../../../../../../common/src/main/ets/default/PreferencesHelper';
+import { GetLauncherIsLoad } from '../../../../../../../../common/src/main/ets/default/GetLauncherIsLoad';
+import { ScreenStatus } from '../../../../../../../../common/src/main/ets/default/Constants'
+import screenLockService from '../model/screenLockService';
 
-const TAG = 'ScreenLock-LockIconViewModel'
+const TAG = 'ScreenLock-LockIconViewModel';
 
 export default class LockIconViewModel {
     cutMessage: any= {}
@@ -29,6 +32,27 @@ export default class LockIconViewModel {
         this.cutMessage = $r('app.string.lock_prompt')
     }
 
+    async unlockScreen() {
+        Log.showInfo(TAG, 'Unlock this screen');
+        let isFirst = await PreferencesHelper.getInstance().get(ScreenStatus.isFirst, true);
+        Log.showInfo(TAG, `The power-on status is obtained, isFirst:${isFirst}`);
+        if (isFirst) {
+            AppStorage.setOrCreate(ScreenStatus.lockStatus, ScreenLockStatus.Locking);
+            setTimeout(() => {
+                this.iconPath = $r('app.media.ic_public_unlock_filled');
+                this.cutMessage = $r('app.string.unlock_prompt');
+                clearInterval(GetLauncherIsLoad.getInstance().timer);
+                AppStorage.setOrCreate(ScreenStatus.lockStatus, ScreenLockStatus.Unlock);
+                AppStorage.setOrCreate('unlockPrompt', true);
+                PreferencesHelper.getInstance().put(ScreenStatus.isFirst, false);
+            }, 5000);
+        } else {
+            this.iconPath = $r('app.media.ic_public_unlock_filled');
+            this.cutMessage = $r('app.string.unlock_prompt');
+            AppStorage.setOrCreate('unlockPrompt', true);
+        }
+    }
+
     onStatusChange(lockStatus: ScreenLockStatus): void {
         Log.showInfo(TAG, `onStatusChange lockStatus:${lockStatus}`);
         switch (lockStatus) {
@@ -37,8 +61,7 @@ export default class LockIconViewModel {
                 this.cutMessage = $r('app.string.lock_prompt')
                 break;
             case ScreenLockStatus.Unlock:
-                this.iconPath = $r('app.media.ic_public_unlock_filled');
-                this.cutMessage = $r('app.string.unlock_prompt')
+                this.unlockScreen();
                 break;
             case ScreenLockStatus.RecognizingFace:
                 this.iconPath = $r('app.media.ic_public_unlock_filled');

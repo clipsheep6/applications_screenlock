@@ -13,14 +13,16 @@
  * limitations under the License.
  */
 
-import Log from '../../../../../../common/src/main/ets/default/Log'
-import Accounts from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/accounts'
-import {UserData} from '../../../../../../features/screenlock/src/main/ets/com/ohos/data/userData'
-import DateTime from '../../../../../../features/datetimecomponent/src/main/ets/com/ohos/view/component/dateTime'
-import LockIcon from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/lockIcon'
-import Wallpaper from '../../../../../../features/wallpapercomponent/src/main/ets/com/ohos/view/component/wallpaper'
-import NotificationListComponent from '../../../../../../features/noticeitem/src/main/ets/com/ohos/noticeItem/view/NotificationListComponent'
-import StatusBar from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/statusBar'
+import Log from '../../../../../../common/src/main/ets/default/Log';
+import Accounts from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/accounts';
+import {UserData} from '../../../../../../features/screenlock/src/main/ets/com/ohos/data/userData';
+import DateTime from '../../../../../../features/datetimecomponent/src/main/ets/com/ohos/view/component/dateTime';
+import LockIcon from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/lockIcon';
+import Wallpaper from '../../../../../../features/wallpapercomponent/src/main/ets/com/ohos/view/component/wallpaper';
+import NotificationListComponent from '../../../../../../features/noticeitem/src/main/ets/com/ohos/noticeItem/view/NotificationListComponent';
+import StatusBar from '../../../../../../features/screenlock/src/main/ets/com/ohos/view/component/statusBar';
+import { PreferencesHelper } from '../../../../../../common/src/main/ets/default/PreferencesHelper';
+import { GetLauncherIsLoad } from '../../../../../../common/src/main/ets/default/GetLauncherIsLoad';
 import Constants from '../common/constants'
 import ViewModel from '../vm/slideScreenLockViewModel'
 
@@ -59,6 +61,7 @@ export default struct SlideScreenlock {
     }
     this.isClickFrontItem = false
   }
+
 
   build() {
     Stack({ alignContent: Alignment.Bottom }) {
@@ -134,8 +137,21 @@ export default struct SlideScreenlock {
         iterations: 1, // times of play
         playMode: PlayMode.Normal // animation mode
       })
-      .onTouch((event) => {
-        this.mViewModel.touchEvent(event)
+      .onTouch((event: TouchEvent) => {
+        let unlockPrompt: boolean | undefined = AppStorage.get('unlockPrompt');
+        Log.showDebug(TAG, `unlockPrompt:${unlockPrompt}`);
+        if (unlockPrompt) {
+          this.mViewModel.touchEvent(event);
+        }
+      })
+      .onAppear(async () => {
+        Log.showDebug(TAG, 'The lock screen is loaded');
+        await PreferencesHelper.getInstance().initPreference(getContext(this));
+        let isFirstBoot = await GetLauncherIsLoad.getInstance().checkIsFirst(getContext(this));
+        if (isFirstBoot) {
+          this.mViewModel.duration = 500;
+          this.mViewModel.ViewModelInit();
+        }
       })
     }
   }
