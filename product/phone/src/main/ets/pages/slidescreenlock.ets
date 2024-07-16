@@ -138,7 +138,7 @@ export default struct SlideScreenlock {
         let upgLide = AppStorage.get('upgLide');
         let unLock = AppStorage.get('unLock');
         Log.showError(TAG, `upgLide:${upgLide}, unLock:${unLock}`);
-        if (upgLide && unLock) {
+        if (upgLide) {
           this.mViewModel.touchEvent(event)
         }
       })

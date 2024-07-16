@@ -21,6 +21,7 @@ import Constants from '../../../../../../features/screenlock/src/main/ets/com/oh
 import AbilityManager from '../../../../../../common/src/main/ets/default/abilitymanager/abilityManager'
 import sTimeManager from '../../../../../../common/src/main/ets/default/TimeManager'
 import { UIContext } from '@ohos.arkui.UIContext'
+import window from '@ohos.window';
 
 const TAG = "ScreenLock-ServiceExtAbility"
 
@@ -45,6 +46,15 @@ class ServiceExtAbility extends ServiceExtension {
                     Log.showInfo(TAG, "then begin " + name + " window show in then! ");
                 })
             })
+
+            win.on('windowEvent', (stageEventType)=>{
+                // 获焦或失焦时，通知桌面的卡片变为可见状态
+                if (stageEventType === window.WindowEventType.WINDOW_ACTIVE) {
+                    Log.showInfo(TAG, `lifeCycleEvent change: ${stageEventType}`);
+                    AppStorage.setOrCreate('unLock', true);
+                }
+            })
+
         }, (error) => {
             Log.showError(TAG, name + " window createFailed, error.code = " + error.code)
         })
