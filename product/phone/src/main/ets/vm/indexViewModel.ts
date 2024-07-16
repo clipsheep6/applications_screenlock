@@ -39,6 +39,7 @@ export default class IndexViewModel {
   onPageShow() {
     Log.showInfo(TAG, `onPageShow`)
     ScreenLockService.notifyDrawDone();
+    AppStorage.setOrCreate('upgLide', true)
   }
 
   ViewModelDestroy() {

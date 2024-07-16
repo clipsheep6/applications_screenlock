@@ -135,7 +135,12 @@ export default struct SlideScreenlock {
         playMode: PlayMode.Normal // animation mode
       })
       .onTouch((event) => {
-        this.mViewModel.touchEvent(event)
+        let upgLide = AppStorage.get('upgLide');
+        let unLock = AppStorage.get('unLock');
+        Log.showError(TAG, `upgLide:${upgLide}, unLock:${unLock}`);
+        if (upgLide && unLock) {
+          this.mViewModel.touchEvent(event)
+        }
       })
     }
   }
