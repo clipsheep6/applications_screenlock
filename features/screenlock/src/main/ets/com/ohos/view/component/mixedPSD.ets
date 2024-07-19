@@ -91,5 +91,5 @@ export default struct MixedPSD {
     .width(Constants.FULL_CONTAINER_WIDTH)
     .height(Constants.FULL_CONTAINER_HEIGHT)
   }
-  
+
 }
