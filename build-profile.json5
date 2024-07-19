@@ -3,11 +3,25 @@
     "products": [
       {
         "name": "default",
-        "signingConfig": "default",
+        "signingConfig": "release",
         "compileSdkVersion": 10,
-        "compatibleSdkVersion": 9,
+        "compatibleSdkVersion": 9
       }
-    ]
+    ],
+    "signingConfigs": [
+      {
+        "name": "release",
+        "material": {
+          "certpath": "C:\\Users\\Administrator\\.ohos\\config\\openharmony\\auto_ohos_release_applications_screenlock_com.ohos.systemui.cer",
+          "storePassword": "0000001A23320B028353EFA00CB900A591838A877427E2E80FB6A80D55CEB9A373F52812655578C043BD",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001A108F0AFAA0DF9A33E2361CB96AAF42FA76CEA3755CE56973026DD150157AA81A7C4BB7761586",
+          "profile": "C:\\Users\\Administrator\\.ohos\\config\\openharmony\\auto_ohos_release_applications_screenlock_com.ohos.systemui.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "C:\\Users\\Administrator\\.ohos\\config\\openharmony\\auto_ohos_release_applications_screenlock_com.ohos.systemui.p12"
+        }
+      }
+    ],
   },
   "modules": [
     {
@@ -22,6 +36,7 @@
         }
       ]
     },
+    /*
     {
       "name": "pc",
       "srcPath": "./product/pc",
@@ -34,6 +49,7 @@
         }
       ]
     },
+    */
     {
       "name": "phone",
       "srcPath": "./product/phone",
