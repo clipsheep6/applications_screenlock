@@ -38,7 +38,7 @@ export default struct MixedPSD {
   }
 
   build() {
-   Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
+    Column() {
 
       Text(this.mViewModel.prompt)
         .fontSize($r('app.float.mixedpsd_prompt_fontsize'))
