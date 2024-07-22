@@ -38,21 +38,20 @@ export default struct MixedPSD {
   }
 
   build() {
-
-    Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
+   Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
 
       Text(this.mViewModel.prompt)
         .fontSize($r('app.float.mixedpsd_prompt_fontsize'))
         .fontWeight(FontWeight.Bold)
         .fontColor(Color.White)
-        .margin({
-          bottom: $r('app.float.mixedpsd_prompt_margin_bottom'),
-          top: $r("app.float.mixedpsd_prompt_margin_top")
-        })
         .textAlign(TextAlign.Center)
         .textOverflow({ overflow: TextOverflow.None })
         .width($r('app.float.mixedpsd_prompt_width'))
         .height($r('app.float.mixedpsd_prompt_height'))
+        .margin({
+          bottom: $r('app.float.mixedpsd_prompt_margin_bottom'),
+          top: $r("app.float.mixedpsd_prompt_margin_top")
+        })
 
       TextInput({ placeholder: '', text: this.mViewModel.password })
         .type(InputType.Password)
@@ -98,8 +97,8 @@ export default struct MixedPSD {
         .fontColor(Color.White)
         .textAlign(TextAlign.Center)
         .textOverflow({ overflow: TextOverflow.None })
-        .onClick(this.mViewModel.onCallPhone.bind(this.mViewModel));
-
+        .onClick(this.mViewModel.onCallPhone.bind(this.mViewModel))
+        .margin({ top: Constants.ACCOUNT_SPACE })
     }
     .width(Constants.FULL_CONTAINER_WIDTH)
     .height(Constants.FULL_CONTAINER_HEIGHT)
