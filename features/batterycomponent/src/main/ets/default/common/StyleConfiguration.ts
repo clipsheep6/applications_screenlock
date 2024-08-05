@@ -18,7 +18,9 @@ import Constants from './constants'
 
 const TAG = 'battery-StyleConfiguration';
 
+// 定义了一个默认导出的类，该类包含了两个静态方法，用于获取电池组件的样式。
 export default class StyleConfiguration {
+
     static getBatteryComponentStyle() {
         const key: string = TAG + "-BatteryComponent";
         return StyleManager.getStyle(key, () => {
@@ -46,4 +48,5 @@ export default class StyleConfiguration {
             };
         });
     }
+
 }

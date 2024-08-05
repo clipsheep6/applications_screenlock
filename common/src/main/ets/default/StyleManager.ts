@@ -17,14 +17,23 @@ import Log from './Log';
 
 const TAG = 'Common-StyleManager';
 
+// 定义一个名为 StyleManager 的类，并将其导出
 export class StyleManager {
+
+    // 在类中定义一个私有成员变量 mAbilityPageName，类型为字符串，初始值为空字符串
     mAbilityPageName: string = '';
 
+    // 定义一个方法 setAbilityPageName，它接受一个字符串参数 name，用于设置 mAbilityPageName 的值。
+    // 方法体中首先记录一条调试日志，然后更新 mAbilityPageName 的值。
     setAbilityPageName(name: string): void{
         Log.showDebug(TAG, `setAbilityPageName, name: ${name}`);
         this.mAbilityPageName = name;
     }
 
+    // 定义一个方法 getStyle，它接受两个参数：
+    // key：一个字符串，表示样式的键。
+    // generateDefaultFunction：一个函数，用于生成默认样式。
+    // 方法体中首先根据 mAbilityPageName 和 key 生成一个新的键 newKey。
     getStyle(key: string, generateDefaultFunction: Function) {
         let newKey = this.mAbilityPageName + '-' + key;
         if (!AppStorage.Has(newKey)) {

@@ -26,8 +26,10 @@ import Constants from "./Constants";
 import { obtainLocalEvent } from "./event/EventUtil";
 import { CommonEventManager, getCommonEventManager, POLICY } from "./commonEvent/CommonEventManager";
 
+// 导出一个常量 TIME_CHANGE_EVENT，用作时间变更事件的标识。
 export const TIME_CHANGE_EVENT = "Time_Change_Event";
 
+// 导出一个类型别名 TimeEventArgs，定义了时间事件参数的结构，包含日期和时间格式。
 export type TimeEventArgs = {
   date: Date;
   timeFormat: boolean;
@@ -53,10 +55,15 @@ export function concatTime(h: number, m: number) {
 }
 
 class TimeManager {
+
+  // mUse24hFormat：一个私有变量，用于存储是否使用24小时格式。
+  // mSettingsHelper：一个可能未定义的私有变量，用于数据能力助手。
+  // mManager：一个可能未定义的私有变量，用于公共事件管理器。
   private mUse24hFormat: boolean = false;
   private mSettingsHelper?: DataAbilityHelper;
   private mManager?: CommonEventManager;
 
+  // init 方法接受一个上下文参数，并进行事件管理器的初始化、订阅时间变更事件、应用策略等。
   public init(context: any) {
     this.mManager = getCommonEventManager(
       TAG,
@@ -69,16 +76,19 @@ class TimeManager {
     this.initTimeFormat(context);
   }
 
+  // release 方法用于释放资源，包括取消订阅公共事件和清除数据能力助手的监听器。
   public release() {
     this.mManager?.release();
     this.mManager = undefined;
     this.mSettingsHelper?.off("dataChange", Constants.getUriSync(TIME_FORMAT_KEY));
   }
 
+  // formatTime 方法接受一个日期对象，返回格式化后的小时和分钟字符串。
   public formatTime(date: Date) {
     return concatTime(date.getHours() % (this.mUse24hFormat ? 24 : 12), date.getMinutes());
   }
 
+  // initTimeFormat 方法异步获取时间格式设置，并监听时间格式变化。
   private async initTimeFormat(context: any) {
     Log.showDebug(TAG, "initTimeFormat");
     //this.mSettingsHelper = featureAbility.acquireDataAbilityHelper(context, URI_VAR);
@@ -96,6 +106,7 @@ class TimeManager {
     }
   }
 
+  // handleTimeFormatChange 方法处理时间格式变化，更新 mUse24hFormat 变量，并通知时间变更。
   private handleTimeFormatChange(context: any) {
     Log.showDebug(TAG, "handleTimeFormatChange")
     if (!this.mSettingsHelper) {
@@ -108,6 +119,7 @@ class TimeManager {
     this.notifyTimeChange();
   };
 
+  // notifyTimeChange 方法创建时间事件参数并发布时间变更事件。
   private notifyTimeChange() {
     Log.showDebug(TAG, "notifyTimeChange");
     let args: TimeEventArgs = {
@@ -116,8 +128,11 @@ class TimeManager {
     };
     EventManager.publish(obtainLocalEvent(TIME_CHANGE_EVENT, args));
   }
+
 }
 
+// 使用 createOrGet 方法创建 TimeManager 类的单例。
 let sTimeManager = createOrGet(TimeManager, TAG);
 
+// 将 sTimeManager 作为默认导出，允许其他模块使用这个单例。
 export default sTimeManager as TimeManager;

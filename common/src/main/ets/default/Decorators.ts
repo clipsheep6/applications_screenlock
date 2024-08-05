@@ -17,6 +17,8 @@ import Log from "./Log";
 
 const TAG = "Decorators";
 
+// 定义了一个名为 debounce 的装饰器函数，它接受一个参数 timeout，表示延迟执行的时间（毫秒）。
+// 这个装饰器用于确保在指定的时间间隔内，无论触发了多少次函数调用，只有第一次调用会被执行。
 export function debounce(timeout: number) {
     return function inner(target: any, propKey: string, descriptor: PropertyDescriptor) {
         let curFunc: number = 0;
@@ -29,6 +31,8 @@ export function debounce(timeout: number) {
     };
 }
 
+// 定义了一个名为 throttle 的装饰器函数，它接受一个参数 waitTime，表示两次函数执行之间必须等待的时间（毫秒）。
+// 这个装饰器用于限制函数在指定的时间间隔内只能执行一次。
 export function throttle(waitTime: number) {
     return function inner(target: any, propKey: string, descriptor: PropertyDescriptor) {
         let lastTime: number = 0;

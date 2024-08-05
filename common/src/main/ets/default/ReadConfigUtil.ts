@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+// 用于从一个资源管理器中读取配置文件，并将其解析为JSON格式
 import Log from './Log';
 import AbilityManager from '../default/abilitymanager/abilityManager'
 

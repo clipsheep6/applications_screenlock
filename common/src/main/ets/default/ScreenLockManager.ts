@@ -13,6 +13,13 @@
  * limitations under the License.
  */
 
+// 导入HarmonyOS的 commonEvent 模块，用于创建和订阅通用事件。
+// 导入 CommonEventSubscriber 类型，用于订阅通用事件。
+// 导入 createOrGet 函数，可能用于确保 ScreenLockManager 类为单例模式。
+// 导入 EventManager 类，用于事件的发布和订阅。
+// 导入 obtainLocalEvent 函数，可能用于创建本地事件。
+// 导入 debounce 装饰器，用于限制函数在指定的时间间隔内只能执行一次。
+// 导出一个常量 SCREEN_CHANGE_EVENT，用作屏幕变化事件的标识。
 import commonEvent from "@ohos.commonEvent";
 import { CommonEventSubscriber } from "commonEvent/commonEventSubscriber";
 import createOrGet from "./SingleInstanceHelper";

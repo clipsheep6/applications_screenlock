@@ -54,7 +54,8 @@ export default struct CustomPassword {
 
   build() {
     Stack() {
-      Image($r('app.media.bg')).width(Constants.FULL_CONTAINER_WIDTH)
+      Image($r('app.media.bg'))
+        .width(Constants.FULL_CONTAINER_WIDTH)
         .height(Constants.FULL_CONTAINER_HEIGHT)
       Flex({ direction: FlexDirection.Column, alignItems: ItemAlign.Center, justifyContent: FlexAlign.Center }) {
         Column() {
