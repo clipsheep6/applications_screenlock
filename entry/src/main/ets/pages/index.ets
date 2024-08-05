@@ -13,9 +13,12 @@
  * limitations under the License.
  */
 
+
+
+
 @Entry
 @Component
-struct Index {
+export struct MainPage {
   @State message: string = 'Hello World'
 
   build() {
@@ -29,4 +32,5 @@ struct Index {
     }
     .height('100%')
   }
+
 }

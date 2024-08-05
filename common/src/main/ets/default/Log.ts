@@ -12,8 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// 这行代码从 @ohos.hilog 包中导入了 hiLog 对象，这可能是一个用于日志记录的模块，特定于HarmonyOS开发环境。
 import hiLog from '@ohos.hilog';
 
+// 定义了一些常量，如 DOMAIN, TAG, SYMBOL, 和一个正则表达式数组 FILTER_KEYS，这些常量可能用于日志记录或数据过滤。
 const DOMAIN: number = 0x002A;
 const TAG = "ScreenLock_Default";
 const SYMBOL = " --> ";
@@ -21,6 +24,8 @@ const FILTER_KEYS = [
     new RegExp('hide', "gi")
 ]
 
+// 这是一个装饰器函数，用于拦截类的方法调用，并对其进行处理。
+// 它接收三个参数：target 是类原型，propKey 是方法名，descriptor 是方法的属性描述符。
 export function filterKey(target: any, propKey: string, descriptor: PropertyDescriptor) {
     const original = descriptor.value;
     descriptor.value = function (...args: string[]) {
@@ -37,6 +42,10 @@ export function filterKey(target: any, propKey: string, descriptor: PropertyDesc
 /**
  * Basic log class
  */
+
+// 定义了一个默认导出的日志类 Log，包含多个静态方法用于不同级别的日志输出。
+// 每个静态方法（如 showDebug, showInfo, showWarn, showError, showFatal）都接收三个参数：tag, format, 和剩余参数 args。这些方法用于输出不同级别的日志。
+// 在输出日志之前，会调用 Log.isLogGable 方法检查是否应该输出日志，这取决于 DOMAIN, TAG 和日志级别。
 export default class Log {
     /**
      * Outputs debug-level logs.

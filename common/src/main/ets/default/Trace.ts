@@ -13,10 +13,14 @@
  * limitations under the License.
  */
 
+// 导入 byTrace 模块用于跟踪操作，以及 Log 模块用于日志记录。
 import byTrace from "@ohos.bytrace";
 import Log from "./Log";
 
+// 定义一个默认导出的 Trace 类。
 export default class Trace {
+
+  // CORE_METHOD_*：定义了一些核心方法的追踪名称，这些名称将用于追踪特定的操作。
   static readonly CORE_METHOD_UNLOCK_SCREEN = "unlockScreen"
   static readonly CORE_METHOD_CALL_ACCOUNT_SYSTEM = "callAccountSubsystem";
   static readonly CORE_METHOD_PASS_ACCOUNT_SYSTEM_RESULT = "passingAccountSubsystemResult";
@@ -24,23 +28,25 @@ export default class Trace {
   static readonly CORE_METHOD_SHOW_LOCK_SCREEN = "showLockScreen";
   static readonly CORE_METHOD_SLEEP_TO_LOCK_SCREEN = "sleepToLockScreen"
 
+  // TRACE_TAG：用于日志记录的标签。
+  // RECORD_TRACE：一个布尔值，用于控制是否进行追踪记录。
+  // TRACE_LIMIT：定义了追踪记录的长度限制。
+  // TRACE_BASE_INDEX：追踪任务ID的起始索引。
   private static readonly TRACE_TAG = 'ScreenLock:Trace';
   private static readonly RECORD_TRACE = true;
   private static readonly TRACE_LIMIT = 2000;
-
   private static readonly TRACE_BASE_INDEX = 10020;
 
+  // 一个私有静态方法，用于初始化追踪参数。
+  // 它检查全局变量 globalThis.taskIdMap 和 globalThis.traceIndex 是否已定义，如果没有，它们会被初始化。
   private static init() {
     Log.showInfo(this.TRACE_TAG, 'init trace parameters');
     globalThis.taskIdMap = new Map<string, number>();
     globalThis.traceIndex = Trace.TRACE_BASE_INDEX;
   }
 
-  /**
-    * start trace method
-    *
-    * @param {string} methodName - methodName for tracing
-    */
+  // 一个静态方法，用于开始追踪一个方法的执行。它首先检查是否应该记录追踪（通过 RECORD_TRACE）。
+  // 然后它获取或创建一个任务ID，并使用 byTrace.startTrace 方法开始追踪。
   static start(methodName: string) {
     if (!Trace.RECORD_TRACE) return;
     if (typeof globalThis.taskIdMap === 'undefined' || typeof globalThis.traceIndex === 'undefined') {
@@ -56,11 +62,8 @@ export default class Trace {
     byTrace.startTrace(this.TRACE_TAG + methodName, taskId, Trace.TRACE_LIMIT);
   }
 
-  /**
-    * stop trace method
-    *
-    * @param {string} methodName - methodName for tracing
-    */
+  // 一个静态方法，用于结束一个方法的追踪。
+  // 它同样检查 RECORD_TRACE，获取任务ID，并使用 byTrace.finishTrace 方法结束追踪。
   static end(methodName: string) {
     if (!Trace.RECORD_TRACE) return;
     if (typeof globalThis.taskIdMap === 'undefined') {

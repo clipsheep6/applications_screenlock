@@ -18,10 +18,13 @@ import Log from '../Log';
 
 const TAG = 'FeatureAbilityManager';
 
+// 定义了一个默认的导出类，包含与Ability相关的操作。
 export default class FeatureAbilityManager {
 
+  // 打开一个Ability，接收两个参数：tag是一个标识来源的标签，want是一个描述要打开的能力的对象。
   openAbility(tag, want) {
     Log.showInfo(TAG, `openAbility from: ${tag}`);
+    // 使用FeatureAbility.startAbility(want)启动能力，并用Log记录相关信息。
     let result = FeatureAbility.startAbility(want)
       .then(data =>
     Log.showInfo(TAG, `tag: ${tag} promise then: ${JSON.stringify(data)}`))
@@ -29,9 +32,11 @@ export default class FeatureAbilityManager {
     Log.showError(TAG, `tag: ${tag} promise catch: ${JSON.stringify(error)}, openAbility result: ${result}`));
   }
 
+  // 获取当前的Ability请求
   getAbilityWant(listener) {
     FeatureAbility.getWant((err, data) => {
       Log.showDebug(TAG, `getAbilityWant callBack err: ${JSON.stringify(err)} data: ${JSON.stringify(data)}`);
+      // 如果成功获取，调用传入的listener回调函数，并传递获取到的数据
       if (err.code !== 0) {
         Log.showError(TAG, `failed to getAbilityWant because ${err.message}`);
         return;
@@ -43,8 +48,10 @@ export default class FeatureAbilityManager {
     });
   }
 
+  // 结束当前的能力，并携带结果。
   finishAbilityWithResult(abilityResult) {
     FeatureAbility.finishWithResult(abilityResult, (err, data) => {
+      // 如果结束失败，记录错误信息
       if (err.code !== 0) {
         Log.showError(TAG, `failed to finishWithResult because ${JSON.stringify(err)}`);
         return;
@@ -53,8 +60,10 @@ export default class FeatureAbilityManager {
     });
   }
 
+  // 静态方法，用于结束当前的能力
   static finishAbility() {
     FeatureAbility.terminateAbility((err, data) => {
+      // 如果结束失败，记录错误信息
       if (err.code !== 0) {
         Log.showError(TAG, `failed to finishAbility because ${JSON.stringify(err)}`);
         return;

@@ -12,6 +12,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// 将公历（阳历）日期转换为农历（阴历）日期
 export function ConvertLunarCalendar(gregorianCalendarYear, gregorianCalendarMonth, gregorianCalendarDay) {
     let lunarIndex1 = 2,
         lunarIndex2 = 9,
