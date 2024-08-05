@@ -19,9 +19,13 @@ import StyleConfiguration from '../common/StyleConfiguration'
 
 const TAG = 'BatteryComponent-batteryPic'
 
+
 @Component
 export default
 struct BatteryPic {
+
+  // 接下来的一系列 @StorageLink 和 @State 装饰器定义了组件的状态和存储链接。
+  // 这些属性包括电池电量（batterySoc）、是否正在充电（batteryCharging）、内容颜色（mContentColor）、电池图片的尺寸和样式等。
   @StorageLink('batterySoc') batterySoc: number = 100
   @StorageLink('batteryCharging') batteryCharging : boolean = false
   @State mContentColor: string = "#FFFFFFFF"
@@ -91,4 +95,5 @@ struct BatteryPic {
       return this.mContentColor;
     }
   }
+
 }
