@@ -72,7 +72,7 @@ struct Index {
     let length = parseInt(Router.getLength())
     Log.showDebug(TAG, `onBackPress length: ${length}`)
     if (length > 1) {
-      Router.back()
+
       return false
     }
     return true
