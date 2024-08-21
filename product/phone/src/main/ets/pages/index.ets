@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 
+
 import {Log, Trace, styleManager as CommonStyleManager, AbilityManager} from '@ohos/common'
 import {LockStyleMode} from '../../../../../../features/screenlock/src/main/ets/com/ohos/model/screenlockStyle'
 import ViewModel from '../vm/indexViewModel'
@@ -71,7 +72,7 @@ struct Index {
     let length = parseInt(Router.getLength())
     Log.showDebug(TAG, `onBackPress length: ${length}`)
     if (length > 1) {
-      Router.back()
+
       return false
     }
     return true

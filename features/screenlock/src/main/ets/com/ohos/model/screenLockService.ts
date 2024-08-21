@@ -174,7 +174,7 @@ export class ScreenLockService {
         Log.showDebug(TAG, `Router.getLength: ${length}`)
         for (let index = 1; index < length; index++) {
             Log.showInfo(TAG, `back to index`);
-            Router.back();
+
         }
         //lock the screen
         this.screenLockModel.showScreenLockWindow(() => {
@@ -347,7 +347,7 @@ export class ScreenLockService {
 
     goBack() {
         Log.showInfo(TAG, `screen lock service goBack`);
-        Router.back();
+
         this.notifyUnlockScreenResult(UnlockResult.Cancel)
         this.accountModel.unregisterInputer();
     }
