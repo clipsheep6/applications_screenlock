@@ -35,12 +35,10 @@ export default struct Wallpaper {
   }
 
   build() {
-    if (this.isWallpaperShow === true) {
-      Image(this.mViewModel.getWallpaperData())
-        .width(Constants.FULL_CONTAINER_WIDTH)
-        .height(Constants.FULL_CONTAINER_HEIGHT)
-        .objectFit(ImageFit.Cover)
-        .hoverEffect(HoverEffect.None)
-    }
+    Image(this.mViewModel.getWallpaperData())
+      .width(Constants.FULL_CONTAINER_WIDTH)
+      .height(Constants.FULL_CONTAINER_HEIGHT)
+      .objectFit(ImageFit.Cover)
+      .hoverEffect(HoverEffect.None)
   }
 }
