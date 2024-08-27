@@ -19,14 +19,14 @@ import {createOrGet} from "./SingleInstanceHelper";
 import {sEventManager} from "./event/EventManager";
 import {Log} from "./Log";
 import {obtainLocalEvent} from "./event/EventUtil";
-import {debounce} from "./Decorators";
+// import {debounce} from "./Decorators";
 export const SCREEN_CHANGE_EVENT = "screenChangeEvent";
 
 const TAG = "ScreenLockManager";
 const SCREEN_COMMON_EVENT_INFO = {
   events: [commonEvent.Support.COMMON_EVENT_SCREEN_OFF, commonEvent.Support.COMMON_EVENT_SCREEN_ON],
 };
-const debounceTimeout = 500;
+// const debounceTimeout = 500;
 
 class ScreenLockManager {
   mSubscriber: CommonEventSubscriber | undefined;
@@ -52,7 +52,7 @@ class ScreenLockManager {
     });
   }
 
-  @debounce(debounceTimeout)
+//  @debounce(debounceTimeout)
   notifyScreenEvent(isScreenOn: boolean) {
     sEventManager.publish(obtainLocalEvent(SCREEN_CHANGE_EVENT, isScreenOn));
     Log.showDebug(TAG, `publish ${SCREEN_CHANGE_EVENT} screenState: ${isScreenOn}`);
