@@ -183,11 +183,11 @@ export class ScreenLockService {
             this.checkPinAuthProperty(() => {
             });
             Log.showInfo(TAG, `screenlock status:${this.currentLockStatus}, userId : ${this.accountModel.getCurrentUserId()}`);
+            systemParameter.set('bootevent.lockscreen.ready','true')
             if (this.currentLockStatus == ScreenLockStatus.Locking) {
                 Log.showInfo(TAG, `had locked, no need to publish lock_screen`);
             } else {
                 this.notifyLockScreenResult(LockResult.Success)
-                systemParameter.set('bootevent.lockscreen.ready','true')
                 this.currentLockStatus = ScreenLockStatus.Locking;
             }
         });
