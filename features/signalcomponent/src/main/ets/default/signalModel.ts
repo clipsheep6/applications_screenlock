@@ -134,7 +134,7 @@ export class SignalModel {
       });
     }catch{
       Log.showError(TAG, 'Systemui Error.')
-    }
+    } 
 
   }
 
